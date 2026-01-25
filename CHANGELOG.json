@@ -7,6 +7,25 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.0",
+      "date": "2026-01-25",
+      "highlights": [
+        { "description": "Add schema package with //go:embed for programmatic JSON Schema access", "commit": "c219bed" },
+        { "description": "Add schema generator from Go types using invopop/jsonschema (Go-first approach)", "commit": "699ef11" }
+      ],
+      "added": [
+        { "description": "Add schema embed package with PRDSchemaJSON, PRDSchema(), and PRDSchemaBytes()", "commit": "c219bed" },
+        { "description": "Add PRDSchemaID constant for canonical schema URL", "commit": "c219bed" },
+        { "description": "Add schema generator using invopop/jsonschema to generate from Go types", "commit": "699ef11" },
+        { "description": "Add NewGenerator(), GeneratePRDSchema(), WritePRDSchema() functions", "commit": "699ef11" },
+        { "description": "Add 'srequirements schema generate' CLI command for schema generation", "commit": "1970cb9" },
+        { "description": "Add extended PRD sections: problem, market, solution, decisions, reviews, revision_history, goals", "commit": "0911fd5" }
+      ],
+      "dependencies": [
+        { "description": "Add github.com/invopop/jsonschema v0.13.0 for JSON Schema generation", "commit": "699ef11" }
+      ]
+    },
+    {
       "version": "v0.1.0",
       "date": "2026-01-25",
       "highlights": [
