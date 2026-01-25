@@ -1,0 +1,41 @@
+{
+  "ir_version": "1.0",
+  "project": "structured-requirements",
+  "repository": "https://github.com/grokify/structured-requirements",
+  "versioning": "semver",
+  "commit_convention": "conventional",
+  "maintainers": ["grokify", "johncwang@gmail.com"],
+  "releases": [
+    {
+      "version": "v0.1.0",
+      "date": "2026-01-25",
+      "highlights": [
+        { "description": "Initial release of structured-requirements for PRD, MRD, and TRD document management" },
+        { "description": "Integration with structureddocs and structured-goals for consistent rendering and goals alignment" }
+      ],
+      "added": [
+        { "description": "PRD (Product Requirements Document) types with personas, objectives, requirements, and roadmap" },
+        { "description": "MRD (Market Requirements Document) types with market analysis and competitive landscape" },
+        { "description": "TRD (Technical Requirements Document) types with architecture and technical specifications" },
+        { "description": "Marp slide renderer for PRD using structureddocs shared themes" },
+        { "description": "Goals alignment support for OKR and V2MOM frameworks via structured-goals" },
+        { "description": "Document completeness scoring and validation" },
+        { "description": "Persona library with common user archetypes" },
+        { "description": "Multiple view formats: executive summary, PM view, PR/FAQ, six-pager" },
+        { "description": "JSON Schema for PRD document validation" },
+        { "description": "CLI command for requirements document management" },
+        { "description": "Example PRD, MRD, and TRD documents" }
+      ],
+      "documentation": [
+        { "description": "MkDocs documentation site with getting started guides" },
+        { "description": "Document type references for PRD, MRD, and TRD" },
+        { "description": "Goals integration guides for OKR and V2MOM" },
+        { "description": "Feature documentation for scoring, completeness, and personas" }
+      ],
+      "dependencies": [
+        { "description": "Add github.com/grokify/structureddocs v0.1.0 for shared Marp utilities" },
+        { "description": "Add github.com/grokify/structured-goals v0.1.0 for goals alignment" }
+      ]
+    }
+  ]
+}
