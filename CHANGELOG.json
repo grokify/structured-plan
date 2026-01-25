@@ -10,31 +10,41 @@
       "version": "v0.1.0",
       "date": "2026-01-25",
       "highlights": [
-        { "description": "Initial release of structured-requirements for PRD, MRD, and TRD document management" },
-        { "description": "Integration with structureddocs and structured-goals for consistent rendering and goals alignment" }
+        { "description": "Initial release of structured-requirements for PRD, MRD, and TRD document management", "commit": "d4177b0" },
+        { "description": "Integration with structureddocs and structured-goals for consistent rendering and goals alignment", "commit": "c1493a4" }
       ],
       "added": [
-        { "description": "PRD (Product Requirements Document) types with personas, objectives, requirements, and roadmap" },
-        { "description": "MRD (Market Requirements Document) types with market analysis and competitive landscape" },
-        { "description": "TRD (Technical Requirements Document) types with architecture and technical specifications" },
-        { "description": "Marp slide renderer for PRD using structureddocs shared themes" },
-        { "description": "Goals alignment support for OKR and V2MOM frameworks via structured-goals" },
-        { "description": "Document completeness scoring and validation" },
-        { "description": "Persona library with common user archetypes" },
-        { "description": "Multiple view formats: executive summary, PM view, PR/FAQ, six-pager" },
-        { "description": "JSON Schema for PRD document validation" },
-        { "description": "CLI command for requirements document management" },
-        { "description": "Example PRD, MRD, and TRD documents" }
+        { "description": "PRD (Product Requirements Document) types with personas, objectives, requirements, and roadmap", "commit": "d4177b0" },
+        { "description": "MRD (Market Requirements Document) types with market analysis and competitive landscape", "commit": "d4177b0" },
+        { "description": "TRD (Technical Requirements Document) types with architecture and technical specifications", "commit": "d4177b0" },
+        { "description": "Marp slide renderer for PRD using structureddocs shared themes", "commit": "d4177b0" },
+        { "description": "Goals alignment support for OKR and V2MOM frameworks via structured-goals", "commit": "d4177b0" },
+        { "description": "Document completeness scoring and validation", "commit": "d4177b0" },
+        { "description": "Persona library with common user archetypes", "commit": "d4177b0" },
+        { "description": "Multiple view formats: executive summary, PM view, PR/FAQ, six-pager", "commit": "d4177b0" },
+        { "description": "JSON Schema for PRD document validation", "commit": "d4177b0" },
+        { "description": "CLI command for requirements document management", "commit": "d4177b0" },
+        { "description": "Example PRD, MRD, and TRD documents", "commit": "d4177b0" }
       ],
       "documentation": [
-        { "description": "MkDocs documentation site with getting started guides" },
-        { "description": "Document type references for PRD, MRD, and TRD" },
-        { "description": "Goals integration guides for OKR and V2MOM" },
-        { "description": "Feature documentation for scoring, completeness, and personas" }
+        { "description": "MkDocs documentation site with getting started guides", "commit": "71e9b1f" },
+        { "description": "Document type references for PRD, MRD, and TRD", "commit": "71e9b1f" },
+        { "description": "Goals integration guides for OKR and V2MOM", "commit": "71e9b1f" },
+        { "description": "Feature documentation for scoring, completeness, and personas", "commit": "71e9b1f" },
+        { "description": "Add changelog and release notes for v0.1.0", "commit": "64acec9" }
       ],
       "dependencies": [
-        { "description": "Add github.com/grokify/structureddocs v0.1.0 for shared Marp utilities" },
-        { "description": "Add github.com/grokify/structured-goals v0.1.0 for goals alignment" }
+        { "description": "Add github.com/grokify/structureddocs v0.1.0 for shared Marp utilities", "commit": "c1493a4" },
+        { "description": "Add github.com/grokify/structured-goals v0.1.0 for goals alignment", "commit": "c1493a4" }
+      ],
+      "ci": [
+        { "description": "Add GitHub Actions workflows for build, lint, and test", "commit": "2219a95" }
+      ],
+      "chore": [
+        { "description": "Add project configuration files", "commit": "db399b2" }
+      ],
+      "refactored": [
+        { "description": "Fix lint issues and remove unused code", "commit": "9286e56" }
       ]
     }
   ]
