@@ -304,7 +304,7 @@ func extractStrengths(doc *Document, scores *ScoringResult) []string {
 		}
 		// Take top 3
 		for i := 0; i < 3 && i < len(topCats); i++ {
-			strengths = append(strengths, categoryToStrength(topCats[i].name, doc))
+			strengths = append(strengths, categoryToStrength(topCats[i].name))
 		}
 	}
 
@@ -331,7 +331,7 @@ func extractStrengths(doc *Document, scores *ScoringResult) []string {
 	return strengths
 }
 
-func categoryToStrength(category string, doc *Document) string {
+func categoryToStrength(category string) string {
 	switch category {
 	case "problem_definition":
 		return "Clear articulation of the core user problem"

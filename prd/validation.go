@@ -2,7 +2,6 @@ package prd
 
 import (
 	"fmt"
-	"regexp"
 )
 
 // ValidationResult contains validation errors and warnings.
@@ -281,10 +280,4 @@ func (r *ValidationResult) validateTraceability(doc *Document) {
 			}
 		}
 	}
-}
-
-// isValidIDFormat checks if an ID matches the expected pattern.
-func isValidIDFormat(id, prefix string) bool {
-	pattern := regexp.MustCompile(fmt.Sprintf(`^%s-\d+$`, prefix))
-	return pattern.MatchString(id)
 }

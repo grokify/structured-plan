@@ -1,6 +1,6 @@
 version: "2"
 run:
-  go: "1.23"
+  go: "1.24"
 linters:
   enable:
     - dogsled
@@ -23,6 +23,10 @@ linters:
       - third_party$
       - builtin$
       - examples$
+    rules:
+      - path: cmd/
+        linters:
+          - dupl
   settings:
     staticcheck:
       checks:
