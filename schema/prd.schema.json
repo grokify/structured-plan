@@ -67,6 +67,37 @@
       "items": {
         "$ref": "#/$defs/custom_section"
       }
+    },
+    "problem": {
+      "$ref": "#/$defs/problem_definition",
+      "description": "Extended problem definition with evidence"
+    },
+    "market": {
+      "$ref": "#/$defs/market_definition",
+      "description": "Market analysis and competitive landscape"
+    },
+    "solution": {
+      "$ref": "#/$defs/solution_definition",
+      "description": "Solution options and selection rationale"
+    },
+    "decisions": {
+      "$ref": "#/$defs/decisions_definition",
+      "description": "Decision records for the PRD"
+    },
+    "reviews": {
+      "$ref": "#/$defs/reviews_definition",
+      "description": "Review outcomes and quality assessments"
+    },
+    "revision_history": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/revision_record"
+      },
+      "description": "Audit trail of PRD revisions"
+    },
+    "goals": {
+      "$ref": "#/$defs/goals_alignment",
+      "description": "Alignment with strategic goals (V2MOM, OKR)"
     }
   },
   "$defs": {
@@ -1147,6 +1178,522 @@
         "content": {},
         "schema": {
           "type": "string"
+        }
+      }
+    },
+    "problem_definition": {
+      "type": "object",
+      "required": ["statement"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this problem"
+        },
+        "statement": {
+          "type": "string",
+          "description": "The problem statement"
+        },
+        "user_impact": {
+          "type": "string",
+          "description": "How users are affected by this problem"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "description": "Supporting evidence"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence level in the problem definition (0.0-1.0)"
+        },
+        "root_causes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Underlying causes of the problem"
+        },
+        "affected_segments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "User segments affected by this problem"
+        },
+        "secondary_problems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/problem_definition"
+          },
+          "description": "Related or secondary problems"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["type", "source"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["interview", "survey", "analytics", "support_ticket", "market_research", "assumption"],
+          "description": "Evidence type"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the evidence came from"
+        },
+        "summary": {
+          "type": "string",
+          "description": "What the evidence shows"
+        },
+        "sample_size": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of data points (for quantitative evidence)"
+        },
+        "strength": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "How strong the evidence is"
+        },
+        "date": {
+          "type": "string",
+          "description": "When the evidence was collected"
+        }
+      }
+    },
+    "market_definition": {
+      "type": "object",
+      "properties": {
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/alternative"
+          },
+          "description": "Competing products, workarounds, or alternative approaches"
+        },
+        "differentiation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "How this solution differs from alternatives"
+        },
+        "market_risks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Risks related to market conditions or competition"
+        }
+      }
+    },
+    "alternative": {
+      "type": "object",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this alternative"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the alternative"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["competitor", "workaround", "do_nothing", "internal_tool"],
+          "description": "Type of alternative"
+        },
+        "description": {
+          "type": "string",
+          "description": "Details about the alternative"
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Advantages of this alternative"
+        },
+        "weaknesses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Disadvantages of this alternative"
+        },
+        "why_not_chosen": {
+          "type": "string",
+          "description": "Why this alternative was not selected"
+        }
+      }
+    },
+    "solution_definition": {
+      "type": "object",
+      "properties": {
+        "solution_options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/solution_option"
+          },
+          "description": "Possible solutions considered"
+        },
+        "selected_solution_id": {
+          "type": "string",
+          "description": "ID of the chosen solution"
+        },
+        "solution_rationale": {
+          "type": "string",
+          "description": "Why the selected solution was chosen"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence level in the solution (0.0-1.0)"
+        }
+      }
+    },
+    "solution_option": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this solution option"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of this solution option"
+        },
+        "description": {
+          "type": "string",
+          "description": "Details about the solution"
+        },
+        "problems_addressed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Problem IDs this solution addresses"
+        },
+        "benefits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Advantages of this solution"
+        },
+        "tradeoffs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Compromises or downsides of this solution"
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Potential risks of this solution"
+        },
+        "estimated_effort": {
+          "type": "string",
+          "description": "High-level effort estimate"
+        }
+      }
+    },
+    "decisions_definition": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/decision_record"
+          },
+          "description": "Decision records"
+        }
+      }
+    },
+    "decision_record": {
+      "type": "object",
+      "required": ["id", "decision"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this decision"
+        },
+        "decision": {
+          "type": "string",
+          "description": "The decision that was made"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this decision was made"
+        },
+        "alternatives_considered": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Other options that were evaluated"
+        },
+        "made_by": {
+          "type": "string",
+          "description": "Person or group who made the decision"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the decision was made"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["proposed", "accepted", "superseded", "deprecated"],
+          "description": "Current status of the decision"
+        },
+        "related_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "IDs of related items (requirements, risks, etc.)"
+        }
+      }
+    },
+    "reviews_definition": {
+      "type": "object",
+      "properties": {
+        "review_board_summary": {
+          "type": "string",
+          "description": "Summary from the review board"
+        },
+        "quality_scores": {
+          "$ref": "#/$defs/quality_scores",
+          "description": "Scores across quality dimensions"
+        },
+        "decision": {
+          "type": "string",
+          "enum": ["approve", "revise", "reject", "human_review"],
+          "description": "Review decision"
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/blocker"
+          },
+          "description": "Issues that block approval"
+        },
+        "revision_triggers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/revision_trigger"
+          },
+          "description": "Issues requiring revision"
+        }
+      }
+    },
+    "quality_scores": {
+      "type": "object",
+      "properties": {
+        "problem_definition": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for problem definition (0-10)"
+        },
+        "user_understanding": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for user understanding (0-10)"
+        },
+        "market_awareness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for market awareness (0-10)"
+        },
+        "solution_fit": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for solution fit (0-10)"
+        },
+        "scope_discipline": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for scope discipline (0-10)"
+        },
+        "requirements_quality": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for requirements quality (0-10)"
+        },
+        "ux_coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for UX coverage (0-10)"
+        },
+        "technical_feasibility": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for technical feasibility (0-10)"
+        },
+        "metrics_quality": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for metrics quality (0-10)"
+        },
+        "risk_management": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Score for risk management (0-10)"
+        },
+        "overall_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Overall weighted score (0-10)"
+        }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "required": ["id", "category", "description"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this blocker"
+        },
+        "category": {
+          "type": "string",
+          "description": "Scoring category related to this blocker"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the blocking issue"
+        }
+      }
+    },
+    "revision_trigger": {
+      "type": "object",
+      "required": ["issue_id", "category", "severity"],
+      "properties": {
+        "issue_id": {
+          "type": "string",
+          "description": "Unique identifier for this issue"
+        },
+        "category": {
+          "type": "string",
+          "description": "Scoring category related to this issue"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["blocker", "major", "minor"],
+          "description": "Severity of the issue"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the issue"
+        },
+        "recommended_owner": {
+          "type": "string",
+          "description": "Suggested agent/person to address this issue"
+        }
+      }
+    },
+    "revision_record": {
+      "type": "object",
+      "required": ["version", "changes", "trigger", "date"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Version number after this revision"
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What changed in this revision"
+        },
+        "trigger": {
+          "type": "string",
+          "enum": ["initial", "review", "score", "human"],
+          "description": "What triggered this revision"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this revision was made"
+        },
+        "author": {
+          "type": "string",
+          "description": "Who made this revision"
+        }
+      }
+    },
+    "goals_alignment": {
+      "type": "object",
+      "properties": {
+        "v2mom_ref": {
+          "$ref": "#/$defs/goal_reference",
+          "description": "Reference to an external V2MOM document"
+        },
+        "v2mom": {
+          "type": "object",
+          "description": "Embedded V2MOM document (see structured-goals schema)"
+        },
+        "okr_ref": {
+          "$ref": "#/$defs/goal_reference",
+          "description": "Reference to an external OKR document"
+        },
+        "okr": {
+          "type": "object",
+          "description": "Embedded OKR document (see structured-goals schema)"
+        },
+        "aligned_objectives": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Maps PRD objective IDs to goal/method/objective IDs"
+        }
+      }
+    },
+    "goal_reference": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the goals document"
+        },
+        "path": {
+          "type": "string",
+          "description": "File path to the goals document"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the goals document (e.g., Confluence, Notion)"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the goals document this PRD aligns with"
         }
       }
     }
