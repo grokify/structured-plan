@@ -12,6 +12,7 @@ import (
 
 	"github.com/grokify/structured-requirements/mrd"
 	"github.com/grokify/structured-requirements/prd"
+	"github.com/grokify/structured-requirements/schema"
 	"github.com/grokify/structured-requirements/trd"
 )
 
@@ -59,6 +60,7 @@ func init() {
 	rootCmd.AddCommand(prdCmd)
 	rootCmd.AddCommand(mrdCmd)
 	rootCmd.AddCommand(trdCmd)
+	rootCmd.AddCommand(schemaCmd)
 }
 
 // ============================================================================
@@ -599,4 +601,88 @@ func deriveOutputPath(inputFile string) string {
 		return base + ".md"
 	}
 	return inputFile + ".md"
+}
+
+// ============================================================================
+// Schema Commands
+// ============================================================================
+
+var schemaCmd = &cobra.Command{
+	Use:   "schema",
+	Short: "Generate JSON Schema files from Go types",
+	Long: `Commands for generating JSON Schema files from Go type definitions.
+
+This implements the Go-first approach where Go structs are the source of truth
+and JSON Schema is generated from them.`,
+}
+
+var schemaGenerateFlags struct {
+	output  string
+	docType string
+}
+
+var schemaGenerateCmd = &cobra.Command{
+	Use:   "generate",
+	Short: "Generate JSON Schema from Go types",
+	Long: `Generate JSON Schema files from Go type definitions.
+
+By default, generates all schema files (PRD, MRD, TRD) to the schema/ directory.
+Use --type to generate a specific document type's schema.`,
+	Example: `  srequirements schema generate
+  srequirements schema generate -o ./schema/
+  srequirements schema generate --type prd -o prd.schema.json`,
+	RunE: runSchemaGenerate,
+}
+
+func init() {
+	schemaGenerateCmd.Flags().StringVarP(&schemaGenerateFlags.output, "output", "o", ".", "Output directory or file path")
+	schemaGenerateCmd.Flags().StringVarP(&schemaGenerateFlags.docType, "type", "t", "all", "Document type to generate (prd, mrd, trd, or all)")
+
+	schemaCmd.AddCommand(schemaGenerateCmd)
+}
+
+func runSchemaGenerate(cmd *cobra.Command, args []string) error {
+	gen := schema.NewGenerator()
+	output := schemaGenerateFlags.output
+	docType := strings.ToLower(schemaGenerateFlags.docType)
+
+	switch docType {
+	case "prd":
+		// Single PRD schema
+		path := output
+		if isDir(output) {
+			path = filepath.Join(output, "prd.schema.json")
+		}
+		if err := gen.WritePRDSchema(path); err != nil {
+			return fmt.Errorf("generating PRD schema: %w", err)
+		}
+		fmt.Printf("Generated: %s\n", path)
+
+	case "all":
+		// All schemas to directory
+		dir := output
+		if !isDir(dir) {
+			dir = filepath.Dir(output)
+		}
+		if err := gen.GenerateAll(dir); err != nil {
+			return fmt.Errorf("generating schemas: %w", err)
+		}
+		fmt.Printf("Generated schemas in: %s\n", dir)
+
+	case "mrd", "trd":
+		return fmt.Errorf("schema generation for %s is not yet implemented", docType)
+
+	default:
+		return fmt.Errorf("unknown document type: %s (expected prd, mrd, trd, or all)", docType)
+	}
+
+	return nil
+}
+
+func isDir(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return info.IsDir()
 }
