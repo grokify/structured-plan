@@ -1,0 +1,97 @@
+site_name: Structured Requirements
+site_description: Go library for structured requirements documents (PRD, MRD, TRD) with goals alignment
+site_url: https://grokify.github.io/structured-requirements/
+repo_url: https://github.com/grokify/structured-requirements
+repo_name: grokify/structured-requirements
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/grokify/structured-requirements
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+  - Document Types:
+      - Overview: documents/overview.md
+      - PRD (Product Requirements): documents/prd.md
+      - MRD (Market Requirements): documents/mrd.md
+      - TRD (Technical Requirements): documents/trd.md
+  - Goals Alignment:
+      - Overview: goals/overview.md
+      - V2MOM Integration: goals/v2mom.md
+      - OKR Integration: goals/okr.md
+  - Views & Output:
+      - PM View: views/pm-view.md
+      - Executive View: views/exec-view.md
+      - 6-Pager: views/six-pager.md
+      - PR/FAQ: views/prfaq.md
+      - Marp Slides: views/slides.md
+  - Features:
+      - Scoring & Validation: features/scoring.md
+      - Persona Library: features/persona-library.md
+      - Completeness Check: features/completeness.md
+  - Examples:
+      - PRD Examples: examples/prd-examples.md
+      - Integration Examples: examples/integration.md
+  - API Reference: api/reference.md

@@ -1,0 +1,669 @@
+{
+  "metadata": {
+    "id": "prd-auth-001",
+    "title": "User Authentication System",
+    "version": "1.0.0",
+    "status": "draft",
+    "created_at": "2026-01-15T10:00:00Z",
+    "updated_at": "2026-01-20T14:30:00Z",
+    "authors": [
+      {
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "role": "Product Manager"
+      }
+    ],
+    "reviewers": [
+      {
+        "name": "Bob Johnson",
+        "email": "bob.johnson@example.com",
+        "role": "Engineering Lead"
+      }
+    ],
+    "approvers": [
+      {
+        "name": "Alice Wong",
+        "email": "alice.wong@example.com",
+        "role": "VP Engineering",
+        "approved": false
+      }
+    ],
+    "tags": ["authentication", "security", "identity"]
+  },
+  "executive_summary": {
+    "problem_statement": "Users currently experience friction during authentication due to lack of modern sign-in options, leading to 15% cart abandonment and 8% user churn at the login step.",
+    "proposed_solution": "Implement a modern, secure authentication system supporting OAuth2/OIDC, MFA, and passwordless authentication options while maintaining enterprise-grade security and multi-tenancy support.",
+    "expected_outcomes": [
+      "Reduce login-related cart abandonment by 50%",
+      "Decrease user churn at authentication by 60%",
+      "Achieve SOC 2 Type II compliance",
+      "Support 99.95% authentication service availability"
+    ],
+    "target_audience": "B2B SaaS customers and their end-users across multiple tenant organizations",
+    "value_proposition": "Secure, frictionless authentication that increases conversion while meeting enterprise compliance requirements"
+  },
+  "objectives": {
+    "business_objectives": [
+      {
+        "id": "bo-1",
+        "description": "Increase customer conversion rate by reducing authentication friction",
+        "rationale": "Authentication is the first touchpoint; a poor experience impacts overall customer satisfaction",
+        "aligned_with": "Company OKR: Improve customer acquisition by 25%"
+      },
+      {
+        "id": "bo-2",
+        "description": "Enable enterprise sales by achieving SOC 2 compliance",
+        "rationale": "Enterprise customers require SOC 2 compliance for vendor approval",
+        "aligned_with": "Company OKR: Expand enterprise market segment"
+      }
+    ],
+    "product_goals": [
+      {
+        "id": "pg-1",
+        "description": "Implement OAuth2/OIDC-compliant authentication",
+        "rationale": "Industry standard for secure delegated authentication"
+      },
+      {
+        "id": "pg-2",
+        "description": "Support multi-factor authentication (MFA)",
+        "rationale": "Required for enterprise security compliance"
+      },
+      {
+        "id": "pg-3",
+        "description": "Enable passwordless authentication options",
+        "rationale": "Reduces friction and improves security"
+      }
+    ],
+    "success_metrics": [
+      {
+        "id": "sm-1",
+        "name": "Authentication Success Rate",
+        "description": "Percentage of authentication attempts that succeed",
+        "metric": "success_rate",
+        "target": ">99%",
+        "current_baseline": "94%",
+        "measurement_method": "Auth service metrics"
+      },
+      {
+        "id": "sm-2",
+        "name": "Login Time",
+        "description": "Time from login initiation to successful authentication",
+        "metric": "p95_login_time",
+        "target": "<3 seconds",
+        "current_baseline": "8 seconds",
+        "measurement_method": "End-to-end timing metrics"
+      },
+      {
+        "id": "sm-3",
+        "name": "MFA Adoption",
+        "description": "Percentage of users with MFA enabled",
+        "metric": "mfa_adoption_rate",
+        "target": ">60%",
+        "current_baseline": "12%",
+        "measurement_method": "User profile analytics"
+      }
+    ]
+  },
+  "personas": [
+    {
+      "id": "persona-admin",
+      "name": "Admin Alice",
+      "role": "IT Administrator",
+      "description": "IT administrator responsible for managing user access, security policies, and compliance for their organization",
+      "goals": [
+        "Easily onboard and offboard users",
+        "Enforce security policies across the organization",
+        "Monitor authentication activity for security threats",
+        "Maintain compliance with industry regulations"
+      ],
+      "pain_points": [
+        "Manual user provisioning is time-consuming",
+        "Lack of visibility into authentication failures",
+        "Difficulty enforcing MFA across all users",
+        "No centralized audit logs for compliance"
+      ],
+      "behaviors": [
+        "Reviews security dashboards daily",
+        "Manages user access through admin console",
+        "Generates compliance reports monthly"
+      ],
+      "technical_proficiency": "high",
+      "demographics": {
+        "industry": "Technology",
+        "company_size": "500-5000 employees",
+        "experience": "5-10 years"
+      },
+      "is_primary": false,
+      "quote": "I need to balance security with user experience - too strict and users complain, too loose and we're at risk."
+    },
+    {
+      "id": "persona-enduser",
+      "name": "End-user Emma",
+      "role": "Business User",
+      "description": "Regular user who needs quick, reliable access to the application to do their daily work",
+      "goals": [
+        "Sign in quickly without friction",
+        "Not remember multiple passwords",
+        "Access the app from any device",
+        "Feel confident their account is secure"
+      ],
+      "pain_points": [
+        "Forgot password flows are cumbersome",
+        "MFA setup is confusing",
+        "Can't use preferred social login",
+        "Session expires too frequently"
+      ],
+      "behaviors": [
+        "Uses the app multiple times daily",
+        "Prefers mobile devices",
+        "Often switches between devices"
+      ],
+      "technical_proficiency": "medium",
+      "demographics": {
+        "age_range": "25-45",
+        "industry": "Various",
+        "company_size": "100-10000 employees"
+      },
+      "is_primary": true,
+      "quote": "I just want to get into the app and do my work - authentication should be invisible."
+    }
+  ],
+  "user_stories": [
+    {
+      "id": "us-1",
+      "persona_id": "persona-enduser",
+      "title": "Social Login",
+      "story": "As an end user, I want to sign in using my Google or Microsoft account so that I don't need to remember another password",
+      "acceptance_criteria": [
+        {
+          "id": "ac-1-1",
+          "description": "User can authenticate via Google OAuth",
+          "given": "User is on the login page",
+          "when": "User clicks 'Sign in with Google'",
+          "then": "User is redirected to Google, authenticates, and returns logged in"
+        },
+        {
+          "id": "ac-1-2",
+          "description": "User can authenticate via Microsoft OAuth",
+          "given": "User is on the login page",
+          "when": "User clicks 'Sign in with Microsoft'",
+          "then": "User is redirected to Microsoft, authenticates, and returns logged in"
+        }
+      ],
+      "priority": "high",
+      "phase_id": "phase-1",
+      "story_points": 8,
+      "epic": "OAuth Integration"
+    },
+    {
+      "id": "us-2",
+      "persona_id": "persona-enduser",
+      "title": "MFA Setup",
+      "story": "As an end user, I want to set up MFA using an authenticator app so that my account is more secure",
+      "acceptance_criteria": [
+        {
+          "id": "ac-2-1",
+          "description": "User can enroll TOTP authenticator",
+          "given": "User is in security settings",
+          "when": "User initiates MFA setup and scans QR code",
+          "then": "TOTP is configured and user can verify with a code"
+        }
+      ],
+      "priority": "high",
+      "phase_id": "phase-1",
+      "story_points": 5,
+      "epic": "MFA"
+    },
+    {
+      "id": "us-3",
+      "persona_id": "persona-admin",
+      "title": "Enforce MFA Policy",
+      "story": "As an IT administrator, I want to require MFA for all users in my organization so that I can meet security compliance requirements",
+      "acceptance_criteria": [
+        {
+          "id": "ac-3-1",
+          "description": "Admin can enable org-wide MFA requirement",
+          "given": "Admin is in organization security settings",
+          "when": "Admin enables 'Require MFA' toggle",
+          "then": "All users must set up MFA on next login"
+        }
+      ],
+      "priority": "high",
+      "phase_id": "phase-2",
+      "story_points": 5,
+      "dependencies": ["us-2"],
+      "epic": "MFA"
+    },
+    {
+      "id": "us-4",
+      "persona_id": "persona-enduser",
+      "title": "Passwordless Login",
+      "story": "As an end user, I want to sign in using a magic link sent to my email so that I don't need to remember a password",
+      "acceptance_criteria": [
+        {
+          "id": "ac-4-1",
+          "description": "User can request magic link",
+          "given": "User is on login page",
+          "when": "User enters email and clicks 'Send magic link'",
+          "then": "User receives email with secure login link valid for 15 minutes"
+        }
+      ],
+      "priority": "medium",
+      "phase_id": "phase-2",
+      "story_points": 5,
+      "epic": "Passwordless"
+    }
+  ],
+  "requirements": {
+    "functional": [
+      {
+        "id": "FR-001",
+        "title": "OAuth2/OIDC Provider Support",
+        "description": "System shall support authentication via OAuth2/OIDC providers including Google, Microsoft, and custom SAML providers",
+        "category": "Authentication",
+        "priority": "must",
+        "user_story_ids": ["us-1"],
+        "acceptance_criteria": [
+          {
+            "id": "fr-001-ac-1",
+            "description": "Support Google OAuth2 authentication"
+          },
+          {
+            "id": "fr-001-ac-2",
+            "description": "Support Microsoft OAuth2 authentication"
+          },
+          {
+            "id": "fr-001-ac-3",
+            "description": "Support SAML 2.0 for enterprise SSO"
+          }
+        ],
+        "phase_id": "phase-1"
+      },
+      {
+        "id": "FR-002",
+        "title": "Multi-Factor Authentication",
+        "description": "System shall support TOTP-based MFA with optional SMS and email backup codes",
+        "category": "Authentication",
+        "priority": "must",
+        "user_story_ids": ["us-2", "us-3"],
+        "acceptance_criteria": [
+          {
+            "id": "fr-002-ac-1",
+            "description": "Support TOTP authenticator apps (Google Authenticator, Authy)"
+          },
+          {
+            "id": "fr-002-ac-2",
+            "description": "Generate and manage backup codes"
+          },
+          {
+            "id": "fr-002-ac-3",
+            "description": "Allow organization-level MFA enforcement"
+          }
+        ],
+        "phase_id": "phase-1"
+      },
+      {
+        "id": "FR-003",
+        "title": "Passwordless Authentication",
+        "description": "System shall support passwordless authentication via magic links and WebAuthn/passkeys",
+        "category": "Authentication",
+        "priority": "should",
+        "user_story_ids": ["us-4"],
+        "acceptance_criteria": [
+          {
+            "id": "fr-003-ac-1",
+            "description": "Support magic link authentication via email"
+          },
+          {
+            "id": "fr-003-ac-2",
+            "description": "Support WebAuthn/FIDO2 passkeys"
+          }
+        ],
+        "phase_id": "phase-2"
+      }
+    ],
+    "non_functional": [
+      {
+        "id": "NFR-001",
+        "category": "performance",
+        "title": "Authentication Latency",
+        "description": "Authentication requests must complete within acceptable latency bounds",
+        "metric": "Response time percentiles",
+        "target": "P95 < 200ms, P99 < 500ms",
+        "measurement_method": "APM monitoring (Datadog)",
+        "priority": "must",
+        "phase_id": "phase-1",
+        "current_baseline": "P95 = 450ms"
+      },
+      {
+        "id": "NFR-002",
+        "category": "reliability",
+        "title": "Service Availability",
+        "description": "Authentication service must maintain high availability",
+        "metric": "Uptime percentage",
+        "target": "99.95%",
+        "measurement_method": "Synthetic monitoring + real user metrics",
+        "priority": "must",
+        "phase_id": "phase-1",
+        "slo": {
+          "sli": "Availability (successful requests / total requests)",
+          "slo_target": "99.95%",
+          "window": "30 days rolling",
+          "error_budget": "21.6 minutes/month",
+          "consequences": "Incident review required if breached",
+          "alert_threshold": "99.9%"
+        }
+      },
+      {
+        "id": "NFR-003",
+        "category": "security",
+        "title": "Authentication Security",
+        "description": "Authentication system must meet enterprise security standards",
+        "metric": "Security controls implementation",
+        "target": "100% of required controls implemented",
+        "measurement_method": "Security audit",
+        "priority": "must",
+        "phase_id": "phase-1",
+        "security": {
+          "authentication_methods": ["OAuth2", "SAML", "TOTP", "WebAuthn"],
+          "authorization_model": "RBAC",
+          "encryption_at_rest": true,
+          "encryption_in_transit": true,
+          "compliance_standards": ["SOC2", "GDPR"],
+          "vulnerability_scanning": true,
+          "penetration_testing": true,
+          "security_audit_frequency": "Annual"
+        }
+      },
+      {
+        "id": "NFR-004",
+        "category": "multi_tenancy",
+        "title": "Tenant Isolation",
+        "description": "Each tenant's authentication data must be isolated from other tenants",
+        "metric": "Isolation validation tests",
+        "target": "100% pass rate on isolation tests",
+        "measurement_method": "Automated security testing",
+        "priority": "must",
+        "phase_id": "phase-1",
+        "multi_tenancy": {
+          "isolation_model": "bridge",
+          "data_segregation": "schema_per_tenant",
+          "encryption_model": "tenant_specific_keys",
+          "network_isolation": "namespace_isolation",
+          "noisy_neighbor_protection": "Per-tenant rate limiting at 1000 req/min"
+        }
+      },
+      {
+        "id": "NFR-005",
+        "category": "observability",
+        "title": "Authentication Observability",
+        "description": "Full observability into authentication flows for debugging and security monitoring",
+        "metric": "Trace and log coverage",
+        "target": "100% of auth flows traced, structured logging",
+        "measurement_method": "Observability platform audit",
+        "priority": "must",
+        "phase_id": "phase-1"
+      },
+      {
+        "id": "NFR-006",
+        "category": "scalability",
+        "title": "Authentication Throughput",
+        "description": "System must scale to handle peak authentication loads",
+        "metric": "Requests per second",
+        "target": "10,000 RPS with auto-scaling",
+        "measurement_method": "Load testing",
+        "priority": "must",
+        "phase_id": "phase-2",
+        "current_baseline": "2,000 RPS"
+      },
+      {
+        "id": "NFR-007",
+        "category": "disaster_recovery",
+        "title": "Authentication Recovery",
+        "description": "Authentication service must have disaster recovery capabilities",
+        "metric": "RTO/RPO",
+        "target": "RTO < 4 hours, RPO < 1 hour",
+        "measurement_method": "DR drill results",
+        "priority": "should",
+        "phase_id": "phase-3"
+      },
+      {
+        "id": "NFR-008",
+        "category": "compliance",
+        "title": "Regulatory Compliance",
+        "description": "Authentication system must comply with relevant regulations",
+        "metric": "Compliance audit results",
+        "target": "SOC 2 Type II certified, GDPR compliant",
+        "measurement_method": "External audit",
+        "priority": "must",
+        "phase_id": "phase-2"
+      }
+    ]
+  },
+  "roadmap": {
+    "phases": [
+      {
+        "id": "phase-1",
+        "name": "Foundation",
+        "type": "quarter",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31",
+        "goals": [
+          "Establish core authentication infrastructure",
+          "Implement OAuth2/OIDC support",
+          "Deploy basic MFA capabilities",
+          "Achieve initial observability"
+        ],
+        "deliverables": [
+          {
+            "id": "d-1-1",
+            "title": "OAuth2 Provider Integration",
+            "description": "Google and Microsoft OAuth2 authentication",
+            "type": "feature",
+            "status": "not_started"
+          },
+          {
+            "id": "d-1-2",
+            "title": "TOTP MFA",
+            "description": "Time-based one-time password MFA",
+            "type": "feature",
+            "status": "not_started"
+          },
+          {
+            "id": "d-1-3",
+            "title": "Auth Service Metrics",
+            "description": "Prometheus metrics and Grafana dashboards",
+            "type": "infrastructure",
+            "status": "not_started"
+          }
+        ],
+        "success_criteria": [
+          "OAuth2 login functional with Google and Microsoft",
+          "TOTP MFA enrollment and verification working",
+          "P95 latency < 200ms achieved",
+          "Multi-tenant isolation verified"
+        ],
+        "status": "planned"
+      },
+      {
+        "id": "phase-2",
+        "name": "Enhanced Security",
+        "type": "quarter",
+        "start_date": "2026-04-01",
+        "end_date": "2026-06-30",
+        "goals": [
+          "Implement passwordless authentication",
+          "Add admin MFA enforcement",
+          "Scale to 10K RPS",
+          "Complete SOC 2 preparation"
+        ],
+        "deliverables": [
+          {
+            "id": "d-2-1",
+            "title": "Magic Link Authentication",
+            "description": "Email-based passwordless login",
+            "type": "feature",
+            "status": "not_started"
+          },
+          {
+            "id": "d-2-2",
+            "title": "WebAuthn/Passkeys",
+            "description": "FIDO2 passwordless authentication",
+            "type": "feature",
+            "status": "not_started"
+          },
+          {
+            "id": "d-2-3",
+            "title": "MFA Policy Enforcement",
+            "description": "Organization-level MFA requirements",
+            "type": "feature",
+            "status": "not_started"
+          }
+        ],
+        "success_criteria": [
+          "Passwordless login available",
+          "Admins can enforce MFA org-wide",
+          "System handles 10K RPS",
+          "SOC 2 audit preparation complete"
+        ],
+        "dependencies": ["phase-1"],
+        "status": "planned"
+      },
+      {
+        "id": "phase-3",
+        "name": "Enterprise Ready",
+        "type": "quarter",
+        "start_date": "2026-07-01",
+        "end_date": "2026-09-30",
+        "goals": [
+          "Complete SOC 2 Type II certification",
+          "Implement disaster recovery",
+          "Add advanced security features",
+          "Enterprise SAML SSO"
+        ],
+        "deliverables": [
+          {
+            "id": "d-3-1",
+            "title": "SAML 2.0 SSO",
+            "description": "Enterprise SAML single sign-on",
+            "type": "feature",
+            "status": "not_started"
+          },
+          {
+            "id": "d-3-2",
+            "title": "DR Implementation",
+            "description": "Multi-region failover capability",
+            "type": "infrastructure",
+            "status": "not_started"
+          },
+          {
+            "id": "d-3-3",
+            "title": "SOC 2 Certification",
+            "description": "SOC 2 Type II audit completion",
+            "type": "milestone",
+            "status": "not_started"
+          }
+        ],
+        "success_criteria": [
+          "SOC 2 Type II certified",
+          "RTO < 4h, RPO < 1h verified",
+          "SAML SSO functional",
+          "Enterprise customers onboarded"
+        ],
+        "dependencies": ["phase-2"],
+        "status": "planned"
+      }
+    ]
+  },
+  "assumptions": {
+    "assumptions": [
+      {
+        "id": "a-1",
+        "description": "Users have access to email for passwordless authentication",
+        "rationale": "Magic link authentication requires email access",
+        "risk": "Users without email access cannot use passwordless option",
+        "validated": true
+      },
+      {
+        "id": "a-2",
+        "description": "Third-party OAuth providers maintain their SLAs",
+        "rationale": "We depend on Google/Microsoft for OAuth",
+        "risk": "OAuth provider outages affect our availability",
+        "validated": false
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c-1",
+        "type": "regulatory",
+        "description": "Must comply with GDPR for EU users",
+        "impact": "Data residency requirements for EU",
+        "mitigation": "Deploy EU region infrastructure"
+      },
+      {
+        "id": "c-2",
+        "type": "technical",
+        "description": "Must maintain backward compatibility with existing auth API",
+        "impact": "Limits architectural changes",
+        "mitigation": "Versioned API with deprecation period"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "dep-1",
+        "name": "Identity Provider Team",
+        "description": "IdP team must provide SCIM provisioning API",
+        "type": "Team",
+        "owner": "Identity Team",
+        "status": "Pending",
+        "due_date": "2026-02-15"
+      }
+    ]
+  },
+  "out_of_scope": [
+    "User profile management (handled by separate service)",
+    "Authorization/permissions (handled by access control service)",
+    "Legacy LDAP authentication (deprecated)",
+    "Biometric authentication on mobile (future phase)"
+  ],
+  "risks": [
+    {
+      "id": "r-1",
+      "description": "OAuth provider API changes could break integration",
+      "probability": "low",
+      "impact": "high",
+      "mitigation": "Monitor provider changelogs, maintain integration tests",
+      "owner": "Engineering Lead",
+      "status": "open"
+    },
+    {
+      "id": "r-2",
+      "description": "MFA adoption may be lower than expected",
+      "probability": "medium",
+      "impact": "medium",
+      "mitigation": "User education campaign, streamlined enrollment UX",
+      "owner": "Product Manager",
+      "status": "open"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Multi-Factor Authentication",
+      "definition": "Security mechanism requiring two or more verification factors to access a resource",
+      "acronym": "MFA",
+      "related": ["TOTP", "WebAuthn"]
+    },
+    {
+      "term": "Time-based One-Time Password",
+      "definition": "Algorithm generating one-time passwords based on current time and shared secret",
+      "acronym": "TOTP",
+      "related": ["MFA", "Authenticator App"]
+    },
+    {
+      "term": "Service Level Objective",
+      "definition": "Target value for a service level that is measured by a service level indicator",
+      "acronym": "SLO",
+      "related": ["SLI", "SLA", "Error Budget"]
+    }
+  ]
+}
