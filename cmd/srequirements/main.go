@@ -55,6 +55,7 @@ type generateFlags struct {
 	monoFont      string
 	fontFamily    string
 	noFrontmatter bool
+	descLen       int
 }
 
 func init() {
@@ -174,6 +175,7 @@ func init() {
 	prdGenerateCmd.Flags().StringVar(&prdGenerateFlags.monoFont, "monofont", "Courier New", "Monospace font family")
 	prdGenerateCmd.Flags().StringVar(&prdGenerateFlags.fontFamily, "fontfamily", "helvet", "LaTeX font family")
 	prdGenerateCmd.Flags().BoolVar(&prdGenerateFlags.noFrontmatter, "no-frontmatter", false, "Disable YAML frontmatter generation")
+	prdGenerateCmd.Flags().IntVar(&prdGenerateFlags.descLen, "desc-len", prd.DefaultDescriptionMaxLen, "Max length for description fields in tables")
 
 	prdCmd.AddCommand(prdGenerateCmd)
 	prdCmd.AddCommand(prdValidateCmd)
@@ -214,6 +216,7 @@ func runPRDGenerate(cmd *cobra.Command, args []string) error {
 		SansFont:           prdGenerateFlags.sansFont,
 		MonoFont:           prdGenerateFlags.monoFont,
 		FontFamily:         prdGenerateFlags.fontFamily,
+		DescriptionMaxLen:  prdGenerateFlags.descLen,
 	}
 	markdown := doc.ToMarkdown(opts)
 
