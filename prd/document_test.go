@@ -38,7 +38,7 @@ func TestDocumentParsing(t *testing.T) {
 					"success_metrics": []
 				},
 				"personas": [{"id": "p1", "name": "User", "role": "End User", "description": "Test user"}],
-				"user_stories": [{"id": "us1", "persona_id": "p1", "title": "Test Story", "story": "As a user..."}],
+				"user_stories": [{"id": "us1", "persona_id": "p1", "title": "Test Story", "as_a": "user", "i_want": "to do something", "so_that": "I can achieve a goal"}],
 				"requirements": {"functional": [], "non_functional": []},
 				"roadmap": {"phases": [{"id": "phase1", "name": "Phase 1"}]}
 			}`,
@@ -214,7 +214,7 @@ func TestDocumentMarshaling(t *testing.T) {
 			ExpectedOutcomes: []string{"Outcome 1"},
 		},
 		Personas:    []Persona{{ID: "p1", Name: "User", Role: "End User", Description: "Test"}},
-		UserStories: []UserStory{{ID: "us1", PersonaID: "p1", Title: "Story", Story: "As a user..."}},
+		UserStories: []UserStory{{ID: "us1", PersonaID: "p1", Title: "Story", AsA: "user", IWant: "to do something", SoThat: "I can achieve a goal"}},
 		Roadmap:     Roadmap{Phases: []Phase{{ID: "ph1", Name: "Phase 1"}}},
 	}
 
@@ -335,7 +335,7 @@ func TestMarkdownGeneration(t *testing.T) {
 			{ID: "p1", Name: "Developer", Role: "Software Engineer", Description: "Builds applications"},
 		},
 		UserStories: []UserStory{
-			{ID: "us1", PersonaID: "p1", Title: "Quick Setup", Story: "As a developer, I want quick setup", Priority: "high"},
+			{ID: "us1", PersonaID: "p1", Title: "Quick Setup", AsA: "developer", IWant: "quick setup", SoThat: "I can start building faster", Priority: "high"},
 		},
 		Requirements: Requirements{
 			Functional: []FunctionalRequirement{
@@ -479,7 +479,7 @@ func TestValidation(t *testing.T) {
 					ProposedSolution: "Solution",
 				},
 				Personas:    []Persona{{ID: "p1", Name: "User"}},
-				UserStories: []UserStory{{ID: "us1", Story: "Story"}},
+				UserStories: []UserStory{{ID: "us1", AsA: "user", IWant: "something", SoThat: "reason"}},
 				Roadmap:     Roadmap{Phases: []Phase{{ID: "ph1", Name: "Phase"}}},
 			},
 			wantErrors: nil,

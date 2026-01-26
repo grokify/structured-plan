@@ -249,7 +249,9 @@
       "id": "us-eu-1",
       "persona_id": "persona-enduser",
       "title": "Browse Agent Catalog",
-      "story": "As an End-User, I want to browse a catalog of verified AI agents so that I can find agents that meet my needs",
+      "as_a": "End-User",
+      "i_want": "to browse a catalog of verified AI agents",
+      "so_that": "I can find agents that meet my needs",
       "acceptance_criteria": [
         {
           "id": "ac-eu-1-1",
@@ -267,7 +269,9 @@
       "id": "us-eu-2",
       "persona_id": "persona-enduser",
       "title": "View KYA Attestation",
-      "story": "As an End-User, I want to view an agent's KYA attestation before granting access so that I can make informed trust decisions",
+      "as_a": "End-User",
+      "i_want": "to view an agent's KYA attestation before granting access",
+      "so_that": "I can make informed trust decisions",
       "acceptance_criteria": [
         {
           "id": "ac-eu-2-1",
@@ -285,7 +289,9 @@
       "id": "us-eu-3",
       "persona_id": "persona-enduser",
       "title": "Grant Scoped Delegation",
-      "story": "As an End-User, I want to grant an agent access to my Google Drive with read-only scope so that the agent can search my documents without modifying them",
+      "as_a": "End-User",
+      "i_want": "to grant an agent access to my Google Drive with read-only scope",
+      "so_that": "the agent can search my documents without modifying them",
       "acceptance_criteria": [
         {
           "id": "ac-eu-3-1",
@@ -303,7 +309,9 @@
       "id": "us-eu-4",
       "persona_id": "persona-enduser",
       "title": "Time-Limited Access",
-      "story": "As an End-User, I want to set a 24-hour expiry on agent access so that my data isn't exposed indefinitely",
+      "as_a": "End-User",
+      "i_want": "to set a 24-hour expiry on agent access",
+      "so_that": "my data isn't exposed indefinitely",
       "acceptance_criteria": [
         {
           "id": "ac-eu-4-1",
@@ -321,7 +329,9 @@
       "id": "us-eu-5",
       "persona_id": "persona-enduser",
       "title": "Immediate Revocation",
-      "story": "As an End-User, I want to revoke an agent's access immediately so that I can respond to suspicious behavior",
+      "as_a": "End-User",
+      "i_want": "to revoke an agent's access immediately",
+      "so_that": "I can respond to suspicious behavior",
       "acceptance_criteria": [
         {
           "id": "ac-eu-5-1",
@@ -339,7 +349,9 @@
       "id": "us-eu-6",
       "persona_id": "persona-enduser",
       "title": "View Agent Actions",
-      "story": "As an End-User, I want to view what actions an agent performed on my behalf so that I can audit agent behavior",
+      "as_a": "End-User",
+      "i_want": "to view what actions an agent performed on my behalf",
+      "so_that": "I can audit agent behavior",
       "acceptance_criteria": [
         {
           "id": "ac-eu-6-1",
@@ -357,7 +369,9 @@
       "id": "us-ac-1",
       "persona_id": "persona-agent-creator",
       "title": "Register Agent",
-      "story": "As an Agent Creator, I want to register my agent with its SPIFFE ID so that it can be discovered and governed",
+      "as_a": "Agent Creator",
+      "i_want": "to register my agent with its SPIFFE ID",
+      "so_that": "it can be discovered and governed",
       "acceptance_criteria": [
         {
           "id": "ac-ac-1-1",
@@ -375,7 +389,9 @@
       "id": "us-ac-2",
       "persona_id": "persona-agent-creator",
       "title": "Submit for KYA Review",
-      "story": "As an Agent Creator, I want to submit my agent for KYA review so that it can receive a trust attestation",
+      "as_a": "Agent Creator",
+      "i_want": "to submit my agent for KYA review",
+      "so_that": "it can receive a trust attestation",
       "acceptance_criteria": [
         {
           "id": "ac-ac-2-1",
@@ -393,7 +409,9 @@
       "id": "us-ad-1",
       "persona_id": "persona-admin",
       "title": "Configure LLM Policies",
-      "story": "As an Admin, I want to configure which LLM models each agent can use so that I can control costs and capabilities",
+      "as_a": "Admin",
+      "i_want": "to configure which LLM models each agent can use",
+      "so_that": "I can control costs and capabilities",
       "acceptance_criteria": [
         {
           "id": "ac-ad-1-1",
@@ -411,7 +429,9 @@
       "id": "us-ad-2",
       "persona_id": "persona-admin",
       "title": "Set LLM Budget Limits",
-      "story": "As an Admin, I want to set monthly LLM budget limits per agent so that we don't exceed budget",
+      "as_a": "Admin",
+      "i_want": "to set monthly LLM budget limits per agent",
+      "so_that": "we don't exceed budget",
       "acceptance_criteria": [
         {
           "id": "ac-ad-2-1",
@@ -429,7 +449,9 @@
       "id": "us-ad-3",
       "persona_id": "persona-admin",
       "title": "Emergency Revocation",
-      "story": "As an Admin, I want to revoke all delegations for a compromised agent so that I can respond to incidents quickly",
+      "as_a": "Admin",
+      "i_want": "to revoke all delegations for a compromised agent",
+      "so_that": "I can respond to incidents quickly",
       "acceptance_criteria": [
         {
           "id": "ac-ad-3-1",

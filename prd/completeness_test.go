@@ -67,7 +67,9 @@ func TestCompletenessMinimalDocument(t *testing.T) {
 				ID:        "us-1",
 				PersonaID: "p-1",
 				Title:     "Test Story",
-				Story:     "As a developer, I want to test so that I can verify",
+				AsA:       "developer",
+				IWant:     "to test",
+				SoThat:    "I can verify",
 				Priority:  PriorityHigh,
 				PhaseID:   "phase-1",
 				AcceptanceCriteria: []AcceptanceCriterion{

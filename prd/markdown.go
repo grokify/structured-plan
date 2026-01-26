@@ -316,7 +316,7 @@ func (d *Document) generateUserStories() string {
 		sb.WriteString("|----|-------|----------|-------|\n")
 		for _, us := range stories {
 			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s |\n",
-				us.ID, us.Story, us.Priority, us.PhaseID))
+				us.ID, us.Story(), us.Priority, us.PhaseID))
 		}
 		sb.WriteString("\n")
 		sectionNum++

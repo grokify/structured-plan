@@ -173,7 +173,9 @@
       "id": "us-1",
       "persona_id": "persona-enduser",
       "title": "Social Login",
-      "story": "As an end user, I want to sign in using my Google or Microsoft account so that I don't need to remember another password",
+      "as_a": "end user",
+      "i_want": "to sign in using my Google or Microsoft account",
+      "so_that": "I don't need to remember another password",
       "acceptance_criteria": [
         {
           "id": "ac-1-1",
@@ -199,7 +201,9 @@
       "id": "us-2",
       "persona_id": "persona-enduser",
       "title": "MFA Setup",
-      "story": "As an end user, I want to set up MFA using an authenticator app so that my account is more secure",
+      "as_a": "end user",
+      "i_want": "to set up MFA using an authenticator app",
+      "so_that": "my account is more secure",
       "acceptance_criteria": [
         {
           "id": "ac-2-1",
@@ -218,7 +222,9 @@
       "id": "us-3",
       "persona_id": "persona-admin",
       "title": "Enforce MFA Policy",
-      "story": "As an IT administrator, I want to require MFA for all users in my organization so that I can meet security compliance requirements",
+      "as_a": "IT administrator",
+      "i_want": "to require MFA for all users in my organization",
+      "so_that": "I can meet security compliance requirements",
       "acceptance_criteria": [
         {
           "id": "ac-3-1",
@@ -238,7 +244,9 @@
       "id": "us-4",
       "persona_id": "persona-enduser",
       "title": "Passwordless Login",
-      "story": "As an end user, I want to sign in using a magic link sent to my email so that I don't need to remember a password",
+      "as_a": "end user",
+      "i_want": "to sign in using a magic link sent to my email",
+      "so_that": "I don't need to remember a password",
       "acceptance_criteria": [
         {
           "id": "ac-4-1",

@@ -395,9 +395,17 @@
         "title": {
           "type": "string"
         },
-        "story": {
+        "as_a": {
           "type": "string",
-          "description": "Format: As a [persona], I want [goal] so that [reason]"
+          "description": "Persona role (e.g., 'developer', 'admin')"
+        },
+        "i_want": {
+          "type": "string",
+          "description": "Desired action or feature"
+        },
+        "so_that": {
+          "type": "string",
+          "description": "Benefit or reason for the feature"
         },
         "acceptance_criteria": {
           "type": "array",

@@ -25,7 +25,9 @@ type UserStory struct {
 	ID                 string                `json:"id"`
 	PersonaID          string                `json:"persona_id"` // Reference to persona
 	Title              string                `json:"title"`
-	Story              string                `json:"story"` // "As a [persona], I want [goal] so that [reason]"
+	AsA                string                `json:"as_a"`    // Persona role (e.g., "developer", "admin")
+	IWant              string                `json:"i_want"`  // Desired action/feature
+	SoThat             string                `json:"so_that"` // Benefit/reason
 	AcceptanceCriteria []AcceptanceCriterion `json:"acceptance_criteria"`
 	Priority           Priority              `json:"priority"`
 	PhaseID            string                `json:"phase_id"` // Reference to roadmap phase
@@ -34,6 +36,11 @@ type UserStory struct {
 	Epic               string                `json:"epic,omitempty"`         // Parent epic
 	Labels             []string              `json:"labels,omitempty"`
 	Notes              string                `json:"notes,omitempty"`
+}
+
+// Story returns the full user story string in standard format.
+func (us UserStory) Story() string {
+	return "As a " + us.AsA + ", I want " + us.IWant + " so that " + us.SoThat
 }
 
 // AcceptanceCriterion defines a testable condition for a user story.
