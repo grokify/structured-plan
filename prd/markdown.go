@@ -353,7 +353,7 @@ func (d *Document) generateRequirements(opts MarkdownOptions) string {
 	for cat, reqs := range categories {
 		sb.WriteString(fmt.Sprintf("### 5.%d %s\n\n", sectionNum, cat))
 		sb.WriteString("| ID | Title | Description | Priority | Phase |\n")
-		sb.WriteString("|------|------------------------|-------------------------------------|----------|-------|\n")
+		sb.WriteString("|------|-----------------|--------------------------------------------|----------|-------|\n")
 		for _, r := range reqs {
 			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s | %s |\n",
 				r.ID, r.Title, truncate(r.Description, opts.DescriptionMaxLen), r.Priority, r.PhaseID))
