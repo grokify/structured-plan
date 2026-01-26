@@ -6,5 +6,5 @@ coverage.txt
 debug.test
 main
 main.zip
-srequirements
-cmd/srequirements/srequirements
+/srequirements
+/cmd/srequirements/srequirements

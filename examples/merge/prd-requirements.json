@@ -1,0 +1,18 @@
+{
+  "requirements": {
+    "functional": [
+      {
+        "id": "FR-001",
+        "description": "The system shall process natural language queries.",
+        "user_story": "US-001"
+      }
+    ],
+    "non_functional": [
+      {
+        "id": "NFR-001",
+        "category": "Performance",
+        "description": "90% of AI-powered queries should return a summarized answer in under 3 seconds."
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "roadmap": {
+    "phases": [
+      {
+        "name": "Phase 1: Core Q&A",
+        "timeline": "Q3 2024",
+        "features": [
+          "Natural language query understanding.",
+          "Basic answer summarization."
+        ]
+      }
+    ]
+  }
+}

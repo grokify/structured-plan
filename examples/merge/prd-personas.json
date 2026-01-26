@@ -1,0 +1,16 @@
+{
+  "personas": [
+    {
+      "name": "Alex the Analyst",
+      "role": "Financial Analyst",
+      "goals": [
+        "Quickly find specific financial reports and data points from the last 5 years.",
+        "Synthesize information from multiple documents to identify trends."
+      ],
+      "pain_points": [
+        "Current keyword search is too broad and returns irrelevant documents.",
+        "Spends hours manually collating information from different sources."
+      ]
+    }
+  ]
+}

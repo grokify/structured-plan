@@ -1,0 +1,14 @@
+{
+  "user_stories": [
+    {
+      "id": "US-001",
+      "persona": "Alex the Analyst",
+      "story": "As Alex, I want to ask the search system a question in plain English, so that I can get a direct answer without crafting complex keyword queries.",
+      "acceptance_criteria": [
+        "The system accepts a question of at least 10 words.",
+        "The system provides a single, summarized answer at the top of the results page.",
+        "The answer includes citations from the source documents."
+      ]
+    }
+  ]
+}
