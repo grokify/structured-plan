@@ -10,8 +10,10 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/agentplexus/structured-evaluation/evaluation"
 	"github.com/grokify/structured-requirements/mrd"
 	"github.com/grokify/structured-requirements/prd"
+	"github.com/grokify/structured-requirements/prd/render/terminal"
 	"github.com/grokify/structured-requirements/schema"
 	"github.com/grokify/structured-requirements/trd"
 )
@@ -125,6 +127,44 @@ The check examines:
 	RunE: runPRDCheck,
 }
 
+var prdScoreFlags struct {
+	format string
+}
+
+var prdScoreCmd = &cobra.Command{
+	Use:   "score <input.json>",
+	Short: "Score PRD quality with actionable feedback",
+	Long: `Score a Product Requirements Document against 10 quality dimensions.
+
+This command provides an actionable workflow:
+  (a) Scores - weighted scores across 10 categories
+  (b) Gaps - specific missing elements per category
+  (c) Fix recommendations - what to improve with effort estimates
+  (d) Re-run instructions - command to verify fixes
+
+Output formats:
+  - terminal (default): Box-format terminal output with status icons
+  - json: Full JSON report for programmatic use
+  - markdown: Markdown report for documentation
+
+Quality categories (with weights):
+  - Problem Definition (20%)    - Solution Fit (15%)
+  - User Understanding (10%)    - Market Awareness (10%)
+  - Scope Discipline (10%)      - Requirements Quality (10%)
+  - Metrics Quality (10%)       - UX Coverage (5%)
+  - Technical Feasibility (5%)  - Risk Management (5%)
+
+Decision thresholds:
+  - Approve: >= 8.0
+  - Revise:  >= 6.5
+  - Reject:  < 3.0 (any blocker)`,
+	Example: `  srequirements prd score myproduct.prd.json
+  srequirements prd score myproduct.prd.json --format=json
+  srequirements prd score myproduct.prd.json --format=markdown`,
+	Args: cobra.ExactArgs(1),
+	RunE: runPRDScore,
+}
+
 func init() {
 	// PRD generate flags
 	prdGenerateCmd.Flags().StringVarP(&prdGenerateFlags.output, "output", "o", "", "Output markdown file path (default: input with .md extension)")
@@ -138,9 +178,13 @@ func init() {
 	prdCmd.AddCommand(prdGenerateCmd)
 	prdCmd.AddCommand(prdValidateCmd)
 	prdCmd.AddCommand(prdCheckCmd)
+	prdCmd.AddCommand(prdScoreCmd)
 
 	// PRD check flags
 	prdCheckCmd.Flags().BoolVar(&prdCheckFlags.json, "json", false, "Output report as JSON")
+
+	// PRD score flags
+	prdScoreCmd.Flags().StringVarP(&prdScoreFlags.format, "format", "f", "terminal", "Output format (terminal, json, markdown)")
 }
 
 func runPRDGenerate(cmd *cobra.Command, args []string) error {
@@ -275,6 +319,128 @@ func runPRDCheck(cmd *cobra.Command, args []string) error {
 	}
 
 	return nil
+}
+
+func runPRDScore(cmd *cobra.Command, args []string) error {
+	inputFile := args[0]
+
+	data, err := os.ReadFile(inputFile)
+	if err != nil {
+		return fmt.Errorf("reading input file: %w", err)
+	}
+
+	var doc prd.Document
+	if err := json.Unmarshal(data, &doc); err != nil {
+		return fmt.Errorf("parsing JSON: %w", err)
+	}
+
+	// Generate evaluation report from deterministic scoring
+	report := prd.ScoreToEvaluationReport(&doc, inputFile)
+
+	switch strings.ToLower(prdScoreFlags.format) {
+	case "json":
+		output, err := json.MarshalIndent(report, "", "  ")
+		if err != nil {
+			return fmt.Errorf("marshaling report: %w", err)
+		}
+		fmt.Println(string(output))
+
+	case "markdown":
+		fmt.Print(formatEvaluationReportMarkdown(report))
+
+	case "terminal", "":
+		renderer := terminal.New(os.Stdout)
+		if err := renderer.Render(report); err != nil {
+			return fmt.Errorf("rendering report: %w", err)
+		}
+
+	default:
+		return fmt.Errorf("unknown format: %s (expected terminal, json, or markdown)", prdScoreFlags.format)
+	}
+
+	// Return non-zero exit code if PRD has blocking issues
+	if !report.Decision.Passed {
+		return fmt.Errorf("PRD evaluation: %s", report.Decision.Rationale)
+	}
+
+	return nil
+}
+
+func formatEvaluationReportMarkdown(report *evaluation.EvaluationReport) string {
+	var b strings.Builder
+
+	b.WriteString("# PRD Evaluation Report\n\n")
+	b.WriteString(fmt.Sprintf("**Document**: %s\n", report.Metadata.Document))
+	if report.Metadata.DocumentTitle != "" {
+		b.WriteString(fmt.Sprintf("**Title**: %s\n", report.Metadata.DocumentTitle))
+	}
+	b.WriteString(fmt.Sprintf("**Score**: %.1f / 10.0\n", report.WeightedScore))
+	b.WriteString(fmt.Sprintf("**Decision**: %s\n\n", strings.ToUpper(string(report.Decision.Status))))
+
+	// Category scores table
+	b.WriteString("## Category Scores\n\n")
+	b.WriteString("| Category | Score | Weight | Status |\n")
+	b.WriteString("|----------|-------|--------|--------|\n")
+	for _, cs := range report.Categories {
+		status := "✅"
+		if cs.Status == evaluation.ScoreStatusWarn {
+			status = "⚠️"
+		} else if cs.Status == evaluation.ScoreStatusFail {
+			status = "❌"
+		}
+		b.WriteString(fmt.Sprintf("| %s | %.1f | %.0f%% | %s |\n",
+			cs.Category, cs.Score, cs.Weight*100, status))
+	}
+	b.WriteString("\n")
+
+	// Findings by severity
+	if len(report.Findings) > 0 {
+		b.WriteString("## Findings\n\n")
+		for _, sev := range evaluation.AllSeverities() {
+			sevFindings := []evaluation.Finding{}
+			for _, f := range report.Findings {
+				if f.Severity == sev {
+					sevFindings = append(sevFindings, f)
+				}
+			}
+			if len(sevFindings) > 0 {
+				b.WriteString(fmt.Sprintf("### %s %s\n\n", sev.Icon(), strings.ToUpper(string(sev))))
+				for _, f := range sevFindings {
+					b.WriteString(fmt.Sprintf("- **[%s]** %s\n", f.Category, f.Title))
+					if f.Recommendation != "" {
+						b.WriteString(fmt.Sprintf("  - Fix: %s\n", f.Recommendation))
+					}
+					if f.Owner != "" {
+						b.WriteString(fmt.Sprintf("  - Owner: %s\n", f.Owner))
+					}
+				}
+				b.WriteString("\n")
+			}
+		}
+	}
+
+	// Next steps
+	b.WriteString("## Next Steps\n\n")
+	if len(report.NextSteps.Immediate) > 0 {
+		b.WriteString("### Immediate Actions\n\n")
+		for _, action := range report.NextSteps.Immediate {
+			b.WriteString(fmt.Sprintf("- [ ] 🔴 %s\n", action.Action))
+		}
+		b.WriteString("\n")
+	}
+
+	if len(report.NextSteps.Recommended) > 0 {
+		b.WriteString("### Recommended\n\n")
+		for _, action := range report.NextSteps.Recommended {
+			b.WriteString(fmt.Sprintf("- [ ] %s\n", action.Action))
+		}
+		b.WriteString("\n")
+	}
+
+	b.WriteString("### Re-run Evaluation\n\n")
+	b.WriteString(fmt.Sprintf("```bash\n%s\n```\n", report.NextSteps.RerunCommand))
+
+	return b.String()
 }
 
 // ============================================================================

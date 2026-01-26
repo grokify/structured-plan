@@ -1,3 +1,5 @@
+github.com/agentplexus/structured-evaluation v0.2.0 h1:8pNejb06iKq0X8brbV/uzR+YKX8jYIc6ht8V9rF6TsI=
+github.com/agentplexus/structured-evaluation v0.2.0/go.mod h1:OvcJHsGvXS0v4iwH82TT2hYA/A+eXvAfrlE4oAEZsMU=
 github.com/bahlo/generic-list-go v0.2.0 h1:5sz/EEAK+ls5wF+NeqDpk5+iNdMDXrh3z3nPnH1Wvgk=
 github.com/bahlo/generic-list-go v0.2.0/go.mod h1:2KvAjgMlE5NNynlg/5iLrrCCZ2+5xWbdbCW3pNTGyYg=
 github.com/buger/jsonparser v1.1.1 h1:2PnMjfWD7wBILjqQbt530v576A/cAbQvEW9gGIpYMUs=

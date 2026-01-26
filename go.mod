@@ -3,6 +3,7 @@ module github.com/grokify/structured-requirements
 go 1.24
 
 require (
+	github.com/agentplexus/structured-evaluation v0.2.0
 	github.com/grokify/structured-goals v0.1.0
 	github.com/grokify/structureddocs v0.1.0
 	github.com/invopop/jsonschema v0.13.0
