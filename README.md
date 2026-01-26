@@ -134,6 +134,39 @@ func main() {
 }
 ```
 
+## Evaluation Integration
+
+The library integrates with `structured-evaluation` for standardized quality reports:
+
+```go
+import "github.com/grokify/structured-requirements/prd"
+
+// Load and score a PRD
+doc, _ := prd.Load("my-product.prd.json")
+
+// Convert deterministic scoring to EvaluationReport format
+report := prd.ScoreToEvaluationReport(doc, "my-product.prd.json")
+
+// Or generate a template for LLM judge evaluation
+template := prd.GenerateEvaluationTemplate(doc, "my-product.prd.json")
+```
+
+**Standard Evaluation Categories:**
+
+| Category | Weight | Description |
+|----------|--------|-------------|
+| problem_definition | 20% | Problem statement clarity and evidence |
+| solution_fit | 15% | Solution alignment with problem |
+| user_understanding | 10% | Persona depth and user insights |
+| market_awareness | 10% | Competitive analysis |
+| scope_discipline | 10% | Clear objectives and boundaries |
+| requirements_quality | 10% | Functional and non-functional specs |
+| metrics_quality | 10% | Success metrics with targets |
+| ux_coverage | 5% | Design and accessibility |
+| technical_feasibility | 5% | Architecture and integrations |
+| risk_management | 5% | Risk identification and mitigation |
+```
+
 ## Document Types
 
 ### MRD - Market Requirements Document

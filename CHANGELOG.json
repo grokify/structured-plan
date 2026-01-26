@@ -7,6 +7,35 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.3.0",
+      "date": "2026-01-26",
+      "highlights": [
+        { "description": "Add structured-evaluation integration for standardized PRD quality reports", "commit": "b5c79ce" },
+        { "description": "Add merge command for combining multiple PRD files", "commit": "8476603" }
+      ],
+      "added": [
+        { "description": "Add ScoreToEvaluationReport() to convert deterministic scoring to EvaluationReport format", "commit": "b5c79ce" },
+        { "description": "Add GenerateEvaluationTemplate() for LLM judge template generation", "commit": "b5c79ce" },
+        { "description": "Add GenerateEvaluationTemplateWithWeights() for custom category weights", "commit": "b5c79ce" },
+        { "description": "Add StandardCategories() returning 10 PRD evaluation categories with weights", "commit": "b5c79ce" },
+        { "description": "Add CategoryDescriptions() and CategoryOwners() helper functions for LLM prompts", "commit": "b5c79ce" },
+        { "description": "Add GetCategoriesFromDocument() to extract categories including custom sections", "commit": "b5c79ce" },
+        { "description": "Add 'srequirements merge' CLI command for combining multiple JSON files", "commit": "8476603" },
+        { "description": "Add deep merge support for nested JSON objects", "commit": "8476603" },
+        { "description": "Add structured user story fields: epic_id, story_points, labels, dependencies", "commit": "4bc8bd7" }
+      ],
+      "improved": [
+        { "description": "Use relative dash widths in markdown tables for wider Story and Description columns in Pandoc output", "commit": "" },
+        { "description": "Add --desc-len CLI flag to control description truncation length in tables (default: 100, was 60)", "commit": "" }
+      ],
+      "dependencies": [
+        { "description": "Update github.com/agentplexus/structured-evaluation to v0.2.0", "commit": "a4e41d1" }
+      ],
+      "chore": [
+        { "description": "Add built binaries to .gitignore", "commit": "cd2651c" }
+      ]
+    },
+    {
       "version": "v0.2.0",
       "date": "2026-01-25",
       "highlights": [
