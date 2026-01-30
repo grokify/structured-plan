@@ -25,7 +25,18 @@ func StatusLegend() string {
 
 // ToSwimlaneTableWithOKRs generates a markdown table with phases as columns,
 // deliverable types as swimlane rows, and OKR swimlanes auto-derived from PhaseTargets.
-// This is a PRD-specific method that requires access to Document.Objectives.OKRs.
+// Deprecated: Use ToSwimlaneTableWithGoals for framework-agnostic goal support.
+func (d *Document) ToSwimlaneTableWithOKRs(opts RoadmapTableOptions) string {
+	return d.ToSwimlaneTableWithGoals(opts)
+}
+
+// ToSwimlaneTableWithGoals generates a markdown table with phases as columns,
+// deliverable types as swimlane rows, and goal swimlanes auto-derived from PhaseTargets.
+// This method supports both OKR and V2MOM frameworks via the Goals abstraction.
+//
+// Labels are dynamic based on the framework:
+//   - OKR: "Objectives" and "Key Results"
+//   - V2MOM: "Methods" and "Measures"
 //
 // Example output:
 //
@@ -34,10 +45,13 @@ func StatusLegend() string {
 //	| Features       | • Auth<br>• Dashboard  | • Reporting            |
 //	| Objectives     | • O1: Market leader    |                        |
 //	| Key Results    | • KR1.1: Share → 15%   | • KR1.1: Share → 20%   |
-func (d *Document) ToSwimlaneTableWithOKRs(opts RoadmapTableOptions) string {
+func (d *Document) ToSwimlaneTableWithGoals(opts RoadmapTableOptions) string {
 	if len(d.Roadmap.Phases) == 0 {
 		return ""
 	}
+
+	// Get goals using the framework-agnostic method
+	productGoals := d.GetProductGoals()
 
 	// Build phase ID to index map
 	phaseIDToIndex := make(map[string]int)
@@ -53,18 +67,11 @@ func (d *Document) ToSwimlaneTableWithOKRs(opts RoadmapTableOptions) string {
 		}
 	}
 
-	// Check if we have OKRs with PhaseTargets
-	hasOKRsWithPhaseTargets := false
-	for _, okr := range d.Objectives.OKRs {
-		for _, kr := range okr.KeyResults {
-			if len(kr.PhaseTargets) > 0 {
-				hasOKRsWithPhaseTargets = true
-				break
-			}
-		}
-		if hasOKRsWithPhaseTargets {
-			break
-		}
+	// Check if we have goals with PhaseTargets
+	hasGoalsWithPhaseTargets := false
+	if productGoals != nil {
+		resultsByPhase := productGoals.ResultItemsByPhase()
+		hasGoalsWithPhaseTargets = len(resultsByPhase) > 0
 	}
 
 	// Determine swimlane order
@@ -131,56 +138,68 @@ func (d *Document) ToSwimlaneTableWithOKRs(opts RoadmapTableOptions) string {
 		sb.WriteString("\n")
 	}
 
-	// Add OKR swimlanes if we have OKRs with PhaseTargets
-	if hasOKRsWithPhaseTargets {
-		// Objectives swimlane: show objective in every phase where any of its KRs has a target
-		sb.WriteString("| **Objectives** |")
-		objectivesByPhase := make(map[int][]string) // phase index -> objective descriptions
-		for i, okr := range d.Objectives.OKRs {
-			// Find all phases where this objective's KRs have targets
-			phasesWithKRs := make(map[int]bool)
-			for _, kr := range okr.KeyResults {
-				for _, pt := range kr.PhaseTargets {
-					if idx, ok := phaseIDToIndex[pt.PhaseID]; ok {
-						phasesWithKRs[idx] = true
+	// Add goal swimlanes if we have goals with PhaseTargets
+	if hasGoalsWithPhaseTargets && productGoals != nil {
+		// Get dynamic labels based on framework
+		goalLabel := productGoals.GoalLabel()     // "Objectives" or "Methods"
+		resultLabel := productGoals.ResultLabel() // "Key Results" or "Measures"
+
+		// Goals swimlane: show goal in every phase where any of its results has a target
+		sb.WriteString(fmt.Sprintf("| **%s** |", goalLabel))
+		goalsByPhase := make(map[int][]string) // phase index -> goal titles
+		goalItems := productGoals.GoalItems()
+		resultItems := productGoals.ResultItems()
+
+		// Build a map of goalID -> goal title
+		goalTitles := make(map[string]string)
+		for i, g := range goalItems {
+			goalTitles[g.ID] = fmt.Sprintf("G%d: %s", i+1, g.Title)
+		}
+
+		// Find phases for each goal based on its results
+		goalPhases := make(map[string]map[int]bool) // goalID -> set of phase indices
+		for _, r := range resultItems {
+			if r.PhaseID != "" {
+				if idx, ok := phaseIDToIndex[r.PhaseID]; ok {
+					if goalPhases[r.GoalID] == nil {
+						goalPhases[r.GoalID] = make(map[int]bool)
 					}
+					goalPhases[r.GoalID][idx] = true
 				}
 			}
-			// Add objective label to each phase where its KRs appear
-			objLabel := fmt.Sprintf("O%d: %s", i+1, okr.Objective.Description)
-			for phaseIdx := range phasesWithKRs {
-				objectivesByPhase[phaseIdx] = append(objectivesByPhase[phaseIdx], "• "+objLabel)
+		}
+
+		// Add goal labels to phases
+		for goalID, phases := range goalPhases {
+			if title, ok := goalTitles[goalID]; ok {
+				for phaseIdx := range phases {
+					goalsByPhase[phaseIdx] = append(goalsByPhase[phaseIdx], "• "+title)
+				}
 			}
 		}
+
 		for i := range d.Roadmap.Phases {
-			items := objectivesByPhase[i]
+			items := goalsByPhase[i]
 			cell := strings.Join(items, "<br>")
 			sb.WriteString(fmt.Sprintf(" %s |", cell))
 		}
 		sb.WriteString("\n")
 
-		// Key Results swimlane: show KR targets for each phase
-		sb.WriteString("| **Key Results** |")
-		for phaseIdx, phase := range d.Roadmap.Phases {
+		// Results swimlane: show result targets for each phase
+		sb.WriteString(fmt.Sprintf("| **%s** |", resultLabel))
+		resultsByPhase := productGoals.ResultItemsByPhase()
+		for _, phase := range d.Roadmap.Phases {
 			var items []string
-			for i, okr := range d.Objectives.OKRs {
-				for j, kr := range okr.KeyResults {
-					for _, pt := range kr.PhaseTargets {
-						if pt.PhaseID == phase.ID {
-							// Format: KR1.1: Description → Target
-							krLabel := fmt.Sprintf("KR%d.%d: %s → %s",
-								i+1, j+1,
-								kr.Description,
-								pt.Target)
-							if opts.IncludeStatus && pt.Status != "" {
-								krLabel = fmt.Sprintf("%s %s", roadmap.PhaseTargetStatusIcon(pt.Status), krLabel)
-							}
-							items = append(items, "• "+krLabel)
-						}
+			if results, ok := resultsByPhase[phase.ID]; ok {
+				for _, r := range results {
+					// Format: R1: Title → Target
+					label := fmt.Sprintf("%s → %s", r.Title, r.PhaseTarget)
+					if opts.IncludeStatus && r.Status != "" {
+						label = fmt.Sprintf("%s %s", roadmap.PhaseTargetStatusIcon(r.Status), label)
 					}
+					items = append(items, "• "+label)
 				}
 			}
-			_ = phaseIdx // unused but kept for clarity
 			cell := strings.Join(items, "<br>")
 			sb.WriteString(fmt.Sprintf(" %s |", cell))
 		}

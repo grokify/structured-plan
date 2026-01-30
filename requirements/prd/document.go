@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/grokify/structured-plan/common"
+	"github.com/grokify/structured-plan/goals"
 	"github.com/grokify/structured-plan/goals/okr"
 )
 
@@ -94,6 +95,27 @@ type (
 	NonGoal = common.NonGoal
 )
 
+// Goals type aliases from goals package for backward compatibility.
+type (
+	// Goals is a framework-agnostic container for organizational goals.
+	Goals = goals.Goals
+
+	// GoalItem represents a high-level goal (Objective or Method).
+	GoalItem = goals.GoalItem
+
+	// ResultItem represents a measurable result (Key Result or Measure).
+	ResultItem = goals.ResultItem
+
+	// Framework identifies the goal-setting framework in use.
+	Framework = goals.Framework
+)
+
+// Framework constants re-exported for convenience.
+const (
+	FrameworkOKR   = goals.FrameworkOKR
+	FrameworkV2MOM = goals.FrameworkV2MOM
+)
+
 // Document represents a complete Product Requirements Document.
 type Document struct {
 	Metadata         Metadata         `json:"metadata"`
@@ -103,6 +125,11 @@ type Document struct {
 	UserStories      []UserStory      `json:"user_stories"`
 	Requirements     Requirements     `json:"requirements"`
 	Roadmap          Roadmap          `json:"roadmap"`
+
+	// ProductGoals contains the product goals using the framework-agnostic Goals wrapper.
+	// This supports either OKR or V2MOM frameworks. When set, this takes precedence
+	// over the legacy Objectives field for roadmap rendering and other goal-related features.
+	ProductGoals *Goals `json:"product_goals,omitempty"`
 
 	// Optional sections
 	Assumptions      *AssumptionsConstraints `json:"assumptions,omitempty"`
@@ -255,7 +282,29 @@ type ExecutiveSummary struct {
 }
 
 // Objectives defines business and product goals using OKR structure.
+// Deprecated: Use ProductGoals field with goals.Goals wrapper for new PRDs.
 type Objectives struct {
 	// OKRs contains Objectives and Key Results in nested OKR format.
 	OKRs []OKR `json:"okrs"`
+}
+
+// GetProductGoals returns the product goals, preferring ProductGoals if set,
+// otherwise converting legacy Objectives to Goals format.
+// This enables framework-agnostic rendering in roadmaps and other sections.
+func (d *Document) GetProductGoals() *Goals {
+	if d.ProductGoals != nil {
+		return d.ProductGoals
+	}
+	// Convert legacy Objectives to Goals format
+	if len(d.Objectives.OKRs) > 0 {
+		okrSet := &okr.OKRSet{OKRs: d.Objectives.OKRs}
+		return goals.NewOKR(okrSet)
+	}
+	return nil
+}
+
+// HasProductGoals returns true if the document has product goals defined
+// (either in ProductGoals or legacy Objectives).
+func (d *Document) HasProductGoals() bool {
+	return d.ProductGoals != nil || len(d.Objectives.OKRs) > 0
 }

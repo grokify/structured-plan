@@ -455,10 +455,13 @@ type Objective struct {
   - [x] Add score grading utilities (ScoreGrade, ScoreDescription)
 - [x] Move Marp renderers from structured-goals (already in goals/okr/render/marp)
 - [x] Update PRD:
-  - [ ] Replace `Objectives` field with `Goals` field (kept Objectives for now)
+  - [x] Add `ProductGoals` field with Goals wrapper (Objectives kept for backward compat)
   - [x] Remove inline OKR types (use goals/okr via type aliases)
+  - [x] Add GetProductGoals() helper for framework-agnostic access
   - [ ] Remove `GoalsAlignment` wrapper (kept for V2MOM/OKR alignment)
-- [ ] Update roadmap swimlane to use Goals abstraction
+- [x] Update roadmap swimlane to use Goals abstraction
+  - [x] ToSwimlaneTableWithGoals() with dynamic labels (Objectives/Methods, Key Results/Measures)
+  - [x] ToSwimlaneTableWithOKRs() deprecated, calls ToSwimlaneTableWithGoals()
 - [ ] Update structured-goals to re-export from structured-plan (or deprecate)
 - [ ] Update CLI: `splan goals okr`, `splan goals v2mom`
 
