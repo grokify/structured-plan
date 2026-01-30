@@ -8,11 +8,21 @@ This checklist tracks renaming `structured-requirements` to `structured-plan` an
 **Target:** `github.com/grokify/structured-plan`
 **CLI:** `splan` (not `splanning`)
 
+### Ecosystem
+
+```
+structured-plan       →  Planning artifacts (V2MOM, OKR, PRD, MRD, TRD, Roadmap, Status Reports)
+structured-metrics    →  DMAIC metrics (separate repo, internal implementation)
+structured-evaluation →  Quality assessment (existing)
+structured-changelog  →  Release management (existing)
+```
+
 ### Why "plan" over "planning"?
 
 - **"Plan" = artifact** (noun) - what you produce
 - **"Planning" = activity** (verb) - what you do
 - The system is about **artifacts**, not meetings
+- **Naming convention**: `structured-*` repos use nouns (`changelog`, `evaluation`, `goals`)
 - **Lifecycle symmetry**: `structured-plan` → `structured-changelog` → `structured-evaluation`
 - **CLI ergonomics**: `splan` is shorter and cleaner than `splanning`
 
@@ -448,7 +458,107 @@ type Objective struct {
 - [ ] Update structured-goals to re-export from structured-plan (or deprecate)
 - [ ] Update CLI: `splan goals okr`, `splan goals v2mom`
 
-## Phase 4: Evaluate structured-roadmap
+## Phase 4: Status Reports (Weekly/Quarterly)
+
+Add support for operational status reporting within the planning lifecycle.
+
+### 4.1 Rationale
+
+Status reports are **plan tracking**, not separate artifacts:
+
+| Cadence | Purpose | Relationship to Plan |
+|---------|---------|---------------------|
+| Weekly | Track delivery, slips, blockers | "Are we on track with the plan?" |
+| Quarterly | Evaluate OKR/objective completion | "Did we hit planned objectives?" |
+
+### 4.2 Target structure
+
+```
+structured-plan/
+├── reports/
+│   ├── weekly/
+│   │   ├── weekly.go        # WeeklyStatus type
+│   │   ├── slide.go         # Exec slide generation
+│   │   └── render/marp/     # Marp slides
+│   └── quarterly/
+│       ├── quarterly.go     # QuarterlyReview type
+│       ├── okr_summary.go   # OKR scoring summary
+│       └── render/marp/     # Marp slides
+└── ...
+```
+
+### 4.3 Weekly Status Type
+
+```go
+type WeeklyStatus struct {
+    Metadata      Metadata          `json:"metadata"`
+    Period        WeekPeriod        `json:"period"`           // Week start/end
+    Highlights    []Highlight       `json:"highlights"`       // Key wins
+    Deliverables  []DeliverableStatus `json:"deliverables"`   // Target vs actual dates
+    Blockers      []Blocker         `json:"blockers"`
+    Risks         []RiskUpdate      `json:"risks,omitempty"`
+    NextWeek      []PlannedItem     `json:"next_week,omitempty"`
+    Metrics       []MetricSnapshot  `json:"metrics,omitempty"` // Refs to structured-metrics
+}
+
+type DeliverableStatus struct {
+    ID              string `json:"id"`
+    Title           string `json:"title"`
+    TargetDate      string `json:"target_date"`      // Original target
+    CurrentDate     string `json:"current_date"`     // Current expected date
+    DeliveredDate   string `json:"delivered_date,omitempty"`
+    SlipDays        int    `json:"slip_days,omitempty"`
+    Status          string `json:"status"`           // on_track, at_risk, blocked, complete
+    StatusReason    string `json:"status_reason,omitempty"`
+    PRDRef          string `json:"prd_ref,omitempty"`
+}
+
+type Blocker struct {
+    ID          string `json:"id"`
+    Description string `json:"description"`
+    Owner       string `json:"owner,omitempty"`
+    DependsOn   string `json:"depends_on,omitempty"` // External team/resource
+    Since       string `json:"since,omitempty"`      // How long blocked
+    Resolution  string `json:"resolution,omitempty"`
+}
+```
+
+### 4.4 Quarterly Review Type
+
+```go
+type QuarterlyReview struct {
+    Metadata       Metadata           `json:"metadata"`
+    Period         QuarterPeriod      `json:"period"`           // Q1 2026, etc.
+    OKRSummary     []ObjectiveResult  `json:"okr_summary"`      // OKR scoring
+    Achievements   []Achievement      `json:"achievements"`
+    Misses         []Miss             `json:"misses,omitempty"`
+    Learnings      []Learning         `json:"learnings,omitempty"`
+    NextQuarter    []PlannedObjective `json:"next_quarter,omitempty"`
+}
+
+type ObjectiveResult struct {
+    ObjectiveID   string          `json:"objective_id"`
+    Title         string          `json:"title"`
+    Score         float64         `json:"score"`          // 0.0-1.0
+    Grade         string          `json:"grade"`          // A, B, C, D, F
+    KeyResults    []KeyResultScore `json:"key_results"`
+    Commentary    string          `json:"commentary,omitempty"`
+}
+```
+
+### 4.5 Tasks
+
+- [ ] Create `reports/` package structure
+- [ ] Create `reports/weekly/weekly.go` with WeeklyStatus type
+- [ ] Create `reports/weekly/slide.go` for exec slide generation
+- [ ] Create `reports/quarterly/quarterly.go` with QuarterlyReview type
+- [ ] Create `reports/quarterly/okr_summary.go` for OKR scoring
+- [ ] Add Marp renderers for both report types
+- [ ] Add CLI: `splan reports weekly`, `splan reports quarterly`
+- [ ] Integration: weekly status can pull from PRD/Roadmap deliverables
+- [ ] Integration: quarterly review can pull from OKR scores
+
+## Phase 5: Evaluate structured-roadmap
 
 Separate from above - `structured-roadmap` is project task tracking, not product planning.
 
@@ -476,11 +586,11 @@ Separate from above - `structured-roadmap` is project task tracking, not product
 | `structured-requirements/trd` | `structured-plan/requirements/trd` |
 | `structured-requirements/common` | `structured-plan/common` |
 
-## Phase 5: Extract Common Types
+## Phase 6: Extract Common Types
 
 Move duplicated types from PRD/MRD/TRD to `common/` package.
 
-### 5.1 Types to extract
+### 6.1 Types to extract
 
 Currently duplicated across packages:
 
@@ -495,7 +605,7 @@ Currently duplicated across packages:
 | `OpenItem` | ✅ | ❌ | ❌ | → common/ (useful for all) |
 | `DecisionRecord` | ✅ | ❌ | ❌ | → common/ (useful for all) |
 
-### 5.2 Target common/ structure
+### 6.2 Target common/ structure
 
 ```
 common/
@@ -510,7 +620,7 @@ common/
 └── nongoals.go      # NonGoal (structured, not just []string)
 ```
 
-### 5.3 Unified types
+### 6.3 Unified types
 
 **OpenItem** (decisions pending):
 ```go
@@ -557,7 +667,7 @@ type NonGoal struct {
 }
 ```
 
-### 5.4 Tasks
+### 6.4 Tasks
 
 - [ ] Create `common/status.go` with Status type and constants
 - [ ] Create `common/assumption.go` with unified Assumption type
@@ -575,9 +685,9 @@ type NonGoal struct {
 
 ---
 
-## Phase 6: Documentation and Presentation
+## Phase 7: Documentation and Presentation
 
-### 5.1 Marp Presentation
+### 7.1 Marp Presentation
 
 Created: `docs/presentations/structured-plan-overview.md`
 
@@ -595,7 +705,7 @@ Tasks:
 - [ ] Add architecture diagrams
 - [ ] Review and polish after Phase 1-3 complete
 
-### 5.2 Documentation Updates
+### 7.2 Documentation Updates
 
 - [ ] Update README.md with new structure
 - [ ] Create migration guide from structured-goals
@@ -616,4 +726,8 @@ Tasks:
 | 2025-01-29 | Merge OKR implementations | PhaseTargets from PRD + Score/Progress from structured-goals |
 | 2025-01-29 | Extract common types | Assumption, Constraint, Risk, OpenItem, Decision, NonGoal shared across PRD/MRD/TRD |
 | 2025-01-29 | Framework-agnostic Goals wrapper | Support V2MOM or OKR via discriminated union with abstraction layer for rendering |
+| 2025-01-30 | Name: structured-plan (not structured-orgops) | "Plan" is a noun matching naming convention; status reports are plan tracking |
+| 2025-01-30 | Keep metrics in separate structured-metrics | DMAIC methodology is different domain; metrics referenced by ID from plans |
+| 2025-01-30 | Add weekly/quarterly status reports | Status reports are plan tracking (weekly = on track?, quarterly = objectives hit?) |
+| 2025-01-30 | V2MOM: Add Assumptions field | Maps to: Methods→Objectives, Measures→KRs, Obstacles→Constraints, NEW: Assumptions |
 | TBD | structured-roadmap → simple-todo | Different purpose (project tasks vs product roadmap) |
