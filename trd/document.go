@@ -1,7 +1,17 @@
 // Package trd provides data types for structured Technical Requirements Documents.
 package trd
 
-import "time"
+import (
+	"time"
+
+	"github.com/grokify/structured-requirements/common"
+)
+
+// Person is an alias for common.Person for backwards compatibility.
+type Person = common.Person
+
+// Approver is an alias for common.Approver for backwards compatibility.
+type Approver = common.Approver
 
 // Document represents a complete Technical Requirements Document.
 type Document struct {
@@ -52,21 +62,6 @@ type Metadata struct {
 	RelatedDocuments []RelatedDoc `json:"related_documents,omitempty"`
 }
 
-// Person represents an individual contributor.
-type Person struct {
-	Name  string `json:"name"`
-	Email string `json:"email,omitempty"`
-	Role  string `json:"role,omitempty"`
-}
-
-// Approver represents a person with approval authority.
-type Approver struct {
-	Person
-	ApprovedAt *time.Time `json:"approved_at,omitempty"`
-	Approved   bool       `json:"approved"`
-	Comments   string     `json:"comments,omitempty"`
-}
-
 // RelatedDoc represents a related document reference.
 type RelatedDoc struct {
 	Title        string `json:"title"`
@@ -105,6 +100,7 @@ type Component struct {
 	Dependencies     []string `json:"dependencies,omitempty"` // IDs of dependent components
 	Technology       string   `json:"technology,omitempty"`
 	Owner            string   `json:"owner,omitempty"`
+	Tags             []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Diagram represents an architecture diagram.
@@ -138,6 +134,7 @@ type ArchDecision struct {
 	Consequences []string `json:"consequences,omitempty"`
 	Alternatives []string `json:"alternatives,omitempty"`
 	Date         string   `json:"date,omitempty"`
+	Tags         []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // TechnologyStack defines technology choices.
@@ -175,6 +172,7 @@ type APISpec struct {
 	Endpoints   []APIEndpoint `json:"endpoints,omitempty"`
 	SpecURL     string        `json:"spec_url,omitempty"` // OpenAPI, Proto file, etc.
 	RateLimit   string        `json:"rate_limit,omitempty"`
+	Tags        []string      `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // APIEndpoint represents an API endpoint.
@@ -203,6 +201,7 @@ type Entity struct {
 	Description   string      `json:"description,omitempty"`
 	Attributes    []Attribute `json:"attributes,omitempty"`
 	Relationships []string    `json:"relationships,omitempty"`
+	Tags          []string    `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Attribute represents an entity attribute.
@@ -216,13 +215,14 @@ type Attribute struct {
 
 // DataStore represents a data storage system.
 type DataStore struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"` // PostgreSQL, MongoDB, Redis, S3, etc.
-	Purpose     string `json:"purpose"`
-	Capacity    string `json:"capacity,omitempty"`
-	Replication string `json:"replication,omitempty"`
-	Backup      string `json:"backup,omitempty"`
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	Type        string   `json:"type"` // PostgreSQL, MongoDB, Redis, S3, etc.
+	Purpose     string   `json:"purpose"`
+	Capacity    string   `json:"capacity,omitempty"`
+	Replication string   `json:"replication,omitempty"`
+	Backup      string   `json:"backup,omitempty"`
+	Tags        []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // SecurityDesign contains security architecture.
@@ -274,22 +274,24 @@ type NetworkSecurity struct {
 
 // Threat represents a security threat.
 type Threat struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Category    string `json:"category,omitempty"` // STRIDE categories
-	Description string `json:"description"`
-	Likelihood  string `json:"likelihood,omitempty"`
-	Impact      string `json:"impact,omitempty"`
-	Mitigation  string `json:"mitigation"`
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	Category    string   `json:"category,omitempty"` // STRIDE categories
+	Description string   `json:"description"`
+	Likelihood  string   `json:"likelihood,omitempty"`
+	Impact      string   `json:"impact,omitempty"`
+	Mitigation  string   `json:"mitigation"`
+	Tags        []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // SecurityControl represents a security control.
 type SecurityControl struct {
-	ID             string `json:"id"`
-	Name           string `json:"name"`
-	Category       string `json:"category,omitempty"`
-	Description    string `json:"description"`
-	Implementation string `json:"implementation,omitempty"`
+	ID             string   `json:"id"`
+	Name           string   `json:"name"`
+	Category       string   `json:"category,omitempty"`
+	Description    string   `json:"description"`
+	Implementation string   `json:"implementation,omitempty"`
+	Tags           []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Performance contains performance requirements and design.
@@ -302,12 +304,13 @@ type Performance struct {
 
 // PerfRequirement represents a performance requirement.
 type PerfRequirement struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Metric      string `json:"metric"` // Latency, Throughput, etc.
-	Target      string `json:"target"` // e.g., "< 100ms p99"
-	Priority    string `json:"priority,omitempty"`
-	Measurement string `json:"measurement,omitempty"`
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	Metric      string   `json:"metric"` // Latency, Throughput, etc.
+	Target      string   `json:"target"` // e.g., "< 100ms p99"
+	Priority    string   `json:"priority,omitempty"`
+	Measurement string   `json:"measurement,omitempty"`
+	Tags        []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Benchmark represents a performance benchmark.
@@ -358,16 +361,17 @@ type Environment struct {
 
 // Integration represents an external integration.
 type Integration struct {
-	ID            string `json:"id"`
-	Name          string `json:"name"`
-	Type          string `json:"type"`      // API, SDK, Webhook, File
-	Direction     string `json:"direction"` // Inbound, Outbound, Bidirectional
-	Protocol      string `json:"protocol,omitempty"`
-	AuthMethod    string `json:"auth_method,omitempty"`
-	DataFormat    string `json:"data_format,omitempty"`
-	Frequency     string `json:"frequency,omitempty"` // Real-time, Batch, On-demand
-	Description   string `json:"description,omitempty"`
-	Documentation string `json:"documentation,omitempty"`
+	ID            string   `json:"id"`
+	Name          string   `json:"name"`
+	Type          string   `json:"type"`      // API, SDK, Webhook, File
+	Direction     string   `json:"direction"` // Inbound, Outbound, Bidirectional
+	Protocol      string   `json:"protocol,omitempty"`
+	AuthMethod    string   `json:"auth_method,omitempty"`
+	DataFormat    string   `json:"data_format,omitempty"`
+	Frequency     string   `json:"frequency,omitempty"` // Real-time, Batch, On-demand
+	Description   string   `json:"description,omitempty"`
+	Documentation string   `json:"documentation,omitempty"`
+	Tags          []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Development contains development standards.
@@ -393,22 +397,24 @@ type Testing struct {
 
 // Risk represents a technical risk.
 type Risk struct {
-	ID          string `json:"id"`
-	Description string `json:"description"`
-	Probability string `json:"probability"`
-	Impact      string `json:"impact"`
-	Mitigation  string `json:"mitigation"`
-	Owner       string `json:"owner,omitempty"`
-	Status      string `json:"status,omitempty"`
+	ID          string   `json:"id"`
+	Description string   `json:"description"`
+	Probability string   `json:"probability"`
+	Impact      string   `json:"impact"`
+	Mitigation  string   `json:"mitigation"`
+	Owner       string   `json:"owner,omitempty"`
+	Status      string   `json:"status,omitempty"`
+	Tags        []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Constraint represents a technical constraint.
 type Constraint struct {
-	ID          string `json:"id"`
-	Type        string `json:"type"` // Technical, Resource, Time, Budget
-	Description string `json:"description"`
-	Impact      string `json:"impact,omitempty"`
-	Rationale   string `json:"rationale,omitempty"`
+	ID          string   `json:"id"`
+	Type        string   `json:"type"` // Technical, Resource, Time, Budget
+	Description string   `json:"description"`
+	Impact      string   `json:"impact,omitempty"`
+	Rationale   string   `json:"rationale,omitempty"`
+	Tags        []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Assumption represents a technical assumption.
