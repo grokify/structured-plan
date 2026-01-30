@@ -4,7 +4,7 @@
 
 ## Overview
 
-This release standardizes all JSON field names to **camelCase** for consistency with JSON/JavaScript conventions and modern API standards (OpenAPI, GraphQL, Google APIs).
+This release standardizes all JSON field names to **camelCase** for consistency with JSON/JavaScript conventions and modern API standards (OpenAPI, GraphQL, Google APIs). It also adds V2MOM CLI commands for working with V2MOM goal documents.
 
 ## Breaking Changes
 
@@ -84,6 +84,36 @@ The migration to camelCase provides:
 2. **API Compatibility**: Matches OpenAPI, GraphQL, and Google API style guides
 3. **Smaller Payloads**: No underscores means slightly smaller JSON files
 4. **IDE Support**: Better autocomplete in JavaScript/TypeScript editors
+
+## New Features
+
+### V2MOM CLI Commands
+
+The `splan goals v2mom` commands are now available for working with V2MOM (Vision, Values, Methods, Obstacles, Measures) documents:
+
+```bash
+# Validate a V2MOM JSON file
+splan goals v2mom validate my-v2mom.json
+splan goals v2mom validate my-v2mom.json --structure=nested
+
+# Generate Marp presentation slides
+splan goals v2mom generate marp my-v2mom.json
+splan goals v2mom generate marp my-v2mom.json -o slides.md --theme=corporate
+
+# Create a new V2MOM template
+splan goals v2mom init
+splan goals v2mom init --name "FY2026 Product Strategy" -o product-v2mom.json
+```
+
+**Structure modes:**
+- `flat` - Traditional V2MOM with measures/obstacles at top level
+- `nested` - OKR-aligned with measures under methods
+- `hybrid` - Both levels allowed (default)
+
+**Terminology modes:**
+- `v2mom` - Use V2MOM terms: Methods, Measures, Obstacles
+- `okr` - Use OKR terms: Objectives, Key Results, Risks
+- `hybrid` - Show both terminologies
 
 ## New Files
 
