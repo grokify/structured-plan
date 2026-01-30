@@ -18,7 +18,11 @@ type FunctionalRequirement struct {
 	PhaseID            string                `json:"phase_id"` // Target roadmap phase
 	Dependencies       []string              `json:"dependencies,omitempty"`
 	Assumptions        []string              `json:"assumptions,omitempty"`
+	Tags               []string              `json:"tags,omitempty"` // For filtering by topic/domain
 	Notes              string                `json:"notes,omitempty"`
+
+	// AppendixRefs references appendices with additional details for this requirement.
+	AppendixRefs []string `json:"appendix_refs,omitempty"`
 }
 
 // NFRCategory represents categories of non-functional requirements.
@@ -67,6 +71,11 @@ type NonFunctionalRequirement struct {
 
 	// Security specific fields
 	Security *SecuritySpec `json:"security,omitempty"`
+
+	Tags []string `json:"tags,omitempty"` // For filtering by topic/domain
+
+	// AppendixRefs references appendices with additional details for this requirement.
+	AppendixRefs []string `json:"appendix_refs,omitempty"`
 }
 
 // SLOSpec defines Service Level Objective specifications.

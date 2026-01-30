@@ -34,7 +34,7 @@ type UserStory struct {
 	StoryPoints        *int                  `json:"story_points,omitempty"`
 	Dependencies       []string              `json:"dependencies,omitempty"` // Dependent story IDs
 	Epic               string                `json:"epic,omitempty"`         // Parent epic
-	Labels             []string              `json:"labels,omitempty"`
+	Tags               []string              `json:"tags,omitempty"`         // For filtering by topic/domain
 	Notes              string                `json:"notes,omitempty"`
 }
 

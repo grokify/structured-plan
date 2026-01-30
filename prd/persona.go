@@ -28,6 +28,7 @@ type Persona struct {
 	ImageURL             string               `json:"image_url,omitempty"`
 	IsPrimary            bool                 `json:"is_primary,omitempty"`  // Is this the primary persona?
 	LibraryRef           string               `json:"library_ref,omitempty"` // Reference to persona in library (for tracking origin)
+	Tags                 []string             `json:"tags,omitempty"`        // For filtering by topic/domain
 }
 
 // Demographics contains optional demographic information.
