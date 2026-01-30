@@ -47,7 +47,7 @@ package main
 
 import (
     "fmt"
-    "github.com/grokify/structured-requirements/prd"
+    "github.com/grokify/structured-plan/prd"
 )
 
 func main() {
@@ -73,7 +73,7 @@ func main() {
 ## Installation
 
 ```bash
-go get github.com/grokify/structured-requirements
+go get github.com/grokify/structured-plan
 ```
 
 ## Document Relationships

@@ -463,9 +463,9 @@ func RenderExecMarkdown(view *ExecView) string
 
 ### For agent-team-prd Users
 
-1. Replace `github.com/agentplexus/agent-team-prd/pkg/prd` with `github.com/grokify/structured-requirements/prd`
-2. Replace `github.com/agentplexus/agent-team-prd/pkg/scoring` with `github.com/grokify/structured-requirements/prd` (scoring functions now in prd package)
-3. Replace `github.com/agentplexus/agent-team-prd/pkg/views` with `github.com/grokify/structured-requirements/prd` (view functions now in prd package)
+1. Replace `github.com/agentplexus/agent-team-prd/pkg/prd` with `github.com/grokify/structured-plan/prd`
+2. Replace `github.com/agentplexus/agent-team-prd/pkg/scoring` with `github.com/grokify/structured-plan/prd` (scoring functions now in prd package)
+3. Replace `github.com/agentplexus/agent-team-prd/pkg/views` with `github.com/grokify/structured-plan/prd` (view functions now in prd package)
 4. Update type references:
    - `prd.PRD` → `prd.Document`
    - `scoring.Score()` → `prd.Score()`

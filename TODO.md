@@ -4,8 +4,8 @@ This checklist tracks renaming `structured-requirements` to `structured-plan` an
 
 ## Overview
 
-**Current:** `github.com/grokify/structured-requirements`
-**Target:** `github.com/grokify/structured-plan`
+**Previous:** `github.com/grokify/structured-requirements`
+**Current:** `github.com/grokify/structured-plan`
 **CLI:** `splan` (not `splanning`)
 
 ### Ecosystem
@@ -201,8 +201,8 @@ Tasks:
 
 ### 2.1 GitHub rename
 
-- [ ] Rename repo: `structured-requirements` → `structured-plan`
-- [ ] GitHub auto-creates redirect from old name
+- [x] Rename repo: `structured-requirements` → `structured-plan`
+- [x] GitHub auto-creates redirect from old name
 
 ### 2.2 Update go.mod
 
@@ -215,18 +215,18 @@ module github.com/grokify/structured-plan
 ```
 
 Tasks:
-- [ ] Update `go.mod` module path
-- [ ] Update all import paths in all `.go` files
-- [ ] Update `go.sum`
-- [ ] Run `go mod tidy`
-- [ ] Verify build passes
+- [x] Update `go.mod` module path
+- [x] Update all import paths in all `.go` files
+- [x] Update `go.sum`
+- [x] Run `go mod tidy`
+- [x] Verify build passes
 
 ### 2.3 Update documentation
 
-- [ ] Update README.md
-- [ ] Update CHANGELOG.md
-- [ ] Update any hardcoded repo references
-- [ ] Update examples/
+- [x] Update README.md
+- [x] Update CHANGELOG.md
+- [x] Update any hardcoded repo references
+- [x] Update examples/
 
 ## Phase 3: Consolidate OKR and V2MOM
 

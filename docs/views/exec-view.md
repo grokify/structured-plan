@@ -30,7 +30,7 @@ type ExecView struct {
 ## Generate Executive View
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 // Score the PRD first
 scores := prd.Score(doc)

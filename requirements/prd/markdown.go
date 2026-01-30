@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/grokify/structured-requirements/common"
+	"github.com/grokify/structured-plan/common"
 )
 
 // MarkdownOptions configures markdown generation.

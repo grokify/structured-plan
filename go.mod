@@ -1,4 +1,4 @@
-module github.com/grokify/structured-requirements
+module github.com/grokify/structured-plan
 
 go 1.24
 

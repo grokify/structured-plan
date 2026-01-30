@@ -1,7 +1,7 @@
 {
   "ir_version": "1.0",
   "project": "structured-requirements",
-  "repository": "https://github.com/grokify/structured-requirements",
+  "repository": "https://github.com/grokify/structured-plan",
   "versioning": "semver",
   "commit_convention": "conventional",
   "maintainers": ["grokify", "johncwang@gmail.com"],

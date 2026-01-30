@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/grokify/structured-requirements/roadmap"
+	"github.com/grokify/structured-plan/roadmap"
 )
 
 // RoadmapTableOptions configures roadmap table generation.

@@ -25,7 +25,7 @@ graph LR
 ## Generate PR/FAQ
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 prfaq := prd.GeneratePRFAQView(doc)
 

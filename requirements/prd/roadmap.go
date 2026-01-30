@@ -1,7 +1,7 @@
 package prd
 
 import (
-	"github.com/grokify/structured-requirements/roadmap"
+	"github.com/grokify/structured-plan/roadmap"
 )
 
 // Type aliases for backward compatibility.

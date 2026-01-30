@@ -10,8 +10,8 @@ import (
 
 	sdmarp "github.com/grokify/structureddocs/marp"
 
-	"github.com/grokify/structured-requirements/goals/okr"
-	"github.com/grokify/structured-requirements/goals/okr/render"
+	"github.com/grokify/structured-plan/goals/okr"
+	"github.com/grokify/structured-plan/goals/okr/render"
 )
 
 // Renderer implements the render.Renderer interface for OKR Marp output.

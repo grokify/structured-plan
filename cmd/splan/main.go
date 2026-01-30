@@ -11,11 +11,11 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/agentplexus/structured-evaluation/evaluation"
-	"github.com/grokify/structured-requirements/requirements/mrd"
-	"github.com/grokify/structured-requirements/requirements/prd"
-	"github.com/grokify/structured-requirements/requirements/prd/render/terminal"
-	"github.com/grokify/structured-requirements/requirements/trd"
-	"github.com/grokify/structured-requirements/schema"
+	"github.com/grokify/structured-plan/requirements/mrd"
+	"github.com/grokify/structured-plan/requirements/prd"
+	"github.com/grokify/structured-plan/requirements/prd/render/terminal"
+	"github.com/grokify/structured-plan/requirements/trd"
+	"github.com/grokify/structured-plan/schema"
 )
 
 var version = "0.5.0"

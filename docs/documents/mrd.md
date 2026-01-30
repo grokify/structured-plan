@@ -111,7 +111,7 @@ type Messaging struct {
 ## Creating an MRD
 
 ```go
-import "github.com/grokify/structured-requirements/mrd"
+import "github.com/grokify/structured-plan/mrd"
 
 doc := &mrd.Document{
     Metadata: mrd.Metadata{

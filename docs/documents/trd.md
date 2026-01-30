@@ -147,7 +147,7 @@ type Integration struct {
 ## Creating a TRD
 
 ```go
-import "github.com/grokify/structured-requirements/trd"
+import "github.com/grokify/structured-plan/trd"
 
 doc := &trd.Document{
     Metadata: trd.Metadata{

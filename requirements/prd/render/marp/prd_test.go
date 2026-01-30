@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/grokify/structured-requirements/requirements/prd"
-	"github.com/grokify/structured-requirements/requirements/prd/render"
+	"github.com/grokify/structured-plan/requirements/prd"
+	"github.com/grokify/structured-plan/requirements/prd/render"
 )
 
 func TestPRDRenderer_Format(t *testing.T) {

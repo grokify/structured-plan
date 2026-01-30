@@ -7,7 +7,7 @@
 ## Install the Library
 
 ```bash
-go get github.com/grokify/structured-requirements
+go get github.com/grokify/structured-plan
 ```
 
 ## Install the CLI (Optional)
@@ -15,7 +15,7 @@ go get github.com/grokify/structured-requirements
 The `srequirements` CLI tool provides commands for creating and validating documents:
 
 ```bash
-go install github.com/grokify/structured-requirements/cmd/srequirements@latest
+go install github.com/grokify/structured-plan/cmd/srequirements@latest
 ```
 
 ## Verify Installation
@@ -25,7 +25,7 @@ package main
 
 import (
     "fmt"
-    "github.com/grokify/structured-requirements/prd"
+    "github.com/grokify/structured-plan/prd"
 )
 
 func main() {
@@ -37,7 +37,7 @@ func main() {
 ## Package Structure
 
 ```
-github.com/grokify/structured-requirements/
+github.com/grokify/structured-plan/
 ├── prd/          # Product Requirements Document
 ├── mrd/          # Market Requirements Document
 ├── trd/          # Technical Requirements Document
@@ -48,9 +48,9 @@ github.com/grokify/structured-requirements/
 
 ```go
 import (
-    "github.com/grokify/structured-requirements/prd"
-    "github.com/grokify/structured-requirements/mrd"
-    "github.com/grokify/structured-requirements/trd"
+    "github.com/grokify/structured-plan/prd"
+    "github.com/grokify/structured-plan/mrd"
+    "github.com/grokify/structured-plan/trd"
 )
 ```
 

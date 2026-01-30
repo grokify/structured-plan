@@ -29,13 +29,13 @@ Each document type supports:
 ## Installation
 
 ```bash
-go install github.com/grokify/structured-requirements/cmd/srequirements@latest
+go install github.com/grokify/structured-plan/cmd/srequirements@latest
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/grokify/structured-requirements.git
+git clone https://github.com/grokify/structured-plan.git
 cd structured-prd
 go build -o srequirements ./cmd/srequirements
 ```
@@ -99,9 +99,9 @@ import (
     "encoding/json"
     "os"
 
-    "github.com/grokify/structured-requirements/prd"
-    "github.com/grokify/structured-requirements/mrd"
-    "github.com/grokify/structured-requirements/trd"
+    "github.com/grokify/structured-plan/prd"
+    "github.com/grokify/structured-plan/mrd"
+    "github.com/grokify/structured-plan/trd"
 )
 
 func main() {
@@ -139,7 +139,7 @@ func main() {
 The library integrates with `structured-evaluation` for standardized quality reports:
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 // Load and score a PRD
 doc, _ := prd.Load("my-product.prd.json")
@@ -597,17 +597,17 @@ See the `examples/` directory for complete examples:
 
 MIT License
 
- [build-status-svg]: https://github.com/grokify/structured-requirements/actions/workflows/ci.yaml/badge.svg?branch=main
- [build-status-url]: https://github.com/grokify/structured-requirements/actions/workflows/ci.yaml
- [lint-status-svg]: https://github.com/grokify/structured-requirements/actions/workflows/lint.yaml/badge.svg?branch=main
- [lint-status-url]: https://github.com/grokify/structured-requirements/actions/workflows/lint.yaml
- [goreport-svg]: https://goreportcard.com/badge/github.com/grokify/structured-requirements
- [goreport-url]: https://goreportcard.com/report/github.com/grokify/structured-requirements
- [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/grokify/structured-requirements
- [docs-godoc-url]: https://pkg.go.dev/github.com/grokify/structured-requirements
+ [build-status-svg]: https://github.com/grokify/structured-plan/actions/workflows/ci.yaml/badge.svg?branch=main
+ [build-status-url]: https://github.com/grokify/structured-plan/actions/workflows/ci.yaml
+ [lint-status-svg]: https://github.com/grokify/structured-plan/actions/workflows/lint.yaml/badge.svg?branch=main
+ [lint-status-url]: https://github.com/grokify/structured-plan/actions/workflows/lint.yaml
+ [goreport-svg]: https://goreportcard.com/badge/github.com/grokify/structured-plan
+ [goreport-url]: https://goreportcard.com/report/github.com/grokify/structured-plan
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/grokify/structured-plan
+ [docs-godoc-url]: https://pkg.go.dev/github.com/grokify/structured-plan
  [viz-svg]: https://img.shields.io/badge/visualizaton-Go-blue.svg
  [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=grokify%2Fstructured-requirements
  [loc-svg]: https://tokei.rs/b1/github/grokify/structured-requirements
- [repo-url]: https://github.com/grokify/structured-requirements
+ [repo-url]: https://github.com/grokify/structured-plan
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/grokify/structured-requirements/blob/master/LICENSE
+ [license-url]: https://github.com/grokify/structured-plan/blob/master/LICENSE

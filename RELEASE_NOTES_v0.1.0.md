@@ -21,7 +21,7 @@ structured-requirements integrates with:
 ## Installation
 
 ```bash
-go get github.com/grokify/structured-requirements
+go get github.com/grokify/structured-plan
 ```
 
 ## Features
@@ -92,8 +92,8 @@ package main
 
 import (
     "fmt"
-    "github.com/grokify/structured-requirements/prd"
-    "github.com/grokify/structured-requirements/prd/render/marp"
+    "github.com/grokify/structured-plan/prd"
+    "github.com/grokify/structured-plan/prd/render/marp"
 )
 
 func main() {
@@ -140,8 +140,8 @@ The `examples/` directory contains sample documents:
 
 ## Links
 
-- [GitHub Repository](https://github.com/grokify/structured-requirements)
-- [Go Package Documentation](https://pkg.go.dev/github.com/grokify/structured-requirements)
+- [GitHub Repository](https://github.com/grokify/structured-plan)
+- [Go Package Documentation](https://pkg.go.dev/github.com/grokify/structured-plan)
 - [Changelog](CHANGELOG.md)
 - [structureddocs](https://github.com/grokify/structureddocs) - Shared rendering utilities
 - [structured-goals](https://github.com/grokify/structured-goals) - Goals frameworks

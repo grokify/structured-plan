@@ -73,9 +73,9 @@ graph LR
 
 ```go
 import (
-    "github.com/grokify/structured-requirements/prd"  // Product requirements
-    "github.com/grokify/structured-requirements/mrd"  // Market requirements
-    "github.com/grokify/structured-requirements/trd"  // Technical requirements
+    "github.com/grokify/structured-plan/prd"  // Product requirements
+    "github.com/grokify/structured-plan/mrd"  // Market requirements
+    "github.com/grokify/structured-plan/trd"  // Technical requirements
 )
 ```
 

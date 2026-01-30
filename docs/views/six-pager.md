@@ -30,7 +30,7 @@ graph TD
 ## Generate 6-Pager
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 sixPager := prd.GenerateSixPagerView(doc)
 

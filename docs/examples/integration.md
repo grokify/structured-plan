@@ -28,7 +28,7 @@ jobs:
           go-version: '1.21'
 
       - name: Install validator
-        run: go install github.com/grokify/structured-requirements/cmd/srequirements@latest
+        run: go install github.com/grokify/structured-plan/cmd/srequirements@latest
 
       - name: Validate PRDs
         run: |
@@ -64,7 +64,7 @@ import (
     "encoding/json"
     "net/http"
 
-    "github.com/grokify/structured-requirements/prd"
+    "github.com/grokify/structured-plan/prd"
 )
 
 func notifySlack(doc *prd.Document, webhookURL string) error {
@@ -104,7 +104,7 @@ Export PRD to Notion:
 package main
 
 import (
-    "github.com/grokify/structured-requirements/prd"
+    "github.com/grokify/structured-plan/prd"
     // hypothetical notion client
     "github.com/example/notion-go"
 )

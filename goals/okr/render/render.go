@@ -2,7 +2,7 @@
 // to various output formats including Marp slides.
 package render
 
-import "github.com/grokify/structured-requirements/goals/okr"
+import "github.com/grokify/structured-plan/goals/okr"
 
 // Renderer defines the interface for output format renderers.
 type Renderer interface {

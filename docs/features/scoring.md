@@ -22,7 +22,7 @@ graph LR
 ## Quick Start
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 // Score a PRD
 scores := prd.Score(doc)

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/grokify/structured-requirements/roadmap"
+	"github.com/grokify/structured-plan/roadmap"
 )
 
 func TestToSwimlaneTable(t *testing.T) {

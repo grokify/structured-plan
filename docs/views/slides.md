@@ -18,9 +18,9 @@ The slides package converts PRD documents into Marp-compatible markdown that can
 
 ```go
 import (
-    "github.com/grokify/structured-requirements/prd"
-    "github.com/grokify/structured-requirements/prd/render"
-    "github.com/grokify/structured-requirements/prd/render/marp"
+    "github.com/grokify/structured-plan/prd"
+    "github.com/grokify/structured-plan/prd/render"
+    "github.com/grokify/structured-plan/prd/render/marp"
 )
 
 // Load PRD
@@ -211,9 +211,9 @@ import (
     "log"
     "os"
 
-    "github.com/grokify/structured-requirements/prd"
-    "github.com/grokify/structured-requirements/prd/render"
-    "github.com/grokify/structured-requirements/prd/render/marp"
+    "github.com/grokify/structured-plan/prd"
+    "github.com/grokify/structured-plan/prd/render"
+    "github.com/grokify/structured-plan/prd/render/marp"
 )
 
 func main() {

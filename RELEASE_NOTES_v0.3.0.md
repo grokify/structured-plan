@@ -19,7 +19,7 @@ This release adds integration with `structured-evaluation` for standardized PRD 
 The new evaluation integration enables PRD scoring results to be output in the standardized `EvaluationReport` format from `structured-evaluation`:
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 // Convert deterministic scoring to EvaluationReport
 doc, _ := prd.Load("my-product.prd.json")
@@ -99,11 +99,11 @@ No breaking changes. Existing code continues to work without modification.
 ## Installation
 
 ```bash
-go get github.com/grokify/structured-requirements@v0.3.0
+go get github.com/grokify/structured-plan@v0.3.0
 ```
 
 Or install the CLI:
 
 ```bash
-go install github.com/grokify/structured-requirements/cmd/srequirements@v0.3.0
+go install github.com/grokify/structured-plan/cmd/srequirements@v0.3.0
 ```

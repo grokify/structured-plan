@@ -8,7 +8,7 @@ This guide walks you through creating your first PRD with structured-requirement
 package main
 
 import (
-    "github.com/grokify/structured-requirements/prd"
+    "github.com/grokify/structured-plan/prd"
 )
 
 func main() {

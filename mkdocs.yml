@@ -1,7 +1,7 @@
 site_name: Structured Requirements
 site_description: Go library for structured requirements documents (PRD, MRD, TRD) with goals alignment
 site_url: https://grokify.github.io/structured-requirements/
-repo_url: https://github.com/grokify/structured-requirements
+repo_url: https://github.com/grokify/structured-plan
 repo_name: grokify/structured-requirements
 edit_uri: edit/main/docs/
 
@@ -65,7 +65,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/grokify/structured-requirements
+      link: https://github.com/grokify/structured-plan
 
 nav:
   - Home: index.md

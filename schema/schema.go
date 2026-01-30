@@ -24,13 +24,13 @@ func PRDSchemaBytes() []byte {
 // SchemaID constants for referencing schemas.
 const (
 	// PRDSchemaID is the canonical ID for the PRD schema.
-	PRDSchemaID = "https://github.com/grokify/structured-requirements/schema/prd.schema.json"
+	PRDSchemaID = "https://github.com/grokify/structured-plan/schema/prd.schema.json"
 
 	// MRDSchemaID is the canonical ID for the MRD schema (placeholder).
-	MRDSchemaID = "https://github.com/grokify/structured-requirements/schema/mrd.schema.json"
+	MRDSchemaID = "https://github.com/grokify/structured-plan/schema/mrd.schema.json"
 
 	// TRDSchemaID is the canonical ID for the TRD schema (placeholder).
-	TRDSchemaID = "https://github.com/grokify/structured-requirements/schema/trd.schema.json"
+	TRDSchemaID = "https://github.com/grokify/structured-plan/schema/trd.schema.json"
 )
 
 // TODO: Add MRD and TRD schemas when created.

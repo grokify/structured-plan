@@ -22,7 +22,7 @@ Key additions:
 ## Installation
 
 ```bash
-go get github.com/grokify/structured-requirements@v0.2.0
+go get github.com/grokify/structured-plan@v0.2.0
 ```
 
 ## New Features
@@ -32,7 +32,7 @@ go get github.com/grokify/structured-requirements@v0.2.0
 Access the PRD JSON Schema programmatically:
 
 ```go
-import "github.com/grokify/structured-requirements/schema"
+import "github.com/grokify/structured-plan/schema"
 
 // Get schema as string
 schemaJSON := schema.PRDSchema()
@@ -42,7 +42,7 @@ schemaBytes := schema.PRDSchemaBytes()
 
 // Get canonical schema URL
 schemaID := schema.PRDSchemaID
-// "https://github.com/grokify/structured-requirements/schema/prd.schema.json"
+// "https://github.com/grokify/structured-plan/schema/prd.schema.json"
 ```
 
 ### Schema Generator
@@ -50,7 +50,7 @@ schemaID := schema.PRDSchemaID
 Generate JSON Schema from Go types:
 
 ```go
-import "github.com/grokify/structured-requirements/schema"
+import "github.com/grokify/structured-plan/schema"
 
 gen := schema.NewGenerator()
 
@@ -116,10 +116,10 @@ New dependency added:
 
 | Commit | Description |
 |--------|-------------|
-| [`c219bed`](https://github.com/grokify/structured-requirements/commit/c219bed) | feat(schema): add schema embed package for programmatic access |
-| [`699ef11`](https://github.com/grokify/structured-requirements/commit/699ef11) | feat(schema): add JSON Schema generator from Go types |
-| [`1970cb9`](https://github.com/grokify/structured-requirements/commit/1970cb9) | feat(cli): add schema generate command |
-| [`0911fd5`](https://github.com/grokify/structured-requirements/commit/0911fd5) | feat(schema): add extended PRD sections to schema |
+| [`c219bed`](https://github.com/grokify/structured-plan/commit/c219bed) | feat(schema): add schema embed package for programmatic access |
+| [`699ef11`](https://github.com/grokify/structured-plan/commit/699ef11) | feat(schema): add JSON Schema generator from Go types |
+| [`1970cb9`](https://github.com/grokify/structured-plan/commit/1970cb9) | feat(cli): add schema generate command |
+| [`0911fd5`](https://github.com/grokify/structured-plan/commit/0911fd5) | feat(schema): add extended PRD sections to schema |
 
 ## Contributors
 
@@ -128,7 +128,7 @@ New dependency added:
 
 ## Links
 
-- [GitHub Repository](https://github.com/grokify/structured-requirements)
-- [Go Package Documentation](https://pkg.go.dev/github.com/grokify/structured-requirements)
+- [GitHub Repository](https://github.com/grokify/structured-plan)
+- [Go Package Documentation](https://pkg.go.dev/github.com/grokify/structured-plan)
 - [Changelog](CHANGELOG.md)
 - [v0.1.0 Release Notes](RELEASE_NOTES_v0.1.0.md)

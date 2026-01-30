@@ -125,7 +125,7 @@ Output example:
 ## Installation
 
 ```bash
-go install github.com/grokify/structured-requirements/cmd/srequirements@v0.4.0
+go install github.com/grokify/structured-plan/cmd/srequirements@v0.4.0
 ```
 
 ## Full Changelog

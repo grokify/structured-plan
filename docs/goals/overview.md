@@ -160,7 +160,7 @@ go get github.com/grokify/structured-goals
 
 ```go
 import (
-    "github.com/grokify/structured-requirements/prd"
+    "github.com/grokify/structured-plan/prd"
     "github.com/grokify/structured-goals/v2mom"
     "github.com/grokify/structured-goals/okr"
 )

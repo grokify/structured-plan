@@ -30,7 +30,7 @@ type PMView struct {
 ## Generate PM View
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 // Generate view from PRD
 pmView := prd.GeneratePMView(doc)

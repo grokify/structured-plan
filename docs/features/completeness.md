@@ -14,7 +14,7 @@ Unlike scoring (which evaluates quality), completeness checks:
 ## Quick Start
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 
 report := prd.CheckCompleteness(doc)
 

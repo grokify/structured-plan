@@ -5,7 +5,7 @@ Complete API reference for structured-requirements packages.
 ## Package Overview
 
 ```
-github.com/grokify/structured-requirements/
+github.com/grokify/structured-plan/
 ├── prd/    # Product Requirements Document
 ├── mrd/    # Market Requirements Document
 ├── trd/    # Technical Requirements Document
@@ -14,7 +14,7 @@ github.com/grokify/structured-requirements/
 ## PRD Package
 
 ```go
-import "github.com/grokify/structured-requirements/prd"
+import "github.com/grokify/structured-plan/prd"
 ```
 
 ### Document Operations
@@ -164,7 +164,7 @@ Generates markdown output for PR/FAQ.
 ### Slide Renderers
 
 ```go
-import "github.com/grokify/structured-requirements/prd/render/marp"
+import "github.com/grokify/structured-plan/prd/render/marp"
 ```
 
 #### NewPRDRenderer
@@ -446,7 +446,7 @@ const (
 ## MRD Package
 
 ```go
-import "github.com/grokify/structured-requirements/mrd"
+import "github.com/grokify/structured-plan/mrd"
 ```
 
 See [MRD Documentation](../documents/mrd.md) for types and functions.
@@ -454,7 +454,7 @@ See [MRD Documentation](../documents/mrd.md) for types and functions.
 ## TRD Package
 
 ```go
-import "github.com/grokify/structured-requirements/trd"
+import "github.com/grokify/structured-plan/trd"
 ```
 
 See [TRD Documentation](../documents/trd.md) for types and functions.
