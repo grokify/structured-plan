@@ -4,16 +4,22 @@
     "title": "Agent and MCP Control Plane Technical Requirements",
     "version": "1.0.0",
     "status": "draft",
-    "created_at": "2025-12-19T00:00:00Z",
-    "updated_at": "2025-12-19T00:00:00Z",
+    "createdAt": "2025-12-19T00:00:00Z",
+    "updatedAt": "2025-12-19T00:00:00Z",
     "authors": [
       {
         "name": "John Wang",
         "role": "Author"
       }
     ],
-    "tags": ["architecture", "spiffe", "security", "kubernetes", "microservices"],
-    "related_documents": [
+    "tags": [
+      "architecture",
+      "spiffe",
+      "security",
+      "kubernetes",
+      "microservices"
+    ],
+    "relatedDocuments": [
       {
         "title": "Agent and MCP Control Plane PRD",
         "url": "agent-control-plane.prd.json",
@@ -28,18 +34,18 @@
       }
     ]
   },
-  "executive_summary": {
+  "executiveSummary": {
     "purpose": "Define the technical architecture and implementation requirements for the Agent and MCP Control Plane - a governance infrastructure for AI agent ecosystems providing cryptographic identity, trust attestation, credential injection, and audit logging.",
     "scope": "This document covers the control plane architecture, component design, API specifications, security design, and deployment requirements. It does not cover agent framework internals or LLM model implementation.",
-    "technical_approach": "Microservices architecture deployed on Kubernetes, following the control plane / data plane separation pattern used by Istio and Envoy. SPIFFE/SPIRE provides workload identity, with a custom Governance Proxy for credential injection and policy enforcement.",
-    "key_decisions": [
+    "technicalApproach": "Microservices architecture deployed on Kubernetes, following the control plane / data plane separation pattern used by Istio and Envoy. SPIFFE/SPIRE provides workload identity, with a custom Governance Proxy for credential injection and policy enforcement.",
+    "keyDecisions": [
       "SPIFFE/SPIRE for agent identity (CNCF standard)",
       "Go for core services (performance, SPIFFE ecosystem)",
       "PostgreSQL with row-level security for multi-tenancy",
       "Redis for policy caching and rate limiting",
       "mTLS for all inter-service communication"
     ],
-    "out_of_scope": [
+    "outOfScope": [
       "Agent runtime/framework implementation",
       "LLM model hosting or inference",
       "End-user chatbot UI",
@@ -74,7 +80,9 @@
           "Rotate SVIDs automatically before expiry",
           "Federate with external SPIFFE trust domains"
         ],
-        "dependencies": ["postgres-db"],
+        "dependencies": [
+          "postgres-db"
+        ],
         "technology": "SPIRE (Go)",
         "owner": "Platform Team"
       },
@@ -93,7 +101,12 @@
           "Log all requests with full context",
           "Strip credentials from responses"
         ],
-        "dependencies": ["spire-server", "secrets-vault", "policy-service", "audit-service"],
+        "dependencies": [
+          "spire-server",
+          "secrets-vault",
+          "policy-service",
+          "audit-service"
+        ],
         "technology": "Go, Envoy-based",
         "owner": "Platform Team"
       },
@@ -110,7 +123,10 @@
           "Automatic token refresh before expiry",
           "Audit all secret access"
         ],
-        "dependencies": ["postgres-db", "hsm-service"],
+        "dependencies": [
+          "postgres-db",
+          "hsm-service"
+        ],
         "technology": "Go",
         "owner": "Security Team"
       },
@@ -126,7 +142,10 @@
           "Issue signed attestations",
           "Manage attestation lifecycle (issue, renew, revoke)"
         ],
-        "dependencies": ["postgres-db", "spire-server"],
+        "dependencies": [
+          "postgres-db",
+          "spire-server"
+        ],
         "technology": "Go",
         "owner": "Security Team"
       },
@@ -142,7 +161,10 @@
           "Manage delegation policies",
           "Cache policies in Redis"
         ],
-        "dependencies": ["postgres-db", "redis-cache"],
+        "dependencies": [
+          "postgres-db",
+          "redis-cache"
+        ],
         "technology": "Go, OPA (Open Policy Agent)",
         "owner": "Platform Team"
       },
@@ -157,7 +179,10 @@
           "Support SIEM export",
           "Provide audit query API"
         ],
-        "dependencies": ["postgres-db", "object-storage"],
+        "dependencies": [
+          "postgres-db",
+          "object-storage"
+        ],
         "technology": "Go",
         "owner": "Security Team"
       },
@@ -173,7 +198,12 @@
           "Admin policy management",
           "Audit log viewing"
         ],
-        "dependencies": ["policy-service", "kya-service", "secrets-vault", "audit-service"],
+        "dependencies": [
+          "policy-service",
+          "kya-service",
+          "secrets-vault",
+          "audit-service"
+        ],
         "technology": "Go",
         "owner": "Product Team"
       },
@@ -188,7 +218,9 @@
           "Admin dashboard",
           "Audit log viewer"
         ],
-        "dependencies": ["portal-api"],
+        "dependencies": [
+          "portal-api"
+        ],
         "technology": "React, TypeScript",
         "owner": "Product Team"
       },
@@ -221,13 +253,13 @@
         "owner": "Platform Team"
       }
     ],
-    "data_flows": [
+    "dataFlows": [
       {
         "id": "df-agent-request",
         "name": "Agent API Request",
         "source": "agent",
         "destination": "governance-proxy",
-        "data_type": "API Request",
+        "dataType": "API Request",
         "protocol": "mTLS (HTTPS)",
         "description": "Agent makes API request with SVID for identity"
       },
@@ -236,7 +268,7 @@
         "name": "Credential Injection",
         "source": "governance-proxy",
         "destination": "secrets-vault",
-        "data_type": "Credential Request",
+        "dataType": "Credential Request",
         "protocol": "gRPC/mTLS",
         "description": "Proxy retrieves credentials for injection into upstream request"
       },
@@ -245,7 +277,7 @@
         "name": "Policy Evaluation",
         "source": "governance-proxy",
         "destination": "policy-service",
-        "data_type": "Policy Query",
+        "dataType": "Policy Query",
         "protocol": "gRPC/mTLS",
         "description": "Proxy checks if request is allowed by policy"
       },
@@ -254,7 +286,7 @@
         "name": "Audit Event",
         "source": "governance-proxy",
         "destination": "audit-service",
-        "data_type": "Audit Event",
+        "dataType": "Audit Event",
         "protocol": "gRPC/mTLS (async)",
         "description": "Proxy sends audit event for every request"
       },
@@ -263,12 +295,12 @@
         "name": "SVID Issuance",
         "source": "spire-agent",
         "destination": "spire-server",
-        "data_type": "SVID Request",
+        "dataType": "SVID Request",
         "protocol": "gRPC/mTLS",
         "description": "SPIRE agent requests SVID for workload"
       }
     ],
-    "architecture_decisions": [
+    "architectureDecisions": [
       {
         "id": "adr-001",
         "title": "Use SPIFFE/SPIRE for Workload Identity",
@@ -281,7 +313,11 @@
           "Federation capability with external systems",
           "Dependency on SPIFFE ecosystem"
         ],
-        "alternatives": ["Custom PKI", "Cloud-specific identity (AWS IAM Roles)", "JWT-based identity"],
+        "alternatives": [
+          "Custom PKI",
+          "Cloud-specific identity (AWS IAM Roles)",
+          "JWT-based identity"
+        ],
         "date": "2025-01-15"
       },
       {
@@ -296,7 +332,11 @@
           "Additional proxy latency (~5-10ms)",
           "Proxy becomes critical path"
         ],
-        "alternatives": ["Agent-stored credentials", "Short-lived tokens to agents", "Sidecar vault agent"],
+        "alternatives": [
+          "Agent-stored credentials",
+          "Short-lived tokens to agents",
+          "Sidecar vault agent"
+        ],
         "date": "2025-01-15"
       },
       {
@@ -311,7 +351,10 @@
           "Follows industry-proven pattern",
           "More complex deployment"
         ],
-        "alternatives": ["Monolithic architecture", "Full service mesh adoption"],
+        "alternatives": [
+          "Monolithic architecture",
+          "Full service mesh adoption"
+        ],
         "date": "2025-01-15"
       },
       {
@@ -326,19 +369,25 @@
           "Some query performance overhead",
           "Requires careful policy design"
         ],
-        "alternatives": ["Database per tenant", "Schema per tenant", "Application-level isolation only"],
+        "alternatives": [
+          "Database per tenant",
+          "Schema per tenant",
+          "Application-level isolation only"
+        ],
         "date": "2025-01-15"
       }
     ]
   },
-  "technology_stack": {
+  "technologyStack": {
     "languages": [
       {
         "name": "Go",
         "version": "1.22+",
         "purpose": "Backend services, Governance Proxy",
         "rationale": "Performance, SPIFFE ecosystem is Go-native, strong concurrency",
-        "constraints": ["Must use Go modules"]
+        "constraints": [
+          "Must use Go modules"
+        ]
       },
       {
         "name": "TypeScript",
@@ -371,7 +420,9 @@
         "version": "16",
         "purpose": "Primary data store",
         "rationale": "Row-level security, JSONB support, proven reliability",
-        "constraints": ["Must enable row-level security for all tenant tables"]
+        "constraints": [
+          "Must enable row-level security for all tenant tables"
+        ]
       },
       {
         "name": "Redis",
@@ -439,14 +490,14 @@
       }
     ]
   },
-  "api_specifications": [
+  "apiSpecifications": [
     {
       "id": "api-governance-proxy",
       "name": "Governance Proxy API",
       "type": "REST",
       "version": "v1",
       "description": "Proxy API for credential injection and policy enforcement",
-      "base_url": "https://proxy.agentgov.io",
+      "baseUrl": "https://proxy.agentgov.io",
       "auth": "mTLS (SVID)",
       "endpoints": [
         {
@@ -471,7 +522,7 @@
           "response": "Original tool API response"
         }
       ],
-      "rate_limit": "Per-agent limits defined in policy"
+      "rateLimit": "Per-agent limits defined in policy"
     },
     {
       "id": "api-portal",
@@ -479,7 +530,7 @@
       "type": "REST",
       "version": "v1",
       "description": "Management API for portal operations",
-      "base_url": "https://api.agentgov.io",
+      "baseUrl": "https://api.agentgov.io",
       "auth": "OAuth 2.0 / API Key",
       "endpoints": [
         {
@@ -522,7 +573,7 @@
           "response": "AuditEventList"
         }
       ],
-      "spec_url": "https://api.agentgov.io/openapi.yaml"
+      "specUrl": "https://api.agentgov.io/openapi.yaml"
     },
     {
       "id": "api-internal-grpc",
@@ -555,7 +606,7 @@
       ]
     }
   ],
-  "data_model": {
+  "dataModel": {
     "overview": "The data model supports multi-tenant SaaS with complete tenant isolation via PostgreSQL row-level security. Core entities include Organizations, Agents, MCP Servers, Delegations, and Audit Events.",
     "entities": [
       {
@@ -563,12 +614,39 @@
         "name": "Organization",
         "description": "Tenant organization",
         "attributes": [
-          {"name": "id", "type": "UUID", "required": true, "description": "Primary key"},
-          {"name": "name", "type": "VARCHAR(255)", "required": true},
-          {"name": "slug", "type": "VARCHAR(100)", "required": true, "constraints": "UNIQUE"},
-          {"name": "plan", "type": "ENUM", "required": true, "description": "Pricing plan"},
-          {"name": "created_at", "type": "TIMESTAMP", "required": true},
-          {"name": "settings", "type": "JSONB", "description": "Organization settings"}
+          {
+            "name": "id",
+            "type": "UUID",
+            "required": true,
+            "description": "Primary key"
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "required": true
+          },
+          {
+            "name": "slug",
+            "type": "VARCHAR(100)",
+            "required": true,
+            "constraints": "UNIQUE"
+          },
+          {
+            "name": "plan",
+            "type": "ENUM",
+            "required": true,
+            "description": "Pricing plan"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "required": true
+          },
+          {
+            "name": "settings",
+            "type": "JSONB",
+            "description": "Organization settings"
+          }
         ]
       },
       {
@@ -576,48 +654,155 @@
         "name": "Agent",
         "description": "Registered AI agent",
         "attributes": [
-          {"name": "id", "type": "UUID", "required": true},
-          {"name": "org_id", "type": "UUID", "required": true, "description": "FK to Organization"},
-          {"name": "spiffe_id", "type": "VARCHAR(512)", "required": true, "constraints": "UNIQUE"},
-          {"name": "name", "type": "VARCHAR(255)", "required": true},
-          {"name": "description", "type": "TEXT"},
-          {"name": "status", "type": "ENUM", "required": true},
-          {"name": "kya_attestation_id", "type": "UUID", "description": "FK to KYA Attestation"},
-          {"name": "created_at", "type": "TIMESTAMP", "required": true},
-          {"name": "metadata", "type": "JSONB"}
+          {
+            "name": "id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "org_id",
+            "type": "UUID",
+            "required": true,
+            "description": "FK to Organization"
+          },
+          {
+            "name": "spiffe_id",
+            "type": "VARCHAR(512)",
+            "required": true,
+            "constraints": "UNIQUE"
+          },
+          {
+            "name": "name",
+            "type": "VARCHAR(255)",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "TEXT"
+          },
+          {
+            "name": "status",
+            "type": "ENUM",
+            "required": true
+          },
+          {
+            "name": "kya_attestation_id",
+            "type": "UUID",
+            "description": "FK to KYA Attestation"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "required": true
+          },
+          {
+            "name": "metadata",
+            "type": "JSONB"
+          }
         ],
-        "relationships": ["Organization (many-to-one)", "KYA Attestation (one-to-one)"]
+        "relationships": [
+          "Organization (many-to-one)",
+          "KYA Attestation (one-to-one)"
+        ]
       },
       {
         "id": "delegation",
         "name": "Delegation",
         "description": "User authorization for agent to act on their behalf",
         "attributes": [
-          {"name": "id", "type": "UUID", "required": true},
-          {"name": "org_id", "type": "UUID", "required": true},
-          {"name": "user_id", "type": "UUID", "required": true},
-          {"name": "agent_id", "type": "UUID", "required": true},
-          {"name": "service", "type": "VARCHAR(100)", "required": true, "description": "e.g., google, salesforce"},
-          {"name": "scopes", "type": "TEXT[]", "required": true},
-          {"name": "expires_at", "type": "TIMESTAMP"},
-          {"name": "revoked_at", "type": "TIMESTAMP"},
-          {"name": "created_at", "type": "TIMESTAMP", "required": true}
+          {
+            "name": "id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "org_id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "user_id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "agent_id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "service",
+            "type": "VARCHAR(100)",
+            "required": true,
+            "description": "e.g., google, salesforce"
+          },
+          {
+            "name": "scopes",
+            "type": "TEXT[]",
+            "required": true
+          },
+          {
+            "name": "expires_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "revoked_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP",
+            "required": true
+          }
         ],
-        "relationships": ["User (many-to-one)", "Agent (many-to-one)"]
+        "relationships": [
+          "User (many-to-one)",
+          "Agent (many-to-one)"
+        ]
       },
       {
         "id": "kya-attestation",
         "name": "KYA Attestation",
         "description": "Know Your Agent attestation record",
         "attributes": [
-          {"name": "id", "type": "UUID", "required": true},
-          {"name": "agent_id", "type": "UUID", "required": true},
-          {"name": "trust_level", "type": "ENUM", "required": true},
-          {"name": "capabilities", "type": "TEXT[]"},
-          {"name": "issued_at", "type": "TIMESTAMP", "required": true},
-          {"name": "expires_at", "type": "TIMESTAMP", "required": true},
-          {"name": "revoked_at", "type": "TIMESTAMP"},
-          {"name": "signature", "type": "BYTEA", "required": true}
+          {
+            "name": "id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "agent_id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "trust_level",
+            "type": "ENUM",
+            "required": true
+          },
+          {
+            "name": "capabilities",
+            "type": "TEXT[]"
+          },
+          {
+            "name": "issued_at",
+            "type": "TIMESTAMP",
+            "required": true
+          },
+          {
+            "name": "expires_at",
+            "type": "TIMESTAMP",
+            "required": true
+          },
+          {
+            "name": "revoked_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "signature",
+            "type": "BYTEA",
+            "required": true
+          }
         ]
       },
       {
@@ -625,20 +810,55 @@
         "name": "Audit Event",
         "description": "Immutable audit log entry",
         "attributes": [
-          {"name": "id", "type": "UUID", "required": true},
-          {"name": "org_id", "type": "UUID", "required": true},
-          {"name": "timestamp", "type": "TIMESTAMP", "required": true},
-          {"name": "event_type", "type": "VARCHAR(100)", "required": true},
-          {"name": "agent_id", "type": "UUID"},
-          {"name": "user_id", "type": "UUID"},
-          {"name": "resource", "type": "VARCHAR(255)"},
-          {"name": "action", "type": "VARCHAR(100)"},
-          {"name": "outcome", "type": "ENUM", "required": true},
-          {"name": "details", "type": "JSONB"}
+          {
+            "name": "id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "org_id",
+            "type": "UUID",
+            "required": true
+          },
+          {
+            "name": "timestamp",
+            "type": "TIMESTAMP",
+            "required": true
+          },
+          {
+            "name": "event_type",
+            "type": "VARCHAR(100)",
+            "required": true
+          },
+          {
+            "name": "agent_id",
+            "type": "UUID"
+          },
+          {
+            "name": "user_id",
+            "type": "UUID"
+          },
+          {
+            "name": "resource",
+            "type": "VARCHAR(255)"
+          },
+          {
+            "name": "action",
+            "type": "VARCHAR(100)"
+          },
+          {
+            "name": "outcome",
+            "type": "ENUM",
+            "required": true
+          },
+          {
+            "name": "details",
+            "type": "JSONB"
+          }
         ]
       }
     ],
-    "data_stores": [
+    "dataStores": [
       {
         "id": "ds-postgres",
         "name": "Primary PostgreSQL",
@@ -668,36 +888,46 @@
     ],
     "migrations": "Flyway for schema migrations, with forward-only policy and automatic rollback on failure"
   },
-  "security_design": {
+  "securityDesign": {
     "overview": "Security is foundational to the Agent Governance Platform. The architecture implements defense in depth with multiple security layers: cryptographic identity (SPIFFE), mutual TLS for all communication, HSM-backed encryption, and comprehensive audit logging.",
     "authentication": {
       "method": "mTLS with SPIFFE SVIDs",
       "provider": "SPIRE",
       "mfa": true,
-      "session_management": "Stateless JWT for portal, SVID for agents",
+      "sessionManagement": "Stateless JWT for portal, SVID for agents",
       "details": "All agent authentication is via mTLS using X.509 SVIDs issued by SPIRE. Portal users authenticate via OIDC with MFA required."
     },
     "authorization": {
       "model": "RBAC with ABAC extensions",
       "policies": "OPA Rego policies",
-      "roles": ["org_admin", "security_admin", "agent_creator", "end_user", "viewer"],
+      "roles": [
+        "org_admin",
+        "security_admin",
+        "agent_creator",
+        "end_user",
+        "viewer"
+      ],
       "details": "Fine-grained authorization using Open Policy Agent. Policies evaluate agent identity, user delegation, and organizational policies."
     },
     "encryption": {
-      "at_rest": "AES-256-GCM with HSM-backed keys",
-      "in_transit": "TLS 1.3 minimum, mTLS for service-to-service",
-      "key_management": "AWS KMS / Cloud HSM with automatic rotation",
+      "atRest": "AES-256-GCM with HSM-backed keys",
+      "inTransit": "TLS 1.3 minimum, mTLS for service-to-service",
+      "keyManagement": "AWS KMS / Cloud HSM with automatic rotation",
       "details": "All sensitive data encrypted with per-tenant keys. Keys never leave HSM boundary."
     },
-    "network_security": {
+    "networkSecurity": {
       "firewall": "Kubernetes Network Policies",
       "waf": "AWS WAF / Cloudflare WAF",
-      "ddos_protection": "Cloudflare DDoS protection",
-      "network_policy": "Default deny, explicit allow",
+      "ddosProtection": "Cloudflare DDoS protection",
+      "networkPolicy": "Default deny, explicit allow",
       "segmentation": "Separate VPCs for control plane and data plane"
     },
-    "compliance": ["SOC 2 Type II", "GDPR", "ISO 27001"],
-    "threat_model": [
+    "compliance": [
+      "SOC 2 Type II",
+      "GDPR",
+      "ISO 27001"
+    ],
+    "threatModel": [
       {
         "id": "tm-1",
         "name": "SVID Theft",
@@ -735,7 +965,7 @@
         "mitigation": "Network policies, agents have no credentials to bypass"
       }
     ],
-    "security_controls": [
+    "securityControls": [
       {
         "id": "sc-1",
         "name": "mTLS Everywhere",
@@ -820,10 +1050,10 @@
   },
   "scalability": {
     "overview": "The platform is designed for horizontal scalability with stateless services. The Governance Proxy and API services can scale independently based on load.",
-    "horizontal_scaling": "All services are stateless and horizontally scalable. Kubernetes HPA manages scaling based on CPU, memory, and custom metrics (requests per second).",
-    "vertical_scaling": "Database can scale vertically for write-heavy workloads. Consider read replicas for read scaling.",
-    "load_balancing": "Kubernetes Services with external load balancer. Session affinity not required (stateless).",
-    "auto_scaling": "HPA with target 70% CPU, 80% memory. Scale from 3 to 100 pods for Governance Proxy.",
+    "horizontalScaling": "All services are stateless and horizontally scalable. Kubernetes HPA manages scaling based on CPU, memory, and custom metrics (requests per second).",
+    "verticalScaling": "Database can scale vertically for write-heavy workloads. Consider read replicas for read scaling.",
+    "loadBalancing": "Kubernetes Services with external load balancer. Session affinity not required (stateless).",
+    "autoScaling": "HPA with target 70% CPU, 80% memory. Scale from 3 to 100 pods for Governance Proxy.",
     "limits": [
       {
         "name": "Concurrent Connections",
@@ -859,28 +1089,32 @@
         "purpose": "Developer testing and experimentation",
         "url": "https://dev.agentgov.io",
         "resources": "Minimal (single replica per service)",
-        "access_level": "Engineering team"
+        "accessLevel": "Engineering team"
       },
       {
         "name": "Staging",
         "purpose": "Pre-production testing and validation",
         "url": "https://staging.agentgov.io",
         "resources": "Production-like (reduced scale)",
-        "access_level": "Engineering and QA"
+        "accessLevel": "Engineering and QA"
       },
       {
         "name": "Production",
         "purpose": "Customer-facing production environment",
         "url": "https://agentgov.io",
         "resources": "Full scale with auto-scaling",
-        "access_level": "Restricted (SRE and on-call)"
+        "accessLevel": "Restricted (SRE and on-call)"
       }
     ],
     "strategy": "Blue-green deployment with automatic rollback on health check failure",
     "infrastructure": "Kubernetes (EKS/GKE/AKS)",
-    "regions": ["us-east-1 (primary)", "us-west-2 (secondary)", "eu-west-1 (EU customers)"],
-    "high_availability": "Multi-AZ deployment with automatic failover. 3 replicas minimum for critical services.",
-    "disaster_recovery": "Cross-region replication for database. RPO: 1 minute, RTO: 5 minutes."
+    "regions": [
+      "us-east-1 (primary)",
+      "us-west-2 (secondary)",
+      "eu-west-1 (EU customers)"
+    ],
+    "highAvailability": "Multi-AZ deployment with automatic failover. 3 replicas minimum for critical services.",
+    "disasterRecovery": "Cross-region replication for database. RPO: 1 minute, RTO: 5 minutes."
   },
   "integrations": [
     {
@@ -889,8 +1123,8 @@
       "type": "API",
       "direction": "Bidirectional",
       "protocol": "OAuth 2.0",
-      "auth_method": "OAuth 2.0",
-      "data_format": "JSON",
+      "authMethod": "OAuth 2.0",
+      "dataFormat": "JSON",
       "frequency": "On-demand",
       "description": "Connect user accounts from Google, Microsoft, Salesforce, GitHub",
       "documentation": "OAuth 2.0 spec + provider docs"
@@ -901,8 +1135,8 @@
       "type": "API",
       "direction": "Outbound",
       "protocol": "HTTPS",
-      "auth_method": "API Key",
-      "data_format": "JSON",
+      "authMethod": "API Key",
+      "dataFormat": "JSON",
       "frequency": "Real-time",
       "description": "Proxy requests to OpenAI, Anthropic, Google AI, Azure OpenAI",
       "documentation": "Provider API documentation"
@@ -913,8 +1147,8 @@
       "type": "Webhook",
       "direction": "Outbound",
       "protocol": "HTTPS",
-      "auth_method": "API Key",
-      "data_format": "JSON (CEF optional)",
+      "authMethod": "API Key",
+      "dataFormat": "JSON (CEF optional)",
       "frequency": "Near real-time",
       "description": "Export audit logs to customer SIEM (Splunk, Datadog, etc.)"
     },
@@ -924,28 +1158,38 @@
       "type": "API",
       "direction": "Inbound",
       "protocol": "SAML 2.0 / OIDC",
-      "auth_method": "SAML/OIDC",
-      "data_format": "XML/JSON",
+      "authMethod": "SAML/OIDC",
+      "dataFormat": "XML/JSON",
       "frequency": "On-demand",
       "description": "Enterprise SSO for portal authentication (Okta, Azure AD, etc.)"
     }
   ],
   "development": {
-    "coding_standards": "Go: gofmt, golangci-lint. TypeScript: ESLint + Prettier. All code reviewed.",
-    "branch_strategy": "Trunk-based development with short-lived feature branches. Main always deployable.",
-    "code_review": "All changes require 1 approval. Security-sensitive changes require security team review.",
+    "codingStandards": "Go: gofmt, golangci-lint. TypeScript: ESLint + Prettier. All code reviewed.",
+    "branchStrategy": "Trunk-based development with short-lived feature branches. Main always deployable.",
+    "codeReview": "All changes require 1 approval. Security-sensitive changes require security team review.",
     "documentation": "API docs auto-generated from OpenAPI/protobuf. Architecture decisions documented as ADRs.",
-    "tools": ["VS Code", "GoLand", "GitHub Copilot", "Postman", "k9s"]
+    "tools": [
+      "VS Code",
+      "GoLand",
+      "GitHub Copilot",
+      "Postman",
+      "k9s"
+    ]
   },
   "testing": {
     "strategy": "Comprehensive testing pyramid: unit tests for logic, integration tests for APIs, E2E tests for critical flows.",
-    "unit_tests": "80% code coverage minimum. Table-driven tests in Go. Jest for TypeScript.",
-    "integration_tests": "API contract testing with Pact. Database integration tests with testcontainers.",
-    "e2e_tests": "Critical user flows tested with Playwright. Run in staging before production deploy.",
-    "performance_tests": "Load testing with k6. Soak tests for memory leaks. Chaos engineering with Litmus.",
-    "security_tests": "SAST (Semgrep), DAST (OWASP ZAP), dependency scanning (Snyk). Penetration testing quarterly.",
-    "coverage_requirements": "80% line coverage, 90% for security-critical code",
-    "test_environments": ["Local (Docker Compose)", "CI (GitHub Actions)", "Staging"]
+    "unitTests": "80% code coverage minimum. Table-driven tests in Go. Jest for TypeScript.",
+    "integrationTests": "API contract testing with Pact. Database integration tests with testcontainers.",
+    "e2eTests": "Critical user flows tested with Playwright. Run in staging before production deploy.",
+    "performanceTests": "Load testing with k6. Soak tests for memory leaks. Chaos engineering with Litmus.",
+    "securityTests": "SAST (Semgrep), DAST (OWASP ZAP), dependency scanning (Snyk). Penetration testing quarterly.",
+    "coverageRequirements": "80% line coverage, 90% for security-critical code",
+    "testEnvironments": [
+      "Local (Docker Compose)",
+      "CI (GitHub Actions)",
+      "Staging"
+    ]
   },
   "risks": [
     {

@@ -1,14 +1,50 @@
-# Product Requirements Document: Agent and MCP Control Plane
+---
+title: "Agent and MCP Control Plane"
+author: "John Wang"
+date: "2025-12-19"
+version: "1.1.0"
+status: "draft"
+geometry: margin=2cm
+mainfont: "Helvetica"
+sansfont: "Helvetica"
+monofont: "Courier New"
+fontfamily: helvet
+header-includes:
+  - \renewcommand{\familydefault}{\sfdefault}
+---
+
+# Agent and MCP Control Plane
 
 | Field | Value |
 |-------|-------|
 | **ID** | prd-agent-control-plane-001 |
 | **Version** | 1.1.0 |
-| **Status** | Draft |
+| **Status** | draft |
 | **Created** | 2025-12-19 |
 | **Updated** | 2025-12-19 |
-| **Author(s)** | John Wang |
+| **Author(s)** | John Wang (Author) |
 | **Tags** | agent-governance, identity, security, spiffe, multi-tenancy, mcp |
+
+---
+
+## Table of Contents
+
+1. [Executive Summary](#1-executive-summary)
+2. [Objectives and Goals](#2-objectives-and-goals)
+3. [Personas](#3-personas)
+4. [User Stories](#4-user-stories)
+5. [Functional Requirements](#5-functional-requirements)
+6. [Non-Functional Requirements](#6-non-functional-requirements)
+7. [Roadmap](#7-roadmap)
+8. [Technical Architecture](#technical-architecture)
+9. [Assumptions and Constraints](#assumptions-and-constraints)
+10. [Out of Scope](#out-of-scope)
+11. [Risk Assessment](#risk-assessment)
+12. [Glossary](#glossary)
+13. [Market Opportunity](#market-opportunity)
+14. [Deployment Options](#deployment-options)
+15. [SLA Definitions](#sla-definitions)
+16. [Pricing / Cost Model](#pricing--cost-model)
 
 ---
 
@@ -42,34 +78,6 @@ End-to-end agent identity, attestation, credential injection, and observability 
 
 ## 2. Objectives and Goals
 
-### 2.1 Business Objectives
-
-| ID | Objective | Rationale | Aligned With |
-|----|-----------|-----------|--------------|
-| bo-1 | Capture leadership position in the $9-10B agent governance market by 2030 | AI Agents market growing at 46.3% CAGR with significant governance gaps | Market opportunity analysis |
-| bo-2 | Achieve $250M ARR by Year 5 through enterprise customer acquisition | Conservative market capture of 1,000+ enterprise customers | SOM projections |
-| bo-3 | Differentiate from cloud IAM, zero trust, and API gateway competitors | No existing solution provides agent-native identity and governance | Competitive landscape analysis |
-
-### 2.2 Product Goals
-
-| ID | Goal | Rationale |
-|----|------|-----------|
-| pg-1 | Implement zero-trust agent identity where every agent has a cryptographically verifiable identity | Foundation for all governance capabilities |
-| pg-2 | Achieve credential isolation where agents never possess API keys or OAuth tokens | Eliminates credential exposure risk |
-| pg-3 | Enable delegated access with scoped, time-limited user authorization to agents | Supports least-privilege access patterns |
-| pg-4 | Provide full auditability with every credential access logged with agent and user context | Required for compliance and incident response |
-| pg-5 | Implement cost governance with centralized control over LLM API usage and costs | LLM costs are significant and need attribution |
-
-### 2.3 Success Metrics
-
-| ID | Metric | Target | Measurement Method |
-|----|--------|--------|-------------------|
-| sm-1 | Agent Identity Coverage | 100% | SPIRE registration entries / total registered agents |
-| sm-2 | Credential Exposure | 0 | Security scan of agent codebases |
-| sm-3 | Audit Completeness | 100% | Audit log coverage analysis |
-| sm-4 | Mean Time to Revoke | < 1 minute | Revocation latency metrics |
-| sm-5 | LLM Cost Attribution | 100% | Cost tracking reconciliation |
-
 ---
 
 ## 3. Personas
@@ -80,7 +88,7 @@ End-to-end agent identity, attestation, credential injection, and observability 
 |-----------|-------------|
 | **Role** | Individual User |
 | **Description** | Individuals who authorize agents and MCP servers to act on their behalf via ID-JAG delegation |
-| **Technical Proficiency** | Medium |
+| **Technical Proficiency** | medium |
 
 **Goals:**
 
@@ -102,7 +110,7 @@ End-to-end agent identity, attestation, credential injection, and observability 
 |-----------|-------------|
 | **Role** | AI Agent Developer |
 | **Description** | Developers who build and deploy AI agents; submit agents for KYA attestation |
-| **Technical Proficiency** | Expert |
+| **Technical Proficiency** | expert |
 
 **Goals:**
 
@@ -124,7 +132,7 @@ End-to-end agent identity, attestation, credential injection, and observability 
 |-----------|-------------|
 | **Role** | MCP Server Developer |
 | **Description** | Developers who build MCP servers that connect to external services; submit MCP servers for KYA attestation |
-| **Technical Proficiency** | Expert |
+| **Technical Proficiency** | expert |
 
 **Goals:**
 
@@ -145,7 +153,7 @@ End-to-end agent identity, attestation, credential injection, and observability 
 |-----------|-------------|
 | **Role** | IT Administrator |
 | **Description** | Teams managing the agent governance infrastructure; review KYA attestation submissions |
-| **Technical Proficiency** | High |
+| **Technical Proficiency** | high |
 
 **Goals:**
 
@@ -167,7 +175,7 @@ End-to-end agent identity, attestation, credential injection, and observability 
 |-----------|-------------|
 | **Role** | Security Engineer |
 | **Description** | Teams requiring audit trails and policy enforcement; manage KYA attestation policies |
-| **Technical Proficiency** | High |
+| **Technical Proficiency** | high |
 
 **Goals:**
 
@@ -190,163 +198,177 @@ End-to-end agent identity, attestation, credential injection, and observability 
 ### 4.1 End-User Stories
 
 | ID | Story | Priority | Phase |
-|----|-------|----------|-------|
-| us-eu-1 | As an End-User, I want to browse a catalog of verified AI agents so that I can find agents that meet my needs | High | Phase 1 |
-| us-eu-2 | As an End-User, I want to view an agent's KYA attestation before granting access so that I can make informed trust decisions | High | Phase 1 |
-| us-eu-3 | As an End-User, I want to grant an agent access to my Google Drive with read-only scope so that the agent can search my documents without modifying them | High | Phase 1 |
-| us-eu-4 | As an End-User, I want to set a 24-hour expiry on agent access so that my data isn't exposed indefinitely | High | Phase 1 |
-| us-eu-5 | As an End-User, I want to revoke an agent's access immediately so that I can respond to suspicious behavior | High | Phase 1 |
-| us-eu-6 | As an End-User, I want to view what actions an agent performed on my behalf so that I can audit agent behavior | Medium | Phase 2 |
+|------|----------------------------------------|----------|-------|
+| us-eu-1 | As a End-User, I want to browse a catalog of verified AI agents so that I can find agents that meet my needs | high | phase-1 |
+| us-eu-2 | As a End-User, I want to view an agent's KYA attestation before granting access so that I can make informed trust decisions | high | phase-1 |
+| us-eu-3 | As a End-User, I want to grant an agent access to my Google Drive with read-only scope so that the agent can search my documents without modifying them | high | phase-1 |
+| us-eu-4 | As a End-User, I want to set a 24-hour expiry on agent access so that my data isn't exposed indefinitely | high | phase-1 |
+| us-eu-5 | As a End-User, I want to revoke an agent's access immediately so that I can respond to suspicious behavior | high | phase-1 |
+| us-eu-6 | As a End-User, I want to view what actions an agent performed on my behalf so that I can audit agent behavior | medium | phase-2 |
 
 ### 4.2 Agent Creator Stories
 
 | ID | Story | Priority | Phase |
-|----|-------|----------|-------|
-| us-ac-1 | As an Agent Creator, I want to register my agent with its SPIFFE ID so that it can be discovered and governed | High | Phase 1 |
-| us-ac-2 | As an Agent Creator, I want to submit my agent for KYA review so that it can receive a trust attestation | High | Phase 1 |
+|------|----------------------------------------|----------|-------|
+| us-ac-1 | As a Agent Creator, I want to register my agent with its SPIFFE ID so that it can be discovered and governed | high | phase-1 |
+| us-ac-2 | As a Agent Creator, I want to submit my agent for KYA review so that it can receive a trust attestation | high | phase-1 |
 
-### 4.3 Administrator Stories
+### 4.3 Platform Administrator Stories
 
 | ID | Story | Priority | Phase |
-|----|-------|----------|-------|
-| us-ad-1 | As an Admin, I want to configure which LLM models each agent can use so that I can control costs and capabilities | High | Phase 1 |
-| us-ad-2 | As an Admin, I want to set monthly LLM budget limits per agent so that we don't exceed budget | Medium | Phase 2 |
-| us-ad-3 | As an Admin, I want to revoke all delegations for a compromised agent so that I can respond to incidents quickly | High | Phase 1 |
+|------|----------------------------------------|----------|-------|
+| us-ad-1 | As a Admin, I want to configure which LLM models each agent can use so that I can control costs and capabilities | high | phase-1 |
+| us-ad-2 | As a Admin, I want to set monthly LLM budget limits per agent so that we don't exceed budget | medium | phase-2 |
+| us-ad-3 | As a Admin, I want to revoke all delegations for a compromised agent so that I can respond to incidents quickly | high | phase-1 |
 
 ---
 
 ## 5. Functional Requirements
 
-### 5.1 Portal - End-User
+### 5.1 Governance Proxy
 
 | ID | Title | Description | Priority | Phase |
-|----|-------|-------------|----------|-------|
-| FR-P-EU-1 | Agent Catalog with Trust Ratings | View catalog of available agents with trust ratings | Must | Phase 1 |
-| FR-P-EU-2 | KYA Attestation Viewer | View agent KYA attestation details before granting access | Must | Phase 1 |
-| FR-P-EU-3 | Scoped Delegation Grant | Grant delegation to agent with scope selection | Must | Phase 1 |
-| FR-P-EU-4 | Delegation Expiry | Set delegation expiry for time-limited access | Must | Phase 1 |
-| FR-P-EU-5 | Immediate Delegation Revocation | Revoke agent delegation immediately | Must | Phase 1 |
-| FR-P-EU-7 | OAuth Account Connection | Connect external accounts (Google, Salesforce, etc.) via OAuth | Must | Phase 1 |
+|------|-----------------|--------------------------------------------|----------|-------|
+| FR-GP-1 | SPIFFE Identity Validation | Validate SPIFFE identity via mTLS for agents and MCP servers | must | phase-1 |
+| FR-GP-2 | KYA Attestation Validation | Validate KYA attestation for all requests | must | phase-1 |
+| FR-GP-3 | Delegation Validation | Validate user delegation for acting-as requests | must | phase-1 |
+| FR-GP-4 | OAuth Token Injection | Retrieve and inject OAuth tokens for SaaS APIs | must | phase-1 |
+| FR-GP-5 | LLM API Key Injection | Retrieve and inject LLM API keys | must | phase-1 |
+| FR-GP-7 | Model-Level LLM Policies | Enforce model-level LLM policies | must | phase-1 |
+| FR-GP-8 | SSE Streaming Support | Support SSE streaming for LLM responses | must | phase-1 |
+| FR-GP-10 | Request Logging | Log all requests with full context | must | phase-1 |
+| FR-GP-11 | Credential Stripping | Strip credentials from responses | must | phase-1 |
 
-### 5.2 Portal - Agent Creator
-
-| ID | Title | Description | Priority | Phase |
-|----|-------|-------------|----------|-------|
-| FR-P-AC-1 | Agent Registration | Register new agent with metadata | Must | Phase 1 |
-| FR-P-AC-4 | KYA Submission | Submit agent for KYA review | Must | Phase 1 |
-
-### 5.3 KYA Attestation
+### 5.2 KYA Attestation
 
 | ID | Title | Description | Priority | Phase |
-|----|-------|-------------|----------|-------|
-| FR-KYA-2 | Capability Verification | Verify agent capabilities against declared capabilities | Must | Phase 1 |
-| FR-KYA-4 | Attestation Signing | Sign attestation with organizational key | Must | Phase 1 |
-| FR-KYA-6 | Attestation Revocation | Revoke attestation immediately | Must | Phase 1 |
+|------|-----------------|--------------------------------------------|----------|-------|
+| FR-KYA-2 | Capability Verification | Verify agent capabilities against declared capabilities | must | phase-1 |
+| FR-KYA-4 | Attestation Signing | Sign attestation with organizational key | must | phase-1 |
+| FR-KYA-6 | Attestation Revocation | Revoke attestation immediately | must | phase-1 |
 
-### 5.4 Secrets Vault
+### 5.3 Portal - Agent Creator
 
 | ID | Title | Description | Priority | Phase |
-|----|-------|-------------|----------|-------|
-| FR-SV1-1 | OAuth Token Storage | Store OAuth access and refresh tokens per user per service | Must | Phase 1 |
-| FR-SV1-2 | HSM-Backed Encryption | Encrypt tokens with HSM-backed keys | Must | Phase 1 |
-| FR-SV1-3 | Automatic Token Refresh | Automatically refresh tokens before expiry | Must | Phase 1 |
+|------|-----------------|--------------------------------------------|----------|-------|
+| FR-P-AC-1 | Agent Registration | Register new agent with metadata | must | phase-1 |
+| FR-P-AC-4 | KYA Submission | Submit agent for KYA review | must | phase-1 |
+
+### 5.4 Portal - End-User
+
+| ID | Title | Description | Priority | Phase |
+|------|-----------------|--------------------------------------------|----------|-------|
+| FR-P-EU-1 | Agent Catalog with Trust Ratings | View catalog of available agents with trust ratings | must | phase-1 |
+| FR-P-EU-2 | KYA Attestation Viewer | View agent KYA attestation details before granting access | must | phase-1 |
+| FR-P-EU-3 | Scoped Delegation Grant | Grant delegation to agent with scope selection | must | phase-1 |
+| FR-P-EU-4 | Delegation Expiry | Set delegation expiry for time-limited access | must | phase-1 |
+| FR-P-EU-5 | Immediate Delegation Revocation | Revoke agent delegation immediately | must | phase-1 |
+| FR-P-EU-7 | OAuth Account Connection | Connect external accounts (Google, Salesforce, etc.) via OAuth | must | phase-1 |
 
 ### 5.5 SPIRE Server
 
 | ID | Title | Description | Priority | Phase |
-|----|-------|-------------|----------|-------|
-| FR-SP-1 | SVID Issuance | Issue SVIDs to registered agent and MCP server workloads | Must | Phase 1 |
-| FR-SP-4 | Automatic SVID Rotation | Automatic SVID rotation with 1 hour default TTL | Must | Phase 1 |
+|------|-----------------|--------------------------------------------|----------|-------|
+| FR-SP-1 | SVID Issuance | Issue SVIDs to registered agent and MCP server workloads | must | phase-1 |
+| FR-SP-4 | Automatic SVID Rotation | Automatic SVID rotation with 1 hour default TTL | must | phase-1 |
 
-### 5.6 Governance Proxy
+### 5.6 Secrets Vault - Tier 1
 
 | ID | Title | Description | Priority | Phase |
-|----|-------|-------------|----------|-------|
-| FR-GP-1 | SPIFFE Identity Validation | Validate SPIFFE identity via mTLS for agents and MCP servers | Must | Phase 1 |
-| FR-GP-2 | KYA Attestation Validation | Validate KYA attestation for all requests | Must | Phase 1 |
-| FR-GP-3 | Delegation Validation | Validate user delegation for acting-as requests | Must | Phase 1 |
-| FR-GP-4 | OAuth Token Injection | Retrieve and inject OAuth tokens for SaaS APIs | Must | Phase 1 |
-| FR-GP-5 | LLM API Key Injection | Retrieve and inject LLM API keys | Must | Phase 1 |
-| FR-GP-7 | Model-Level LLM Policies | Enforce model-level LLM policies | Must | Phase 1 |
-| FR-GP-8 | SSE Streaming Support | Support SSE streaming for LLM responses | Must | Phase 1 |
-| FR-GP-10 | Request Logging | Log all requests with full context | Must | Phase 1 |
-| FR-GP-11 | Credential Stripping | Strip credentials from responses | Must | Phase 1 |
-
----
+|------|-----------------|--------------------------------------------|----------|-------|
+| FR-SV1-1 | OAuth Token Storage | Store OAuth access and refresh tokens per user per service | must | phase-1 |
+| FR-SV1-2 | HSM-Backed Encryption | Encrypt tokens with HSM-backed keys | must | phase-1 |
+| FR-SV1-3 | Automatic Token Refresh | Automatically refresh tokens before expiry | must | phase-1 |
 
 ## 6. Non-Functional Requirements
 
-### 6.1 Security
+### 6.1 Availability
 
 | ID | Title | Target | Priority | Phase |
 |----|-------|--------|----------|-------|
-| NFR-SEC-1 | mTLS Inter-Service Communication | 100% coverage | Must | Phase 1 |
-| NFR-SEC-2 | Secrets Encryption at Rest | 100% of secrets encrypted (AES-256) | Must | Phase 1 |
-| NFR-SEC-4 | No Credentials in Logs | 0 occurrences | Must | Phase 1 |
-| NFR-SEC-6 | SOC 2 Type II Compliance | Certified | Could | Phase 3 |
+| NFR-AVAIL-1 | Governance Proxy Availability | 99.9% | must | phase-1 |
+| NFR-AVAIL-2 | SPIRE Server Availability | 99.9% | must | phase-1 |
+| NFR-AVAIL-4 | Multi-Region Deployment | 3+ regions | could | phase-3 |
 
-### 6.2 Performance
-
-| ID | Title | Target | Priority | Phase |
-|----|-------|--------|----------|-------|
-| NFR-PERF-1 | Proxy Latency | < 50ms p99 (excluding upstream) | Must | Phase 1 |
-| NFR-PERF-3 | SSE Streaming Latency | < 10ms added per chunk | Must | Phase 1 |
-| NFR-PERF-4 | Token Refresh Latency | < 1 second | Must | Phase 1 |
-
-### 6.3 Scalability
+### 6.2 Compliance
 
 | ID | Title | Target | Priority | Phase |
 |----|-------|--------|----------|-------|
-| NFR-PERF-2 | Concurrent Agent Connections | 10,000 concurrent | Should | Phase 2 |
-| NFR-SCALE-1 | Horizontal Proxy Scaling | Auto-scale based on load | Must | Phase 1 |
-| NFR-SCALE-3 | Registered Agents Capacity | 10,000+ agents | Should | Phase 2 |
+| NFR-SEC-6 | SOC 2 Type II Compliance | Certified | could | phase-3 |
 
-### 6.4 Availability
-
-| ID | Title | Target | SLO | Priority | Phase |
-|----|-------|--------|-----|----------|-------|
-| NFR-AVAIL-1 | Governance Proxy Availability | 99.9% | 43.2 min/month error budget | Must | Phase 1 |
-| NFR-AVAIL-2 | SPIRE Server Availability | 99.9% | - | Must | Phase 1 |
-| NFR-AVAIL-4 | Multi-Region Deployment | 3+ regions | - | Could | Phase 3 |
-
-### 6.5 Multi-Tenancy
+### 6.3 Disaster Recovery
 
 | ID | Title | Target | Priority | Phase |
 |----|-------|--------|----------|-------|
-| NFR-MT-1 | Tenant Data Isolation | 100% isolation test pass rate | Must | Phase 1 |
-| NFR-MT-2 | Per-Tenant Encryption Keys | 100% per-tenant keys | Must | Phase 1 |
+| NFR-DR-1 | Governance Proxy RTO | 5 minutes | must | phase-1 |
+| NFR-DR-2 | Secrets Vault RPO | 1 minute | must | phase-1 |
 
-**Multi-Tenancy Specification:**
-
-| Aspect | Configuration |
-|--------|---------------|
-| Isolation Model | Bridge |
-| Data Segregation | Schema per tenant |
-| Encryption Model | Tenant-specific keys |
-| Network Isolation | Shared |
-| Noisy Neighbor Protection | Rate limiting per org: 10,000 req/min |
-
-### 6.6 Observability
+### 6.4 Multi-Tenancy
 
 | ID | Title | Target | Priority | Phase |
 |----|-------|--------|----------|-------|
-| NFR-OBS-1 | Audit Log Completeness | 100% coverage | Must | Phase 1 |
-| NFR-OBS-2 | Audit Log Immutability | 0 tampering incidents | Should | Phase 2 |
+| NFR-MT-1 | Tenant Data Isolation | 100% | must | phase-1 |
+| NFR-MT-2 | Per-Tenant Encryption Keys | 100% per-tenant keys | must | phase-1 |
 
-### 6.7 Disaster Recovery
+### 6.5 Observability
 
 | ID | Title | Target | Priority | Phase |
 |----|-------|--------|----------|-------|
-| NFR-DR-1 | Governance Proxy RTO | 5 minutes | Must | Phase 1 |
-| NFR-DR-2 | Secrets Vault RPO | 1 minute | Must | Phase 1 |
+| NFR-OBS-1 | Audit Log Completeness | 100% | must | phase-1 |
+| NFR-OBS-2 | Audit Log Immutability | 0 | should | phase-2 |
+
+### 6.6 Performance
+
+| ID | Title | Target | Priority | Phase |
+|----|-------|--------|----------|-------|
+| NFR-PERF-1 | Proxy Latency | < 50ms | must | phase-1 |
+| NFR-PERF-3 | SSE Streaming Latency | < 10ms | must | phase-1 |
+| NFR-PERF-4 | Token Refresh Latency | < 1 second | must | phase-1 |
+
+### 6.7 Scalability
+
+| ID | Title | Target | Priority | Phase |
+|----|-------|--------|----------|-------|
+| NFR-PERF-2 | Concurrent Agent Connections | 10,000 concurrent | should | phase-2 |
+| NFR-SCALE-1 | Horizontal Proxy Scaling | Auto-scale based on load | must | phase-1 |
+| NFR-SCALE-3 | Registered Agents Capacity | 10,000+ agents | should | phase-2 |
+
+### 6.8 Security
+
+| ID | Title | Target | Priority | Phase |
+|----|-------|--------|----------|-------|
+| NFR-SEC-1 | mTLS Inter-Service Communication | 100% | must | phase-1 |
+| NFR-SEC-2 | Secrets Encryption at Rest | 100% of secrets encrypted | must | phase-1 |
+| NFR-SEC-4 | No Credentials in Logs | 0 occurrences | must | phase-1 |
 
 ---
 
 ## 7. Roadmap
 
-### Phase 1: Foundation
+### 7.1 Roadmap Overview (Swimlane View)
 
-**Type:** Generic
+| Swimlane | **Phase 1**<br>Foundation | **Phase 2**<br>Scale & Compliance | **Phase 3**<br>Enterprise Ready |
+|----------|----------|----------|----------|
+| **Features** | • ⏳ Governance Proxy MVP<br>• ⏳ Secrets Vault<br>• ⏳ Portal - End-User Features<br>• ⏳ Portal - Agent Creator Features<br>• ⏳ KYA Attestation Service | • ⏳ LLM Budget Management<br>• ⏳ Usage Analytics Dashboard<br>• ⏳ Rate Limiting | • ⏳ Hybrid Deployment Model<br>• ⏳ Self-Hosted Package |
+| **Integrations** |  | • ⏳ Audit Log Export |  |
+| **Infrastructure** | • ⏳ SPIRE Server Deployment |  | • ⏳ Multi-Region Deployment |
+| **Milestones** |  | • ⏳ SOC 2 Type I Preparation | • ⏳ SOC 2 Type II Certification<br>• ⏳ ISO 27001 Preparation |
+
+**Legend:**
+
+| Icon | Status |
+|------|--------|
+| ✅ | Completed / Achieved |
+| 🔄 | In Progress |
+| ⏳ | Not Started |
+| 🚫 | Blocked |
+| ❌ | Missed |
+
+### 7.2 Phase Details
+
+### phase-1: Foundation
+
+**Type:** generic
 
 **Goals:**
 
@@ -360,12 +382,12 @@ End-to-end agent identity, attestation, credential injection, and observability 
 
 | ID | Title | Type | Status |
 |----|-------|------|--------|
-| d-1-1 | SPIRE Server Deployment | Infrastructure | Not Started |
-| d-1-2 | Governance Proxy MVP | Feature | Not Started |
-| d-1-3 | Secrets Vault | Feature | Not Started |
-| d-1-4 | Portal - End-User Features | Feature | Not Started |
-| d-1-5 | Portal - Agent Creator Features | Feature | Not Started |
-| d-1-6 | KYA Attestation Service | Feature | Not Started |
+| d-1-1 | SPIRE Server Deployment | infrastructure | not_started |
+| d-1-2 | Governance Proxy MVP | feature | not_started |
+| d-1-3 | Secrets Vault | feature | not_started |
+| d-1-4 | Portal - End-User Features | feature | not_started |
+| d-1-5 | Portal - Agent Creator Features | feature | not_started |
+| d-1-6 | KYA Attestation Service | feature | not_started |
 
 **Success Criteria:**
 
@@ -376,11 +398,11 @@ End-to-end agent identity, attestation, credential injection, and observability 
 
 ---
 
-### Phase 2: Scale & Compliance
+### phase-2: Scale & Compliance
 
-**Type:** Generic
+**Type:** generic
 
-**Dependencies:** Phase 1
+**Dependencies:** phase-1
 
 **Goals:**
 
@@ -394,11 +416,11 @@ End-to-end agent identity, attestation, credential injection, and observability 
 
 | ID | Title | Type | Status |
 |----|-------|------|--------|
-| d-2-1 | LLM Budget Management | Feature | Not Started |
-| d-2-2 | Usage Analytics Dashboard | Feature | Not Started |
-| d-2-3 | Rate Limiting | Feature | Not Started |
-| d-2-4 | Audit Log Export | Integration | Not Started |
-| d-2-5 | SOC 2 Type I Preparation | Milestone | Not Started |
+| d-2-1 | LLM Budget Management | feature | not_started |
+| d-2-2 | Usage Analytics Dashboard | feature | not_started |
+| d-2-3 | Rate Limiting | feature | not_started |
+| d-2-4 | Audit Log Export | integration | not_started |
+| d-2-5 | SOC 2 Type I Preparation | milestone | not_started |
 
 **Success Criteria:**
 
@@ -409,11 +431,11 @@ End-to-end agent identity, attestation, credential injection, and observability 
 
 ---
 
-### Phase 3: Enterprise Ready
+### phase-3: Enterprise Ready
 
-**Type:** Generic
+**Type:** generic
 
-**Dependencies:** Phase 2
+**Dependencies:** phase-2
 
 **Goals:**
 
@@ -427,11 +449,11 @@ End-to-end agent identity, attestation, credential injection, and observability 
 
 | ID | Title | Type | Status |
 |----|-------|------|--------|
-| d-3-1 | Multi-Region Deployment | Infrastructure | Not Started |
-| d-3-2 | Hybrid Deployment Model | Feature | Not Started |
-| d-3-3 | Self-Hosted Package | Feature | Not Started |
-| d-3-4 | SOC 2 Type II Certification | Milestone | Not Started |
-| d-3-5 | ISO 27001 Preparation | Milestone | Not Started |
+| d-3-1 | Multi-Region Deployment | infrastructure | not_started |
+| d-3-2 | Hybrid Deployment Model | feature | not_started |
+| d-3-3 | Self-Hosted Package | feature | not_started |
+| d-3-4 | SOC 2 Type II Certification | milestone | not_started |
+| d-3-5 | ISO 27001 Preparation | milestone | not_started |
 
 **Success Criteria:**
 
@@ -442,13 +464,13 @@ End-to-end agent identity, attestation, credential injection, and observability 
 
 ---
 
-## 8. Technical Architecture
+## Technical Architecture
 
-### 8.1 Overview
+### Overview
 
 The architecture follows the industry-standard separation of control plane and data plane. The Control Plane handles configuration, policy, and identity issuance (SPIRE Server, Policy Store, Credential Vault). The Data Plane handles request processing and policy enforcement (Governance Gateway, SPIRE Agent). This pattern follows Istio, Kubernetes, and Consul architectures.
 
-### 8.2 Integration Points
+### Integration Points
 
 | ID | Name | Type | Description | Auth Method |
 |----|------|------|-------------|-------------|
@@ -458,36 +480,27 @@ The architecture follows the industry-standard separation of control plane and d
 | int-4 | SIEM Systems | Webhook/API | Audit log export | API Key/OAuth |
 | int-5 | SSO Providers | SAML/OIDC | Admin authentication | SAML/OIDC |
 
-### 8.3 Technology Stack
-
-| Layer | Technologies |
-|-------|--------------|
-| Infrastructure | Kubernetes, SPIRE, HSM |
-| Backend | Go, gRPC |
-| Database | PostgreSQL (row-level security), Redis (caching) |
-| Monitoring | Prometheus, Grafana, OpenTelemetry |
-
 ---
 
-## 9. Assumptions and Constraints
+## Assumptions and Constraints
 
-### 9.1 Assumptions
+### Assumptions
 
 | ID | Assumption | Risk if Invalid |
-|----|------------|-----------------|
+|----|------------|------------------|
 | a-1 | Organizations will adopt SPIFFE/SPIRE as the agent identity standard | Competing standards emerge |
 | a-2 | LLM providers will maintain stable APIs | Breaking API changes require proxy updates |
 | a-3 | Enterprise customers require compliance certifications | Certification delays impact sales |
 
-### 9.2 Constraints
+### Constraints
 
 | ID | Type | Constraint | Impact | Mitigation |
 |----|------|------------|--------|------------|
-| c-1 | Regulatory | Must comply with GDPR for EU users | Data residency requirements, right to deletion | EU region deployment, PII anonymization |
-| c-2 | Technical | SPIFFE/SPIRE dependency for identity | Tied to SPIFFE ecosystem evolution | Active SPIFFE community participation |
-| c-3 | Regulatory | SOC 2 Type II requires 6+ months of evidence | Cannot certify immediately | Start evidence collection early in Phase 1 |
+| c-1 | regulatory | Must comply with GDPR for EU users | Data residency requirements, right to deletion | EU region deployment, PII anonymization |
+| c-2 | technical | SPIFFE/SPIRE dependency for identity | Tied to SPIFFE ecosystem evolution | Active SPIFFE community participation |
+| c-3 | regulatory | SOC 2 Type II requires 6+ months of evidence | Cannot certify immediately | Start evidence collection early in Phase 1 |
 
-### 9.3 Dependencies
+### Dependencies
 
 | ID | Name | Type | Status |
 |----|------|------|--------|
@@ -497,7 +510,7 @@ The architecture follows the industry-standard separation of control plane and d
 
 ---
 
-## 10. Out of Scope
+## Out of Scope
 
 - Agent cognition/reasoning (handled by agent frameworks like LangChain, AutoGen)
 - LLM model training or fine-tuning
@@ -507,98 +520,69 @@ The architecture follows the industry-standard separation of control plane and d
 
 ---
 
-## 11. Risk Assessment
+## Risk Assessment
 
 | ID | Risk | Probability | Impact | Mitigation | Status |
 |----|------|-------------|--------|------------|--------|
-| r-tm-1 | Stolen SVID enabling agent impersonation | Low | High | Short SVID TTL (1hr), workload attestation | Mitigated |
-| r-tm-2 | Compromised agent binary performing unauthorized actions | Medium | High | KYA code review, container signing | Open |
-| r-tm-3 | Delegation scope escalation granting excess permissions | Low | Medium | Strict scope validation, UI confirmation | Mitigated |
-| r-tm-5 | Secrets vault breach exposing credentials | Low | Critical | HSM backing, encryption at rest, access logging | Mitigated |
-| r-tm-7 | Governance Proxy bypass enabling direct API access | Low | High | Network policies, no credentials in agents | Mitigated |
-| r-tm-8 | Insider admin abuse leading to data exfiltration | Low | High | Audit logging, separation of duties, MFA | Open |
-| r-market-1 | Competing standard emerges for agent identity | Medium | High | Active participation in SPIFFE community, extensible architecture | Open |
+| r-tm-1 | Stolen SVID enabling agent impersonation | low | high | Short SVID TTL (1hr), workload attestation | mitigated |
+| r-tm-2 | Compromised agent binary performing unauthorized actions | medium | high | KYA code review, container signing | open |
+| r-tm-3 | Delegation scope escalation granting excess permissions | low | medium | Strict scope validation, UI confirmation | mitigated |
+| r-tm-5 | Secrets vault breach exposing credentials | low | critical | HSM backing, encryption at rest, access logging | mitigated |
+| r-tm-7 | Governance Proxy bypass enabling direct API access | low | high | Network policies, no credentials in agents | mitigated |
+| r-tm-8 | Insider admin abuse leading to data exfiltration | low | high | Audit logging, separation of duties, MFA | open |
+| r-market-1 | Competing standard emerges for agent identity | medium | high | Active participation in SPIFFE community, extensible architecture | open |
 
 ---
 
-## 12. Market Opportunity
-
-### 12.1 TAM/SAM/SOM
-
-| Metric | 2030 Estimate |
-|--------|---------------|
-| TAM (Agent Identity & Governance) | $9-10 billion |
-| SAM (Enterprise Agentic AI Infrastructure) | $3.7 billion |
-| SOM (Year 5) | $250 million |
-
-### 12.2 CAGR
-
-| Market | CAGR |
-|--------|------|
-| AI Agents | 46.3% |
-| Agentic AI | 43.8% |
-| AI Governance | 49-51% |
-
-### 12.3 Market Gap
-
-No existing solution provides end-to-end agent identity (SPIFFE), attestation (KYA), credential injection, and observability in a unified control plane.
-
----
-
-## 13. Deployment Options
-
-### 13.1 Deployment Models
-
-| Model | Control Plane | Gateway | SLA | Target Customer |
-|-------|--------------|---------|-----|-----------------|
-| Managed SaaS | Vendor | Vendor | Up to 99.999% | Most customers |
-| Hybrid | Vendor | Vendor-in-Customer-VPC | 99.99% | Compliance-sensitive |
-| Self-Hosted | Customer | Customer | Customer's SLA | Air-gapped, regulated |
-
-### 13.2 Pricing Tiers
-
-| Tier | Monthly Price | SLA |
-|------|---------------|-----|
-| Starter | $500 | 99.9% |
-| Business | $2,000 | 99.95% |
-| Enterprise | $8,000 | 99.99% |
-| Premium | $25,000 | 99.999% |
-
----
-
-## 14. SLA Definitions
-
-### 14.1 Service Level Objectives
-
-| Service | Metric | Business Tier | Enterprise Tier |
-|---------|--------|---------------|-----------------|
-| Governance Proxy | Availability | 99.99% | 99.999% |
-| Governance Proxy | Latency (p99) | < 50ms | < 25ms |
-| SPIRE Server | SVID issuance | < 500ms | < 200ms |
-
-### 14.2 SLA Exclusions
-
-- Upstream service failures (LLM providers, SaaS APIs)
-- Scheduled maintenance windows (72-hour notice)
-- Customer-caused issues
-- Force majeure events
-
----
-
-## 15. Glossary
+## Glossary
 
 | Term | Definition |
 |------|------------|
-| **SPIFFE** | Secure Production Identity Framework for Everyone - a set of standards for identifying and securing communications between services |
-| **SPIRE** | SPIFFE Runtime Environment - the reference implementation of SPIFFE |
-| **SVID** | SPIFFE Verifiable Identity Document - an X.509 certificate that encodes a SPIFFE ID |
-| **KYA** | Know Your Agent - attestation framework for verifying AI agent trustworthiness, capabilities, and security posture |
+| **SPIFFE** (SPIFFE) | Secure Production Identity Framework for Everyone - a set of standards for identifying and securing communications between services |
+| **SPIRE** (SPIRE) | SPIFFE Runtime Environment - the reference implementation of SPIFFE |
+| **SVID** (SVID) | SPIFFE Verifiable Identity Document - an X.509 certificate that encodes a SPIFFE ID |
+| **KYA** (KYA) | Know Your Agent - attestation framework for verifying AI agent trustworthiness, capabilities, and security posture |
 | **Delegation** | User authorization for an agent to act on their behalf with specific scopes and time limits |
-| **mTLS** | Mutual TLS - both client and server present certificates for authentication |
-| **SSE** | Server-Sent Events - streaming protocol used for LLM responses |
-| **MCP** | Model Context Protocol - protocol for connecting AI agents to external tools and services |
+| **mTLS** (mTLS) | Mutual TLS - both client and server present certificates for authentication |
+| **SSE** (SSE) | Server-Sent Events - streaming protocol used for LLM responses |
+| **MCP** (MCP) | Model Context Protocol - protocol for connecting AI agents to external tools and services |
 | **Control Plane** | Infrastructure components responsible for configuration, policy, and identity issuance |
 | **Data Plane** | Infrastructure components responsible for request processing and policy enforcement |
+
+---
+
+## Market Opportunity
+
+Detailed market analysis including TAM, SAM, SOM, and competitive landscape
+
+*See JSON source for detailed content.*
+
+---
+
+## Deployment Options
+
+Managed, Hybrid, and Self-Hosted deployment models with SLA tiers
+
+*See JSON source for detailed content.*
+
+---
+
+## SLA Definitions
+
+Service Level Objectives, Indicators, and Error Budgets
+
+*See JSON source for detailed content.*
+
+---
+
+## Pricing / Cost Model
+
+Pricing tiers and usage metering
+
+*See JSON source for detailed content.*
+
+---
+
 
 ---
 

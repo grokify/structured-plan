@@ -4,51 +4,58 @@
     "title": "Agent and MCP Control Plane",
     "version": "1.1.0",
     "status": "draft",
-    "created_at": "2025-12-19T00:00:00Z",
-    "updated_at": "2025-12-19T00:00:00Z",
+    "createdAt": "2025-12-19T00:00:00Z",
+    "updatedAt": "2025-12-19T00:00:00Z",
     "authors": [
       {
         "name": "John Wang",
         "role": "Author"
       }
     ],
-    "tags": ["agent-governance", "identity", "security", "spiffe", "multi-tenancy", "mcp"]
+    "tags": [
+      "agent-governance",
+      "identity",
+      "security",
+      "spiffe",
+      "multi-tenancy",
+      "mcp"
+    ]
   },
-  "executive_summary": {
-    "problem_statement": "Organizations deploying AI agents face critical governance challenges: no standardized way to cryptographically identify AI agents, no mechanism to verify agent capabilities and security posture before granting access, agents often store API keys and OAuth tokens directly creating security risks, limited visibility into what agents access and on whose behalf, and no centralized management of expensive LLM API usage across agents.",
-    "proposed_solution": "The Agent and MCP Control Plane provides centralized governance infrastructure for AI agent and MCP server ecosystems, implementing cryptographic identity via SPIFFE/SPIRE, trust attestation via Know Your Agent (KYA) certification, just-in-time credential injection via a governance proxy, comprehensive audit logging of all agent and MCP server actions, and LLM usage management with model-level policies and cost tracking.",
-    "expected_outcomes": [
+  "executiveSummary": {
+    "problemStatement": "Organizations deploying AI agents face critical governance challenges: no standardized way to cryptographically identify AI agents, no mechanism to verify agent capabilities and security posture before granting access, agents often store API keys and OAuth tokens directly creating security risks, limited visibility into what agents access and on whose behalf, and no centralized management of expensive LLM API usage across agents.",
+    "proposedSolution": "The Agent and MCP Control Plane provides centralized governance infrastructure for AI agent and MCP server ecosystems, implementing cryptographic identity via SPIFFE/SPIRE, trust attestation via Know Your Agent (KYA) certification, just-in-time credential injection via a governance proxy, comprehensive audit logging of all agent and MCP server actions, and LLM usage management with model-level policies and cost tracking.",
+    "expectedOutcomes": [
       "100% of agents have cryptographically verifiable SPIFFE IDs",
       "Zero API keys stored in agent code or configuration",
       "100% of API calls logged with full identity context",
       "Mean time to revoke access under 1 minute",
       "100% LLM cost attribution to agent and user"
     ],
-    "target_audience": "Organizations deploying AI agents requiring enterprise-grade governance, identity, and security",
-    "value_proposition": "End-to-end agent identity, attestation, credential injection, and observability in a unified control plane - addressing a market gap where no existing solution provides this combination"
+    "targetAudience": "Organizations deploying AI agents requiring enterprise-grade governance, identity, and security",
+    "valueProposition": "End-to-end agent identity, attestation, credential injection, and observability in a unified control plane - addressing a market gap where no existing solution provides this combination"
   },
   "objectives": {
-    "business_objectives": [
+    "businessObjectives": [
       {
         "id": "bo-1",
         "description": "Capture leadership position in the $9-10B agent governance market by 2030",
         "rationale": "AI Agents market growing at 46.3% CAGR with significant governance gaps",
-        "aligned_with": "Market opportunity analysis"
+        "alignedWith": "Market opportunity analysis"
       },
       {
         "id": "bo-2",
         "description": "Achieve $250M ARR by Year 5 through enterprise customer acquisition",
         "rationale": "Conservative market capture of 1,000+ enterprise customers",
-        "aligned_with": "SOM projections"
+        "alignedWith": "SOM projections"
       },
       {
         "id": "bo-3",
         "description": "Differentiate from cloud IAM, zero trust, and API gateway competitors",
         "rationale": "No existing solution provides agent-native identity and governance",
-        "aligned_with": "Competitive landscape analysis"
+        "alignedWith": "Competitive landscape analysis"
       }
     ],
-    "product_goals": [
+    "productGoals": [
       {
         "id": "pg-1",
         "description": "Implement zero-trust agent identity where every agent has a cryptographically verifiable identity",
@@ -75,14 +82,14 @@
         "rationale": "LLM costs are significant and need attribution"
       }
     ],
-    "success_metrics": [
+    "successMetrics": [
       {
         "id": "sm-1",
         "name": "Agent Identity Coverage",
         "description": "Percentage of agents with SPIFFE IDs",
         "metric": "agent_identity_coverage",
         "target": "100%",
-        "measurement_method": "SPIRE registration entries / total registered agents"
+        "measurementMethod": "SPIRE registration entries / total registered agents"
       },
       {
         "id": "sm-2",
@@ -90,7 +97,7 @@
         "description": "API keys stored in agent code or configuration",
         "metric": "credential_exposure_count",
         "target": "0",
-        "measurement_method": "Security scan of agent codebases"
+        "measurementMethod": "Security scan of agent codebases"
       },
       {
         "id": "sm-3",
@@ -98,7 +105,7 @@
         "description": "Percentage of API calls logged with full identity context",
         "metric": "audit_completeness",
         "target": "100%",
-        "measurement_method": "Audit log coverage analysis"
+        "measurementMethod": "Audit log coverage analysis"
       },
       {
         "id": "sm-4",
@@ -106,7 +113,7 @@
         "description": "Time to revoke agent access after decision",
         "metric": "mttr_revoke",
         "target": "< 1 minute",
-        "measurement_method": "Revocation latency metrics"
+        "measurementMethod": "Revocation latency metrics"
       },
       {
         "id": "sm-5",
@@ -114,7 +121,7 @@
         "description": "Percentage of LLM costs attributed to agent and user",
         "metric": "cost_attribution_accuracy",
         "target": "100%",
-        "measurement_method": "Cost tracking reconciliation"
+        "measurementMethod": "Cost tracking reconciliation"
       }
     ]
   },
@@ -130,7 +137,7 @@
         "Maintain visibility into agent actions",
         "Quickly revoke access when needed"
       ],
-      "pain_points": [
+      "painPoints": [
         "Cannot verify if an agent is trustworthy",
         "No control over what agents access",
         "Cannot see what agents did on their behalf",
@@ -141,8 +148,8 @@
         "Delegates specific tasks to AI agents",
         "Reviews agent activity periodically"
       ],
-      "technical_proficiency": "medium",
-      "is_primary": true
+      "technicalProficiency": "medium",
+      "isPrimary": true
     },
     {
       "id": "persona-agent-creator",
@@ -155,7 +162,7 @@
         "Access user data securely on their behalf",
         "Monitor agent usage and performance"
       ],
-      "pain_points": [
+      "painPoints": [
         "Complex credential management",
         "No standard identity framework for agents",
         "Difficult to prove agent trustworthiness",
@@ -166,8 +173,8 @@
         "Submits agents for security review",
         "Iterates based on attestation feedback"
       ],
-      "technical_proficiency": "expert",
-      "is_primary": false
+      "technicalProficiency": "expert",
+      "isPrimary": false
     },
     {
       "id": "persona-mcp-creator",
@@ -180,7 +187,7 @@
         "Obtain trust attestations",
         "Control which agents can invoke the MCP server"
       ],
-      "pain_points": [
+      "painPoints": [
         "Managing credentials for external services",
         "No standard identity framework",
         "Complex agent authorization logic"
@@ -190,8 +197,8 @@
         "Integrates with external SaaS APIs",
         "Configures access policies"
       ],
-      "technical_proficiency": "expert",
-      "is_primary": false
+      "technicalProficiency": "expert",
+      "isPrimary": false
     },
     {
       "id": "persona-admin",
@@ -204,7 +211,7 @@
         "Monitor agent activity",
         "Respond to security incidents"
       ],
-      "pain_points": [
+      "painPoints": [
         "No centralized agent governance",
         "Uncontrolled LLM costs",
         "Limited audit visibility",
@@ -215,8 +222,8 @@
         "Reviews audit logs regularly",
         "Manages API keys centrally"
       ],
-      "technical_proficiency": "high",
-      "is_primary": false
+      "technicalProficiency": "high",
+      "isPrimary": false
     },
     {
       "id": "persona-security",
@@ -229,7 +236,7 @@
         "Enforce security policies",
         "Respond to security incidents"
       ],
-      "pain_points": [
+      "painPoints": [
         "Insufficient audit logging",
         "Credential sprawl across agents",
         "Compliance gaps",
@@ -240,19 +247,19 @@
         "Analyzes audit logs for anomalies",
         "Defines security policies"
       ],
-      "technical_proficiency": "high",
-      "is_primary": false
+      "technicalProficiency": "high",
+      "isPrimary": false
     }
   ],
-  "user_stories": [
+  "userStories": [
     {
       "id": "us-eu-1",
-      "persona_id": "persona-enduser",
+      "personaId": "persona-enduser",
       "title": "Browse Agent Catalog",
-      "as_a": "End-User",
-      "i_want": "to browse a catalog of verified AI agents",
-      "so_that": "I can find agents that meet my needs",
-      "acceptance_criteria": [
+      "asA": "End-User",
+      "iWant": "to browse a catalog of verified AI agents",
+      "soThat": "I can find agents that meet my needs",
+      "acceptanceCriteria": [
         {
           "id": "ac-eu-1-1",
           "description": "User can view list of agents with trust ratings",
@@ -262,17 +269,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "End-User Portal"
     },
     {
       "id": "us-eu-2",
-      "persona_id": "persona-enduser",
+      "personaId": "persona-enduser",
       "title": "View KYA Attestation",
-      "as_a": "End-User",
-      "i_want": "to view an agent's KYA attestation before granting access",
-      "so_that": "I can make informed trust decisions",
-      "acceptance_criteria": [
+      "asA": "End-User",
+      "iWant": "to view an agent's KYA attestation before granting access",
+      "soThat": "I can make informed trust decisions",
+      "acceptanceCriteria": [
         {
           "id": "ac-eu-2-1",
           "description": "User can view detailed attestation information",
@@ -282,17 +289,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "End-User Portal"
     },
     {
       "id": "us-eu-3",
-      "persona_id": "persona-enduser",
+      "personaId": "persona-enduser",
       "title": "Grant Scoped Delegation",
-      "as_a": "End-User",
-      "i_want": "to grant an agent access to my Google Drive with read-only scope",
-      "so_that": "the agent can search my documents without modifying them",
-      "acceptance_criteria": [
+      "asA": "End-User",
+      "iWant": "to grant an agent access to my Google Drive with read-only scope",
+      "soThat": "the agent can search my documents without modifying them",
+      "acceptanceCriteria": [
         {
           "id": "ac-eu-3-1",
           "description": "User can select specific scopes when granting access",
@@ -302,17 +309,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "Delegation Management"
     },
     {
       "id": "us-eu-4",
-      "persona_id": "persona-enduser",
+      "personaId": "persona-enduser",
       "title": "Time-Limited Access",
-      "as_a": "End-User",
-      "i_want": "to set a 24-hour expiry on agent access",
-      "so_that": "my data isn't exposed indefinitely",
-      "acceptance_criteria": [
+      "asA": "End-User",
+      "iWant": "to set a 24-hour expiry on agent access",
+      "soThat": "my data isn't exposed indefinitely",
+      "acceptanceCriteria": [
         {
           "id": "ac-eu-4-1",
           "description": "User can set delegation expiry time",
@@ -322,17 +329,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "Delegation Management"
     },
     {
       "id": "us-eu-5",
-      "persona_id": "persona-enduser",
+      "personaId": "persona-enduser",
       "title": "Immediate Revocation",
-      "as_a": "End-User",
-      "i_want": "to revoke an agent's access immediately",
-      "so_that": "I can respond to suspicious behavior",
-      "acceptance_criteria": [
+      "asA": "End-User",
+      "iWant": "to revoke an agent's access immediately",
+      "soThat": "I can respond to suspicious behavior",
+      "acceptanceCriteria": [
         {
           "id": "ac-eu-5-1",
           "description": "Revocation takes effect within 1 minute",
@@ -342,17 +349,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "Delegation Management"
     },
     {
       "id": "us-eu-6",
-      "persona_id": "persona-enduser",
+      "personaId": "persona-enduser",
       "title": "View Agent Actions",
-      "as_a": "End-User",
-      "i_want": "to view what actions an agent performed on my behalf",
-      "so_that": "I can audit agent behavior",
-      "acceptance_criteria": [
+      "asA": "End-User",
+      "iWant": "to view what actions an agent performed on my behalf",
+      "soThat": "I can audit agent behavior",
+      "acceptanceCriteria": [
         {
           "id": "ac-eu-6-1",
           "description": "User can view audit history",
@@ -362,17 +369,17 @@
         }
       ],
       "priority": "medium",
-      "phase_id": "phase-2",
+      "phaseId": "phase-2",
       "epic": "Audit & Observability"
     },
     {
       "id": "us-ac-1",
-      "persona_id": "persona-agent-creator",
+      "personaId": "persona-agent-creator",
       "title": "Register Agent",
-      "as_a": "Agent Creator",
-      "i_want": "to register my agent with its SPIFFE ID",
-      "so_that": "it can be discovered and governed",
-      "acceptance_criteria": [
+      "asA": "Agent Creator",
+      "iWant": "to register my agent with its SPIFFE ID",
+      "soThat": "it can be discovered and governed",
+      "acceptanceCriteria": [
         {
           "id": "ac-ac-1-1",
           "description": "Agent can be registered with SPIFFE ID",
@@ -382,17 +389,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "Agent Registration"
     },
     {
       "id": "us-ac-2",
-      "persona_id": "persona-agent-creator",
+      "personaId": "persona-agent-creator",
       "title": "Submit for KYA Review",
-      "as_a": "Agent Creator",
-      "i_want": "to submit my agent for KYA review",
-      "so_that": "it can receive a trust attestation",
-      "acceptance_criteria": [
+      "asA": "Agent Creator",
+      "iWant": "to submit my agent for KYA review",
+      "soThat": "it can receive a trust attestation",
+      "acceptanceCriteria": [
         {
           "id": "ac-ac-2-1",
           "description": "Agent can be submitted for attestation review",
@@ -402,17 +409,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "KYA Attestation"
     },
     {
       "id": "us-ad-1",
-      "persona_id": "persona-admin",
+      "personaId": "persona-admin",
       "title": "Configure LLM Policies",
-      "as_a": "Admin",
-      "i_want": "to configure which LLM models each agent can use",
-      "so_that": "I can control costs and capabilities",
-      "acceptance_criteria": [
+      "asA": "Admin",
+      "iWant": "to configure which LLM models each agent can use",
+      "soThat": "I can control costs and capabilities",
+      "acceptanceCriteria": [
         {
           "id": "ac-ad-1-1",
           "description": "Admin can set model-level access policies",
@@ -422,17 +429,17 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "Policy Management"
     },
     {
       "id": "us-ad-2",
-      "persona_id": "persona-admin",
+      "personaId": "persona-admin",
       "title": "Set LLM Budget Limits",
-      "as_a": "Admin",
-      "i_want": "to set monthly LLM budget limits per agent",
-      "so_that": "we don't exceed budget",
-      "acceptance_criteria": [
+      "asA": "Admin",
+      "iWant": "to set monthly LLM budget limits per agent",
+      "soThat": "we don't exceed budget",
+      "acceptanceCriteria": [
         {
           "id": "ac-ad-2-1",
           "description": "Budget limits are enforced",
@@ -442,17 +449,17 @@
         }
       ],
       "priority": "medium",
-      "phase_id": "phase-2",
+      "phaseId": "phase-2",
       "epic": "Cost Management"
     },
     {
       "id": "us-ad-3",
-      "persona_id": "persona-admin",
+      "personaId": "persona-admin",
       "title": "Emergency Revocation",
-      "as_a": "Admin",
-      "i_want": "to revoke all delegations for a compromised agent",
-      "so_that": "I can respond to incidents quickly",
-      "acceptance_criteria": [
+      "asA": "Admin",
+      "iWant": "to revoke all delegations for a compromised agent",
+      "soThat": "I can respond to incidents quickly",
+      "acceptanceCriteria": [
         {
           "id": "ac-ad-3-1",
           "description": "Bulk revocation works immediately",
@@ -462,7 +469,7 @@
         }
       ],
       "priority": "high",
-      "phase_id": "phase-1",
+      "phaseId": "phase-1",
       "epic": "Incident Response"
     }
   ],
@@ -474,11 +481,16 @@
         "description": "View catalog of available agents with trust ratings",
         "category": "Portal - End-User",
         "priority": "must",
-        "user_story_ids": ["us-eu-1"],
-        "acceptance_criteria": [
-          {"id": "fr-p-eu-1-ac1", "description": "Display agent list with KYA trust levels"}
+        "userStoryIds": [
+          "us-eu-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-eu-1-ac1",
+            "description": "Display agent list with KYA trust levels"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-P-EU-2",
@@ -486,11 +498,16 @@
         "description": "View agent KYA attestation details before granting access",
         "category": "Portal - End-User",
         "priority": "must",
-        "user_story_ids": ["us-eu-2"],
-        "acceptance_criteria": [
-          {"id": "fr-p-eu-2-ac1", "description": "Display attestation details including trust level, capabilities, expiry"}
+        "userStoryIds": [
+          "us-eu-2"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-eu-2-ac1",
+            "description": "Display attestation details including trust level, capabilities, expiry"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-P-EU-3",
@@ -498,11 +515,16 @@
         "description": "Grant delegation to agent with scope selection",
         "category": "Portal - End-User",
         "priority": "must",
-        "user_story_ids": ["us-eu-3"],
-        "acceptance_criteria": [
-          {"id": "fr-p-eu-3-ac1", "description": "User can select specific OAuth scopes when delegating"}
+        "userStoryIds": [
+          "us-eu-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-eu-3-ac1",
+            "description": "User can select specific OAuth scopes when delegating"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-P-EU-4",
@@ -510,11 +532,16 @@
         "description": "Set delegation expiry for time-limited access",
         "category": "Portal - End-User",
         "priority": "must",
-        "user_story_ids": ["us-eu-4"],
-        "acceptance_criteria": [
-          {"id": "fr-p-eu-4-ac1", "description": "User can set expiry time, delegation auto-expires"}
+        "userStoryIds": [
+          "us-eu-4"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-eu-4-ac1",
+            "description": "User can set expiry time, delegation auto-expires"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-P-EU-5",
@@ -522,11 +549,16 @@
         "description": "Revoke agent delegation immediately",
         "category": "Portal - End-User",
         "priority": "must",
-        "user_story_ids": ["us-eu-5"],
-        "acceptance_criteria": [
-          {"id": "fr-p-eu-5-ac1", "description": "Revocation takes effect within 1 minute"}
+        "userStoryIds": [
+          "us-eu-5"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-eu-5-ac1",
+            "description": "Revocation takes effect within 1 minute"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-P-EU-7",
@@ -534,11 +566,16 @@
         "description": "Connect external accounts (Google, Salesforce, etc.) via OAuth",
         "category": "Portal - End-User",
         "priority": "must",
-        "user_story_ids": ["us-eu-3"],
-        "acceptance_criteria": [
-          {"id": "fr-p-eu-7-ac1", "description": "Support Google, Salesforce, GitHub, Microsoft 365 OAuth"}
+        "userStoryIds": [
+          "us-eu-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-eu-7-ac1",
+            "description": "Support Google, Salesforce, GitHub, Microsoft 365 OAuth"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-P-AC-1",
@@ -546,11 +583,16 @@
         "description": "Register new agent with metadata",
         "category": "Portal - Agent Creator",
         "priority": "must",
-        "user_story_ids": ["us-ac-1"],
-        "acceptance_criteria": [
-          {"id": "fr-p-ac-1-ac1", "description": "Agent can be registered with name, description, SPIFFE ID"}
+        "userStoryIds": [
+          "us-ac-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-ac-1-ac1",
+            "description": "Agent can be registered with name, description, SPIFFE ID"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-P-AC-4",
@@ -558,11 +600,16 @@
         "description": "Submit agent for KYA review",
         "category": "Portal - Agent Creator",
         "priority": "must",
-        "user_story_ids": ["us-ac-2"],
-        "acceptance_criteria": [
-          {"id": "fr-p-ac-4-ac1", "description": "Agent enters attestation workflow upon submission"}
+        "userStoryIds": [
+          "us-ac-2"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-p-ac-4-ac1",
+            "description": "Agent enters attestation workflow upon submission"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-KYA-2",
@@ -570,11 +617,16 @@
         "description": "Verify agent capabilities against declared capabilities",
         "category": "KYA Attestation",
         "priority": "must",
-        "user_story_ids": ["us-ac-2"],
-        "acceptance_criteria": [
-          {"id": "fr-kya-2-ac1", "description": "Automated verification of declared vs actual capabilities"}
+        "userStoryIds": [
+          "us-ac-2"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-kya-2-ac1",
+            "description": "Automated verification of declared vs actual capabilities"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-KYA-4",
@@ -582,11 +634,16 @@
         "description": "Sign attestation with organizational key",
         "category": "KYA Attestation",
         "priority": "must",
-        "user_story_ids": ["us-ac-2"],
-        "acceptance_criteria": [
-          {"id": "fr-kya-4-ac1", "description": "Attestations are cryptographically signed"}
+        "userStoryIds": [
+          "us-ac-2"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-kya-4-ac1",
+            "description": "Attestations are cryptographically signed"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-KYA-6",
@@ -594,11 +651,16 @@
         "description": "Revoke attestation immediately",
         "category": "KYA Attestation",
         "priority": "must",
-        "user_story_ids": ["us-ad-3"],
-        "acceptance_criteria": [
-          {"id": "fr-kya-6-ac1", "description": "Revocation propagates within 1 minute"}
+        "userStoryIds": [
+          "us-ad-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-kya-6-ac1",
+            "description": "Revocation propagates within 1 minute"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-SV1-1",
@@ -606,11 +668,16 @@
         "description": "Store OAuth access and refresh tokens per user per service",
         "category": "Secrets Vault - Tier 1",
         "priority": "must",
-        "user_story_ids": ["us-eu-3"],
-        "acceptance_criteria": [
-          {"id": "fr-sv1-1-ac1", "description": "Tokens stored with per-user isolation"}
+        "userStoryIds": [
+          "us-eu-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-sv1-1-ac1",
+            "description": "Tokens stored with per-user isolation"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-SV1-2",
@@ -618,11 +685,16 @@
         "description": "Encrypt tokens with HSM-backed keys",
         "category": "Secrets Vault - Tier 1",
         "priority": "must",
-        "user_story_ids": ["us-eu-3"],
-        "acceptance_criteria": [
-          {"id": "fr-sv1-2-ac1", "description": "All tokens encrypted with HSM-backed keys"}
+        "userStoryIds": [
+          "us-eu-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-sv1-2-ac1",
+            "description": "All tokens encrypted with HSM-backed keys"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-SV1-3",
@@ -630,11 +702,16 @@
         "description": "Automatically refresh tokens before expiry",
         "category": "Secrets Vault - Tier 1",
         "priority": "must",
-        "user_story_ids": ["us-eu-3"],
-        "acceptance_criteria": [
-          {"id": "fr-sv1-3-ac1", "description": "Tokens refreshed before expiry, refresh < 1 second"}
+        "userStoryIds": [
+          "us-eu-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-sv1-3-ac1",
+            "description": "Tokens refreshed before expiry, refresh < 1 second"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-SP-1",
@@ -642,11 +719,16 @@
         "description": "Issue SVIDs to registered agent and MCP server workloads",
         "category": "SPIRE Server",
         "priority": "must",
-        "user_story_ids": ["us-ac-1"],
-        "acceptance_criteria": [
-          {"id": "fr-sp-1-ac1", "description": "SVIDs issued to registered workloads"}
+        "userStoryIds": [
+          "us-ac-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-sp-1-ac1",
+            "description": "SVIDs issued to registered workloads"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-SP-4",
@@ -654,11 +736,16 @@
         "description": "Automatic SVID rotation with 1 hour default TTL",
         "category": "SPIRE Server",
         "priority": "must",
-        "user_story_ids": ["us-ac-1"],
-        "acceptance_criteria": [
-          {"id": "fr-sp-4-ac1", "description": "SVIDs rotate automatically before expiry"}
+        "userStoryIds": [
+          "us-ac-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-sp-4-ac1",
+            "description": "SVIDs rotate automatically before expiry"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-1",
@@ -666,11 +753,16 @@
         "description": "Validate SPIFFE identity via mTLS for agents and MCP servers",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-ac-1"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-1-ac1", "description": "All requests validated via mTLS with SVID"}
+        "userStoryIds": [
+          "us-ac-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-1-ac1",
+            "description": "All requests validated via mTLS with SVID"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-2",
@@ -678,11 +770,16 @@
         "description": "Validate KYA attestation for all requests",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-ac-2"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-2-ac1", "description": "Requests from unattested agents rejected"}
+        "userStoryIds": [
+          "us-ac-2"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-2-ac1",
+            "description": "Requests from unattested agents rejected"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-3",
@@ -690,11 +787,16 @@
         "description": "Validate user delegation for acting-as requests",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-eu-3"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-3-ac1", "description": "Acting-as requests validated against delegation records"}
+        "userStoryIds": [
+          "us-eu-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-3-ac1",
+            "description": "Acting-as requests validated against delegation records"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-4",
@@ -702,11 +804,16 @@
         "description": "Retrieve and inject OAuth tokens for SaaS APIs",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-eu-3"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-4-ac1", "description": "OAuth tokens injected just-in-time into requests"}
+        "userStoryIds": [
+          "us-eu-3"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-4-ac1",
+            "description": "OAuth tokens injected just-in-time into requests"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-5",
@@ -714,11 +821,16 @@
         "description": "Retrieve and inject LLM API keys",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-ad-1"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-5-ac1", "description": "LLM API keys injected based on policy"}
+        "userStoryIds": [
+          "us-ad-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-5-ac1",
+            "description": "LLM API keys injected based on policy"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-7",
@@ -726,11 +838,16 @@
         "description": "Enforce model-level LLM policies",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-ad-1"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-7-ac1", "description": "Agents can only access allowed models"}
+        "userStoryIds": [
+          "us-ad-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-7-ac1",
+            "description": "Agents can only access allowed models"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-8",
@@ -738,11 +855,16 @@
         "description": "Support SSE streaming for LLM responses",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-ad-1"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-8-ac1", "description": "SSE responses streamed with < 10ms added latency per chunk"}
+        "userStoryIds": [
+          "us-ad-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-8-ac1",
+            "description": "SSE responses streamed with < 10ms added latency per chunk"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-10",
@@ -750,11 +872,16 @@
         "description": "Log all requests with full context",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-eu-6"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-10-ac1", "description": "All requests logged with agent identity, user context, timestamp"}
+        "userStoryIds": [
+          "us-eu-6"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-10-ac1",
+            "description": "All requests logged with agent identity, user context, timestamp"
+          }
+        ],
+        "phaseId": "phase-1"
       },
       {
         "id": "FR-GP-11",
@@ -762,14 +889,19 @@
         "description": "Strip credentials from responses",
         "category": "Governance Proxy",
         "priority": "must",
-        "user_story_ids": ["us-ac-1"],
-        "acceptance_criteria": [
-          {"id": "fr-gp-11-ac1", "description": "No credentials visible in responses to agents"}
+        "userStoryIds": [
+          "us-ac-1"
         ],
-        "phase_id": "phase-1"
+        "acceptanceCriteria": [
+          {
+            "id": "fr-gp-11-ac1",
+            "description": "No credentials visible in responses to agents"
+          }
+        ],
+        "phaseId": "phase-1"
       }
     ],
-    "non_functional": [
+    "nonFunctional": [
       {
         "id": "NFR-SEC-1",
         "category": "security",
@@ -778,10 +910,13 @@
         "metric": "mTLS coverage",
         "target": "100%",
         "priority": "must",
-        "phase_id": "phase-1",
+        "phaseId": "phase-1",
         "security": {
-          "encryption_in_transit": true,
-          "authentication_methods": ["mTLS", "SPIFFE"]
+          "encryptionInTransit": true,
+          "authenticationMethods": [
+            "mTLS",
+            "SPIFFE"
+          ]
         }
       },
       {
@@ -792,9 +927,9 @@
         "metric": "Encryption coverage",
         "target": "100% of secrets encrypted",
         "priority": "must",
-        "phase_id": "phase-1",
+        "phaseId": "phase-1",
         "security": {
-          "encryption_at_rest": true
+          "encryptionAtRest": true
         }
       },
       {
@@ -805,7 +940,7 @@
         "metric": "Credential exposure in logs",
         "target": "0 occurrences",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-SEC-6",
@@ -815,9 +950,13 @@
         "metric": "Certification status",
         "target": "Certified",
         "priority": "could",
-        "phase_id": "phase-3",
+        "phaseId": "phase-3",
         "security": {
-          "compliance_standards": ["SOC2", "GDPR", "ISO27001"]
+          "complianceStandards": [
+            "SOC2",
+            "GDPR",
+            "ISO27001"
+          ]
         }
       },
       {
@@ -828,7 +967,7 @@
         "metric": "p99 latency (excluding upstream)",
         "target": "< 50ms",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-PERF-2",
@@ -838,7 +977,7 @@
         "metric": "Concurrent connections",
         "target": "10,000 concurrent",
         "priority": "should",
-        "phase_id": "phase-2"
+        "phaseId": "phase-2"
       },
       {
         "id": "NFR-PERF-3",
@@ -848,7 +987,7 @@
         "metric": "Added latency per chunk",
         "target": "< 10ms",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-PERF-4",
@@ -858,7 +997,7 @@
         "metric": "Token refresh time",
         "target": "< 1 second",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-AVAIL-1",
@@ -868,12 +1007,12 @@
         "metric": "Uptime percentage",
         "target": "99.9%",
         "priority": "must",
-        "phase_id": "phase-1",
+        "phaseId": "phase-1",
         "slo": {
           "sli": "Successful requests / Total requests",
-          "slo_target": "99.9%",
+          "sloTarget": "99.9%",
           "window": "30 days rolling",
-          "error_budget": "43.2 minutes/month"
+          "errorBudget": "43.2 minutes/month"
         }
       },
       {
@@ -884,10 +1023,10 @@
         "metric": "Uptime percentage",
         "target": "99.9%",
         "priority": "must",
-        "phase_id": "phase-1",
+        "phaseId": "phase-1",
         "slo": {
           "sli": "SVID issuance success rate",
-          "slo_target": "99.9%",
+          "sloTarget": "99.9%",
           "window": "30 days rolling"
         }
       },
@@ -899,7 +1038,7 @@
         "metric": "Region coverage",
         "target": "3+ regions",
         "priority": "could",
-        "phase_id": "phase-3"
+        "phaseId": "phase-3"
       },
       {
         "id": "NFR-SCALE-1",
@@ -909,7 +1048,7 @@
         "metric": "Scaling capability",
         "target": "Auto-scale based on load",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-SCALE-3",
@@ -919,7 +1058,7 @@
         "metric": "Agent count",
         "target": "10,000+ agents",
         "priority": "should",
-        "phase_id": "phase-2"
+        "phaseId": "phase-2"
       },
       {
         "id": "NFR-MT-1",
@@ -929,13 +1068,13 @@
         "metric": "Isolation test pass rate",
         "target": "100%",
         "priority": "must",
-        "phase_id": "phase-1",
-        "multi_tenancy": {
-          "isolation_model": "bridge",
-          "data_segregation": "schema_per_tenant",
-          "encryption_model": "tenant_specific_keys",
-          "network_isolation": "shared",
-          "noisy_neighbor_protection": "Rate limiting per org: 10,000 req/min"
+        "phaseId": "phase-1",
+        "multiTenancy": {
+          "isolationModel": "bridge",
+          "dataSegregation": "schema_per_tenant",
+          "encryptionModel": "tenant_specific_keys",
+          "networkIsolation": "shared",
+          "noisyNeighborProtection": "Rate limiting per org: 10,000 req/min"
         }
       },
       {
@@ -946,7 +1085,7 @@
         "metric": "Key isolation",
         "target": "100% per-tenant keys",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-OBS-1",
@@ -956,7 +1095,7 @@
         "metric": "Audit coverage",
         "target": "100%",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-OBS-2",
@@ -966,7 +1105,7 @@
         "metric": "Tampering incidents",
         "target": "0",
         "priority": "should",
-        "phase_id": "phase-2"
+        "phaseId": "phase-2"
       },
       {
         "id": "NFR-DR-1",
@@ -976,7 +1115,7 @@
         "metric": "RTO",
         "target": "5 minutes",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       },
       {
         "id": "NFR-DR-2",
@@ -986,7 +1125,7 @@
         "metric": "RPO",
         "target": "1 minute",
         "priority": "must",
-        "phase_id": "phase-1"
+        "phaseId": "phase-1"
       }
     ]
   },
@@ -1047,7 +1186,7 @@
             "status": "not_started"
           }
         ],
-        "success_criteria": [
+        "successCriteria": [
           "100% of registered agents have SPIFFE IDs",
           "Proxy latency < 50ms p99",
           "99.9% availability achieved",
@@ -1103,13 +1242,15 @@
             "status": "not_started"
           }
         ],
-        "success_criteria": [
+        "successCriteria": [
           "Support 10,000 concurrent agent connections",
           "LLM costs 100% attributed",
           "SOC 2 Type I audit ready",
           "100+ organizations onboarded"
         ],
-        "dependencies": ["phase-1"],
+        "dependencies": [
+          "phase-1"
+        ],
         "status": "planned"
       },
       {
@@ -1160,13 +1301,15 @@
             "status": "not_started"
           }
         ],
-        "success_criteria": [
+        "successCriteria": [
           "SOC 2 Type II certified",
           "99.999% availability for Enterprise tier",
           "Hybrid deployments operational",
           "Self-hosted customers successfully deployed"
         ],
-        "dependencies": ["phase-2"],
+        "dependencies": [
+          "phase-2"
+        ],
         "status": "planned"
       }
     ]
@@ -1242,75 +1385,105 @@
       }
     ]
   },
-  "out_of_scope": [
+  "outOfScope": [
     "Agent cognition/reasoning (handled by agent frameworks like LangChain, AutoGen)",
     "LLM model training or fine-tuning",
     "End-user facing chatbot UI",
     "Data labeling or annotation tools",
     "Agent marketplace/app store (future consideration)"
   ],
-  "technical_architecture": {
+  "technicalArchitecture": {
     "overview": "The architecture follows the industry-standard separation of control plane and data plane. The Control Plane handles configuration, policy, and identity issuance (SPIRE Server, Policy Store, Credential Vault). The Data Plane handles request processing and policy enforcement (Governance Gateway, SPIRE Agent). This pattern follows Istio, Kubernetes, and Consul architectures.",
-    "integration_points": [
+    "integrationPoints": [
       {
         "id": "int-1",
         "name": "OAuth Providers",
         "type": "OAuth 2.0",
         "description": "User account connection (Google, Salesforce, GitHub, Microsoft 365)",
-        "auth_method": "OAuth 2.0",
-        "data_format": "JSON"
+        "authMethod": "OAuth 2.0",
+        "dataFormat": "JSON"
       },
       {
         "id": "int-2",
         "name": "LLM Providers",
         "type": "REST API",
         "description": "Proxied LLM access (Anthropic, OpenAI, Google AI, Azure OpenAI)",
-        "auth_method": "API Key",
-        "data_format": "JSON"
+        "authMethod": "API Key",
+        "dataFormat": "JSON"
       },
       {
         "id": "int-3",
         "name": "Tool APIs",
         "type": "REST API",
         "description": "Proxied tool access (Serper, SerpAPI, Firecrawl)",
-        "auth_method": "API Key",
-        "data_format": "JSON"
+        "authMethod": "API Key",
+        "dataFormat": "JSON"
       },
       {
         "id": "int-4",
         "name": "SIEM Systems",
         "type": "Webhook/API",
         "description": "Audit log export",
-        "auth_method": "API Key/OAuth",
-        "data_format": "JSON"
+        "authMethod": "API Key/OAuth",
+        "dataFormat": "JSON"
       },
       {
         "id": "int-5",
         "name": "SSO Providers",
         "type": "SAML/OIDC",
         "description": "Admin authentication",
-        "auth_method": "SAML/OIDC",
-        "data_format": "XML/JSON"
+        "authMethod": "SAML/OIDC",
+        "dataFormat": "XML/JSON"
       }
     ],
-    "technology_stack": {
+    "technologyStack": {
       "infrastructure": [
-        {"name": "Kubernetes", "purpose": "Container orchestration"},
-        {"name": "SPIRE", "purpose": "Workload identity"},
-        {"name": "HSM", "purpose": "Key management"}
+        {
+          "name": "Kubernetes",
+          "purpose": "Container orchestration"
+        },
+        {
+          "name": "SPIRE",
+          "purpose": "Workload identity"
+        },
+        {
+          "name": "HSM",
+          "purpose": "Key management"
+        }
       ],
       "backend": [
-        {"name": "Go", "purpose": "Governance Proxy, SPIRE integration"},
-        {"name": "gRPC", "purpose": "Inter-service communication"}
+        {
+          "name": "Go",
+          "purpose": "Governance Proxy, SPIRE integration"
+        },
+        {
+          "name": "gRPC",
+          "purpose": "Inter-service communication"
+        }
       ],
       "database": [
-        {"name": "PostgreSQL", "purpose": "Primary data store with row-level security"},
-        {"name": "Redis", "purpose": "Policy caching"}
+        {
+          "name": "PostgreSQL",
+          "purpose": "Primary data store with row-level security"
+        },
+        {
+          "name": "Redis",
+          "purpose": "Policy caching"
+        }
       ],
       "monitoring": [
-        {"name": "Prometheus", "purpose": "Metrics collection"},
-        {"name": "Grafana", "purpose": "Dashboards"},
-        {"name": "OpenTelemetry", "purpose": "Distributed tracing"}
+        {
+          "name": "Prometheus",
+          "purpose": "Metrics collection"
+        },
+        {
+          "name": "Grafana",
+          "purpose": "Dashboards"
+        },
+        {
+          "name": "OpenTelemetry",
+          "purpose": "Distributed tracing"
+        }
       ]
     }
   },
@@ -1396,13 +1569,19 @@
     {
       "term": "Delegation",
       "definition": "User authorization for an agent to act on their behalf with specific scopes and time limits",
-      "related": ["ID-JAG", "OAuth"]
+      "related": [
+        "ID-JAG",
+        "OAuth"
+      ]
     },
     {
       "term": "mTLS",
       "definition": "Mutual TLS - both client and server present certificates for authentication",
       "acronym": "mTLS",
-      "related": ["TLS", "SVID"]
+      "related": [
+        "TLS",
+        "SVID"
+      ]
     },
     {
       "term": "SSE",
@@ -1417,15 +1596,20 @@
     {
       "term": "Control Plane",
       "definition": "Infrastructure components responsible for configuration, policy, and identity issuance",
-      "related": ["Data Plane"]
+      "related": [
+        "Data Plane"
+      ]
     },
     {
       "term": "Data Plane",
       "definition": "Infrastructure components responsible for request processing and policy enforcement",
-      "related": ["Control Plane", "Governance Gateway"]
+      "related": [
+        "Control Plane",
+        "Governance Gateway"
+      ]
     }
   ],
-  "custom_sections": [
+  "customSections": [
     {
       "id": "market-opportunity",
       "title": "Market Opportunity",
@@ -1433,13 +1617,13 @@
       "content": {
         "tam_2030": "$9-10 billion",
         "sam_2030": "$3.7 billion",
-        "som_year5": "$250 million",
+        "somYear5": "$250 million",
         "cagr": {
-          "ai_agents": "46.3%",
-          "agentic_ai": "43.8%",
-          "ai_governance": "49-51%"
+          "aiAgents": "46.3%",
+          "agenticAi": "43.8%",
+          "aiGovernance": "49-51%"
         },
-        "market_gap": "No existing solution provides end-to-end agent identity (SPIFFE), attestation (KYA), credential injection, and observability in a unified control plane"
+        "marketGap": "No existing solution provides end-to-end agent identity (SPIFFE), attestation (KYA), credential injection, and observability in a unified control plane"
       }
     },
     {
@@ -1450,31 +1634,47 @@
         "models": [
           {
             "name": "Managed SaaS",
-            "control_plane": "Vendor",
+            "controlPlane": "Vendor",
             "gateway": "Vendor",
             "sla": "Up to 99.999%",
             "target": "Most customers"
           },
           {
             "name": "Hybrid",
-            "control_plane": "Vendor",
+            "controlPlane": "Vendor",
             "gateway": "Vendor-in-Customer-VPC",
             "sla": "99.99%",
             "target": "Compliance-sensitive"
           },
           {
             "name": "Self-Hosted",
-            "control_plane": "Customer",
+            "controlPlane": "Customer",
             "gateway": "Customer",
             "sla": "Customer's SLA",
             "target": "Air-gapped, regulated"
           }
         ],
-        "pricing_tiers": [
-          {"tier": "Starter", "price": "$500/month", "sla": "99.9%"},
-          {"tier": "Business", "price": "$2,000/month", "sla": "99.95%"},
-          {"tier": "Enterprise", "price": "$8,000/month", "sla": "99.99%"},
-          {"tier": "Premium", "price": "$25,000/month", "sla": "99.999%"}
+        "pricingTiers": [
+          {
+            "tier": "Starter",
+            "price": "$500/month",
+            "sla": "99.9%"
+          },
+          {
+            "tier": "Business",
+            "price": "$2,000/month",
+            "sla": "99.95%"
+          },
+          {
+            "tier": "Enterprise",
+            "price": "$8,000/month",
+            "sla": "99.99%"
+          },
+          {
+            "tier": "Premium",
+            "price": "$25,000/month",
+            "sla": "99.999%"
+          }
         ]
       }
     },
@@ -1487,20 +1687,20 @@
           {
             "service": "Governance Proxy",
             "metric": "Availability",
-            "business_tier": "99.99%",
-            "enterprise_tier": "99.999%"
+            "businessTier": "99.99%",
+            "enterpriseTier": "99.999%"
           },
           {
             "service": "Governance Proxy",
             "metric": "Latency (p99)",
-            "business_tier": "< 50ms",
-            "enterprise_tier": "< 25ms"
+            "businessTier": "< 50ms",
+            "enterpriseTier": "< 25ms"
           },
           {
             "service": "SPIRE Server",
             "metric": "SVID issuance",
-            "business_tier": "< 500ms",
-            "enterprise_tier": "< 200ms"
+            "businessTier": "< 500ms",
+            "enterpriseTier": "< 200ms"
           }
         ],
         "exclusions": [
@@ -1517,13 +1717,33 @@
       "description": "Pricing tiers and usage metering",
       "content": {
         "tiers": [
-          {"name": "Starter", "price": "$0", "agents": 3, "requests": "1,000"},
-          {"name": "Team", "price": "$499", "agents": 25, "requests": "100,000"},
-          {"name": "Business", "price": "$1,999", "agents": 100, "requests": "1M"},
-          {"name": "Enterprise", "price": "Custom", "agents": "Unlimited", "requests": "Custom"}
+          {
+            "name": "Starter",
+            "price": "$0",
+            "agents": 3,
+            "requests": "1,000"
+          },
+          {
+            "name": "Team",
+            "price": "$499",
+            "agents": 25,
+            "requests": "100,000"
+          },
+          {
+            "name": "Business",
+            "price": "$1,999",
+            "agents": 100,
+            "requests": "1M"
+          },
+          {
+            "name": "Enterprise",
+            "price": "Custom",
+            "agents": "Unlimited",
+            "requests": "Custom"
+          }
         ],
-        "llm_markup": "5%",
-        "audit_storage": "$0.10/GB/month"
+        "llmMarkup": "5%",
+        "auditStorage": "$0.10/GB/month"
       }
     }
   ]

@@ -4,31 +4,38 @@
     "title": "Agent and MCP Compute Plane",
     "version": "1.1.0",
     "status": "draft",
-    "created_at": "2025-12-19T00:00:00Z",
-    "updated_at": "2025-12-19T00:00:00Z",
+    "createdAt": "2025-12-19T00:00:00Z",
+    "updatedAt": "2025-12-19T00:00:00Z",
     "authors": [
       {
         "name": "John Wang",
         "role": "Author"
       }
     ],
-    "tags": ["compute-plane", "spire-agent", "agent-sdk", "mcp-server", "kubernetes", "mtls"]
+    "tags": [
+      "compute-plane",
+      "spire-agent",
+      "agent-sdk",
+      "mcp-server",
+      "kubernetes",
+      "mtls"
+    ]
   },
-  "executive_summary": {
-    "problem_statement": "AI agents require a secure execution environment that integrates with governance, provides cryptographic identity, isolates workloads, enables observability, and supports scaling. Agents must operate within policies defined by the Control Plane, need SPIFFE identity for secure communication, and failures or compromises should not affect other agents.",
-    "proposed_solution": "The Agent and MCP Compute Plane provides a governed execution environment for AI agents and MCP servers with SPIFFE Identity (every agent and MCP server receives a cryptographic workload identity via SPIRE Agent), Policy Enforcement (local policy enforcement integrated with Control Plane), Secure Communication (mTLS for all inter-agent, MCP server, and Control Plane communication), Container Orchestration (Kubernetes-native deployment with security contexts), and Observability (integrated tracing, metrics, and logging).",
-    "expected_outcomes": [
+  "executiveSummary": {
+    "problemStatement": "AI agents require a secure execution environment that integrates with governance, provides cryptographic identity, isolates workloads, enables observability, and supports scaling. Agents must operate within policies defined by the Control Plane, need SPIFFE identity for secure communication, and failures or compromises should not affect other agents.",
+    "proposedSolution": "The Agent and MCP Compute Plane provides a governed execution environment for AI agents and MCP servers with SPIFFE Identity (every agent and MCP server receives a cryptographic workload identity via SPIRE Agent), Policy Enforcement (local policy enforcement integrated with Control Plane), Secure Communication (mTLS for all inter-agent, MCP server, and Control Plane communication), Container Orchestration (Kubernetes-native deployment with security contexts), and Observability (integrated tracing, metrics, and logging).",
+    "expectedOutcomes": [
       "100% of agents have valid SPIFFE SVIDs",
       "100% inter-agent mTLS coverage",
       "0 credentials stored in agent images or volumes",
       "Agent startup time including SVID acquisition under 5 seconds",
       "Policy enforcement latency under 10ms per decision"
     ],
-    "target_audience": "Agent developers, MCP server developers, platform operators, and SRE teams managing AI agent workloads",
-    "value_proposition": "Kubernetes-native governed compute with zero-trust identity, credential-free agents, and full observability for AI workloads"
+    "targetAudience": "Agent developers, MCP server developers, platform operators, and SRE teams managing AI agent workloads",
+    "valueProposition": "Kubernetes-native governed compute with zero-trust identity, credential-free agents, and full observability for AI workloads"
   },
   "objectives": {
-    "business_objectives": [
+    "businessObjectives": [
       {
         "id": "bo-1",
         "description": "Enable secure multi-tenant agent execution",
@@ -45,7 +52,7 @@
         "rationale": "Full visibility into agent execution with distributed tracing"
       }
     ],
-    "product_goals": [
+    "productGoals": [
       {
         "id": "pg-1",
         "description": "100% agent identity acquisition via SPIFFE SVIDs"
@@ -63,14 +70,14 @@
         "description": "Policy enforcement latency under 10ms per decision"
       }
     ],
-    "success_metrics": [
+    "successMetrics": [
       {
         "id": "sm-1",
         "name": "Agent Identity Coverage",
         "description": "Percentage of agents with valid SVIDs",
         "metric": "svid_coverage",
         "target": "100%",
-        "measurement_method": "SVID issuance success rate"
+        "measurementMethod": "SVID issuance success rate"
       },
       {
         "id": "sm-2",
@@ -78,7 +85,7 @@
         "description": "Percentage of agent-to-agent calls using mTLS",
         "metric": "mtls_coverage",
         "target": "100%",
-        "measurement_method": "Network traffic analysis"
+        "measurementMethod": "Network traffic analysis"
       },
       {
         "id": "sm-3",
@@ -86,7 +93,7 @@
         "description": "Credentials in agent images or volumes",
         "metric": "credential_exposure",
         "target": "0",
-        "measurement_method": "Container image scanning"
+        "measurementMethod": "Container image scanning"
       },
       {
         "id": "sm-4",
@@ -94,7 +101,7 @@
         "description": "Time from pod start to agent ready including SVID",
         "metric": "startup_time_p99",
         "target": "< 5 seconds",
-        "measurement_method": "Kubernetes pod metrics"
+        "measurementMethod": "Kubernetes pod metrics"
       },
       {
         "id": "sm-5",
@@ -102,7 +109,7 @@
         "description": "Latency per policy decision",
         "metric": "policy_latency_p99",
         "target": "< 10ms",
-        "measurement_method": "SDK metrics"
+        "measurementMethod": "SDK metrics"
       }
     ]
   },
@@ -116,12 +123,12 @@
         "Securely delegate access to agents and MCP servers",
         "Maintain control over data access permissions"
       ],
-      "pain_points": [
+      "painPoints": [
         "Lack of visibility into agent actions",
         "Complex permission management"
       ],
-      "technical_proficiency": "medium",
-      "is_primary": false
+      "technicalProficiency": "medium",
+      "isPrimary": false
     },
     {
       "id": "persona-agent-dev",
@@ -133,13 +140,13 @@
         "Focus on business logic without managing credentials",
         "Integrate with observability platforms"
       ],
-      "pain_points": [
+      "painPoints": [
         "Complex security configuration",
         "Managing API keys and secrets",
         "Debugging distributed systems"
       ],
-      "technical_proficiency": "expert",
-      "is_primary": true
+      "technicalProficiency": "expert",
+      "isPrimary": true
     },
     {
       "id": "persona-mcp-dev",
@@ -151,12 +158,12 @@
         "Secure external API access",
         "Support user delegation"
       ],
-      "pain_points": [
+      "painPoints": [
         "Credential management complexity",
         "Building secure tool interfaces"
       ],
-      "technical_proficiency": "expert",
-      "is_primary": false
+      "technicalProficiency": "expert",
+      "isPrimary": false
     },
     {
       "id": "persona-platform-ops",
@@ -168,12 +175,12 @@
         "Enforce network policies and pod security",
         "Capacity planning and resource management"
       ],
-      "pain_points": [
+      "painPoints": [
         "Complex multi-tenant isolation",
         "Security policy enforcement"
       ],
-      "technical_proficiency": "expert",
-      "is_primary": false
+      "technicalProficiency": "expert",
+      "isPrimary": false
     },
     {
       "id": "persona-sre",
@@ -185,12 +192,12 @@
         "Respond to incidents quickly",
         "Trace requests across distributed agents"
       ],
-      "pain_points": [
+      "painPoints": [
         "Debugging distributed agent failures",
         "Alert fatigue"
       ],
-      "technical_proficiency": "expert",
-      "is_primary": false
+      "technicalProficiency": "expert",
+      "isPrimary": false
     },
     {
       "id": "persona-security",
@@ -202,22 +209,22 @@
         "Verify mTLS enforcement",
         "Validate container security"
       ],
-      "pain_points": [
+      "painPoints": [
         "Lack of audit trails",
         "Complex threat models"
       ],
-      "technical_proficiency": "expert",
-      "is_primary": false
+      "technicalProficiency": "expert",
+      "isPrimary": false
     }
   ],
-  "user_stories": [
+  "userStories": [
     {
       "id": "us-ad-1",
-      "persona_id": "persona-agent-dev",
+      "personaId": "persona-agent-dev",
       "title": "Quick SDK installation",
       "description": "As an Agent Developer, I want to install the Agent SDK with one command so that I can start building quickly.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SDK installable via standard package managers (go get, pip, npm, maven)",
@@ -227,11 +234,11 @@
     },
     {
       "id": "us-ad-2",
-      "persona_id": "persona-agent-dev",
+      "personaId": "persona-agent-dev",
       "title": "Automatic SPIFFE identity",
       "description": "As an Agent Developer, I want to acquire a SPIFFE identity automatically so that I don't need to manage certificates.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SDK automatically connects to SPIRE Agent Workload API",
@@ -246,11 +253,11 @@
     },
     {
       "id": "us-ad-3",
-      "persona_id": "persona-agent-dev",
+      "personaId": "persona-agent-dev",
       "title": "Credential-free LLM calls",
       "description": "As an Agent Developer, I want to call LLMs without managing API keys so that my code is simpler and more secure.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SDK provides CallLLM method that routes through Governance Gateway",
@@ -265,11 +272,11 @@
     },
     {
       "id": "us-ad-4",
-      "persona_id": "persona-agent-dev",
+      "personaId": "persona-agent-dev",
       "title": "User delegation for SaaS access",
       "description": "As an Agent Developer, I want to call external APIs on behalf of users so that my agent can access user data with permission.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SDK provides ActingAs method for user delegation",
@@ -284,11 +291,11 @@
     },
     {
       "id": "us-ad-5",
-      "persona_id": "persona-agent-dev",
+      "personaId": "persona-agent-dev",
       "title": "Secure inter-agent communication",
       "description": "As an Agent Developer, I want to call other agents securely so that I can build multi-agent systems.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SDK provides CallAgent method with automatic mTLS",
@@ -303,11 +310,11 @@
     },
     {
       "id": "us-ad-6",
-      "persona_id": "persona-agent-dev",
+      "personaId": "persona-agent-dev",
       "title": "Custom observability hooks",
       "description": "As an Agent Developer, I want to add custom observability hooks so that I can integrate with my tracing platform.",
       "priority": "should",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SDK provides Observer interface for custom telemetry",
@@ -317,11 +324,11 @@
     },
     {
       "id": "us-ad-7",
-      "persona_id": "persona-agent-dev",
+      "personaId": "persona-agent-dev",
       "title": "Local development with mock governance",
       "description": "As an Agent Developer, I want to test locally with mock governance so that I can develop without full infrastructure.",
       "priority": "should",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SDK supports mock mode for local development",
@@ -331,11 +338,11 @@
     },
     {
       "id": "us-po-1",
-      "persona_id": "persona-platform-ops",
+      "personaId": "persona-platform-ops",
       "title": "SPIRE Agent DaemonSet deployment",
       "description": "As a Platform Operator, I want to deploy SPIRE Agent as a DaemonSet so that all nodes can issue SVIDs.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SPIRE Agent runs on every node as DaemonSet",
@@ -350,11 +357,11 @@
     },
     {
       "id": "us-po-2",
-      "persona_id": "persona-platform-ops",
+      "personaId": "persona-platform-ops",
       "title": "Network policy enforcement",
       "description": "As a Platform Operator, I want to apply network policies to agent namespaces so that agents can't bypass the proxy.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "Default deny for direct internet egress",
@@ -369,11 +376,11 @@
     },
     {
       "id": "us-po-3",
-      "persona_id": "persona-platform-ops",
+      "personaId": "persona-platform-ops",
       "title": "Pod security standards enforcement",
       "description": "As a Platform Operator, I want to enforce pod security standards so that agents run with minimal privileges.",
       "priority": "should",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "Restricted pod security policy enforced",
@@ -388,11 +395,11 @@
     },
     {
       "id": "us-po-4",
-      "persona_id": "persona-platform-ops",
+      "personaId": "persona-platform-ops",
       "title": "Agent resource monitoring",
       "description": "As a Platform Operator, I want to monitor agent resource usage so that I can capacity plan.",
       "priority": "should",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "CPU and memory metrics available per agent",
@@ -402,11 +409,11 @@
     },
     {
       "id": "us-po-5",
-      "persona_id": "persona-platform-ops",
+      "personaId": "persona-platform-ops",
       "title": "Agent autoscaling",
       "description": "As a Platform Operator, I want to configure autoscaling for agents so that agents scale with demand.",
       "priority": "should",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "HPA configuration supported for agent deployments",
@@ -416,11 +423,11 @@
     },
     {
       "id": "us-po-6",
-      "persona_id": "persona-platform-ops",
+      "personaId": "persona-platform-ops",
       "title": "Zero-downtime rolling updates",
       "description": "As a Platform Operator, I want to perform rolling updates so that agent updates have zero downtime.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "Rolling update strategy with readiness probes",
@@ -435,11 +442,11 @@
     },
     {
       "id": "us-sre-1",
-      "persona_id": "persona-sre",
+      "personaId": "persona-sre",
       "title": "Agent health dashboards",
       "description": "As an SRE, I want to view agent health dashboards so that I can monitor system health.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "Prometheus metrics exposed by SDK",
@@ -454,11 +461,11 @@
     },
     {
       "id": "us-sre-2",
-      "persona_id": "persona-sre",
+      "personaId": "persona-sre",
       "title": "Agent failure alerts",
       "description": "As an SRE, I want to receive alerts for agent failures so that I can respond to incidents.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "AlertManager rules for agent failures",
@@ -468,11 +475,11 @@
     },
     {
       "id": "us-sre-3",
-      "persona_id": "persona-sre",
+      "personaId": "persona-sre",
       "title": "Distributed tracing",
       "description": "As an SRE, I want to trace requests across agents so that I can debug distributed issues.",
       "priority": "must",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "OpenTelemetry trace export from SDK",
@@ -487,11 +494,11 @@
     },
     {
       "id": "us-sre-4",
-      "persona_id": "persona-sre",
+      "personaId": "persona-sre",
       "title": "SVID issuance metrics",
       "description": "As an SRE, I want to view SVID issuance metrics so that I can detect identity issues.",
       "priority": "should",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "SPIRE Agent metrics exposed for monitoring",
@@ -501,11 +508,11 @@
     },
     {
       "id": "us-sre-5",
-      "persona_id": "persona-sre",
+      "personaId": "persona-sre",
       "title": "Chaos experiments",
       "description": "As an SRE, I want to perform chaos experiments so that I can validate resilience.",
       "priority": "could",
-      "acceptance_criteria": [
+      "acceptanceCriteria": [
         {
           "id": "ac-1",
           "description": "Chaos testing framework integration documented",
@@ -860,7 +867,7 @@
         "category": "Agent SDK"
       }
     ],
-    "non_functional": [
+    "nonFunctional": [
       {
         "id": "sec-1",
         "title": "Agent-to-Agent Traffic Encryption",
@@ -1009,38 +1016,67 @@
         "id": "phase-1",
         "name": "Phase 1: Foundation",
         "description": "Core SPIRE Agent deployment, Agent SDK (Go), container security baseline",
-        "start_date": "2025-01-01T00:00:00Z",
-        "target_date": "2025-03-31T00:00:00Z",
+        "startDate": "2025-01-01T00:00:00Z",
+        "targetDate": "2025-03-31T00:00:00Z",
         "deliverables": [
           {
             "id": "d-1.1",
             "title": "SPIRE Agent DaemonSet",
             "description": "SPIRE Agent deployed as DaemonSet with Kubernetes workload attestation",
-            "requirements": ["sa-1", "sa-2", "sa-3", "sa-4", "sa-5"]
+            "requirements": [
+              "sa-1",
+              "sa-2",
+              "sa-3",
+              "sa-4",
+              "sa-5"
+            ]
           },
           {
             "id": "d-1.2",
             "title": "Container Security Baseline",
             "description": "Non-root execution, read-only filesystem, dropped capabilities, resource limits",
-            "requirements": ["rt-1", "rt-2", "rt-3", "rt-4", "rt-5", "rt-6"]
+            "requirements": [
+              "rt-1",
+              "rt-2",
+              "rt-3",
+              "rt-4",
+              "rt-5",
+              "rt-6"
+            ]
           },
           {
             "id": "d-1.3",
             "title": "Go Agent SDK",
             "description": "Go SDK with SPIFFE identity, mTLS, Governance Proxy integration",
-            "requirements": ["sdk-1", "sdk-2", "sdk-3", "sdk-4", "sdk-6"]
+            "requirements": [
+              "sdk-1",
+              "sdk-2",
+              "sdk-3",
+              "sdk-4",
+              "sdk-6"
+            ]
           },
           {
             "id": "d-1.4",
             "title": "Inter-Agent mTLS",
             "description": "mTLS for agent-to-agent communication with SPIFFE ID validation",
-            "requirements": ["ia-1", "ia-2", "ia-6"]
+            "requirements": [
+              "ia-1",
+              "ia-2",
+              "ia-6"
+            ]
           },
           {
             "id": "d-1.5",
             "title": "Core Security NFRs",
             "description": "mTLS encryption, no secrets in containers",
-            "requirements": ["sec-1", "sec-2", "sec-3", "sec-4", "sec-5"]
+            "requirements": [
+              "sec-1",
+              "sec-2",
+              "sec-3",
+              "sec-4",
+              "sec-5"
+            ]
           }
         ]
       },
@@ -1048,38 +1084,67 @@
         "id": "phase-2",
         "name": "Phase 2: Enterprise Features",
         "description": "Observability, autoscaling, additional SDKs, enhanced resilience",
-        "start_date": "2025-04-01T00:00:00Z",
-        "target_date": "2025-06-30T00:00:00Z",
+        "startDate": "2025-04-01T00:00:00Z",
+        "targetDate": "2025-06-30T00:00:00Z",
         "deliverables": [
           {
             "id": "d-2.1",
             "title": "Full Observability Stack",
             "description": "Structured logging, Prometheus metrics, OpenTelemetry traces",
-            "requirements": ["ob-1", "ob-2", "ob-3", "ob-4", "ob-5", "ob-6"]
+            "requirements": [
+              "ob-1",
+              "ob-2",
+              "ob-3",
+              "ob-4",
+              "ob-5",
+              "ob-6"
+            ]
           },
           {
             "id": "d-2.2",
             "title": "Agent Lifecycle Management",
             "description": "Health checks, graceful shutdown, rolling updates, HPA support",
-            "requirements": ["lc-1", "lc-2", "lc-3", "lc-4", "lc-5", "lc-6"]
+            "requirements": [
+              "lc-1",
+              "lc-2",
+              "lc-3",
+              "lc-4",
+              "lc-5",
+              "lc-6"
+            ]
           },
           {
             "id": "d-2.3",
             "title": "Governance Integration",
             "description": "Acting-as delegation, local policy cache, capability-based filtering",
-            "requirements": ["gi-1", "gi-2", "gi-3", "gi-4", "gi-5", "gi-6"]
+            "requirements": [
+              "gi-1",
+              "gi-2",
+              "gi-3",
+              "gi-4",
+              "gi-5",
+              "gi-6"
+            ]
           },
           {
             "id": "d-2.4",
             "title": "Inter-Agent Resilience",
             "description": "Service discovery, circuit breaker, retry with backoff",
-            "requirements": ["ia-3", "ia-4", "ia-5"]
+            "requirements": [
+              "ia-3",
+              "ia-4",
+              "ia-5"
+            ]
           },
           {
             "id": "d-2.5",
             "title": "Enhanced SPIRE Agent",
             "description": "SVID caching, health endpoint, cloud provider attestation",
-            "requirements": ["sa-6", "sa-7", "sa-8"]
+            "requirements": [
+              "sa-6",
+              "sa-7",
+              "sa-8"
+            ]
           }
         ]
       },
@@ -1087,20 +1152,24 @@
         "id": "phase-3",
         "name": "Phase 3: Multi-Language & Scale",
         "description": "Python, TypeScript, Java SDKs, multi-cluster support, advanced security",
-        "start_date": "2025-07-01T00:00:00Z",
-        "target_date": "2025-09-30T00:00:00Z",
+        "startDate": "2025-07-01T00:00:00Z",
+        "targetDate": "2025-09-30T00:00:00Z",
         "deliverables": [
           {
             "id": "d-3.1",
             "title": "Python Agent SDK",
             "description": "Full-featured Python SDK with feature parity to Go",
-            "requirements": ["sdk-7"]
+            "requirements": [
+              "sdk-7"
+            ]
           },
           {
             "id": "d-3.2",
             "title": "TypeScript Agent SDK",
             "description": "Full-featured TypeScript SDK with feature parity to Go",
-            "requirements": ["sdk-8"]
+            "requirements": [
+              "sdk-8"
+            ]
           },
           {
             "id": "d-3.3",
@@ -1111,19 +1180,28 @@
             "id": "d-3.4",
             "title": "Multi-Cluster Support",
             "description": "Cross-cluster mTLS via SPIFFE federation",
-            "requirements": ["scale-3"]
+            "requirements": [
+              "scale-3"
+            ]
           },
           {
             "id": "d-3.5",
             "title": "Advanced Security",
             "description": "Container image signing, Pod Security Standards, runtime monitoring",
-            "requirements": ["sec-6", "sec-7", "rt-7", "rt-8"]
+            "requirements": [
+              "sec-6",
+              "sec-7",
+              "rt-7",
+              "rt-8"
+            ]
           },
           {
             "id": "d-3.6",
             "title": "LLM Observability Integration",
             "description": "Integration with LLM observability platforms",
-            "requirements": ["ob-7"]
+            "requirements": [
+              "ob-7"
+            ]
           }
         ]
       }
@@ -1267,7 +1345,7 @@
       "definition": "Proxy that enforces policies and injects credentials for external API calls"
     }
   ],
-  "custom_sections": [
+  "customSections": [
     {
       "id": "market-opportunity",
       "title": "Market Opportunity",

@@ -1,11 +1,11 @@
 {
   "objectives": {
-    "business_goals": [
+    "businessGoals": [
       "Increase user engagement with the search platform by 25%.",
       "Reduce time-to-find information by 40%.",
       "Establish a new premium tier for AI-powered features."
     ],
-    "product_goals": [
+    "productGoals": [
       "Provide natural language query capabilities.",
       "Summarize search results into concise answers.",
       "Offer contextual follow-up suggestions."
@@ -13,7 +13,7 @@
     "okrs": [
       {
         "objective": "Launch a successful AI Copilot MVP",
-        "key_results": [
+        "keyResults": [
           "Achieve a 70+ Net Promoter Score (NPS) from beta users.",
           "Have 50% of beta users utilize the AI Copilot more than 3 times a week."
         ]

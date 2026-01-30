@@ -4,10 +4,10 @@
       {
         "id": "FR-001",
         "description": "The system shall process natural language queries.",
-        "user_story": "US-001"
+        "userStory": "US-001"
       }
     ],
-    "non_functional": [
+    "nonFunctional": [
       {
         "id": "NFR-001",
         "category": "Performance",

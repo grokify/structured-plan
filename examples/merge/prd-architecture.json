@@ -1,7 +1,7 @@
 {
   "architecture": {
-    "current_architecture": "Standard keyword-based search index (Elasticsearch).",
-    "target_architecture": "Hybrid model using keyword search for retrieval and a Large Language Model (LLM) for answer synthesis.",
+    "currentArchitecture": "Standard keyword-based search index (Elasticsearch).",
+    "targetArchitecture": "Hybrid model using keyword search for retrieval and a Large Language Model (LLM) for answer synthesis.",
     "assumptions": [
       "An appropriate LLM can be securely hosted in our cloud environment."
     ]
