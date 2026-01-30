@@ -428,8 +428,9 @@ type Objective struct {
 - [x] Create `goals/` package structure:
   ```
   goals/
-  ├── goals.go       # Goals wrapper with Framework discriminator (TODO)
-  ├── abstract.go    # GoalItem, ResultItem abstractions (TODO)
+  ├── goals.go       # Goals wrapper with Framework discriminator
+  ├── abstract.go    # GoalItem, ResultItem abstractions
+  ├── goals_test.go  # Tests for Goals wrapper
   ├── okr/
   │   ├── okr.go     # OKR types (merged from structured-goals)
   │   ├── validation.go
@@ -440,11 +441,12 @@ type Objective struct {
       ├── terminology.go
       └── render/marp/
   ```
-- [ ] Implement Goals wrapper:
-  - [ ] GoalFramework discriminator (okr, v2mom)
-  - [ ] GoalItems() abstraction (Objectives or Methods)
-  - [ ] ResultItems() abstraction (Key Results or Measures)
-  - [ ] GoalLabel()/ResultLabel() for rendering
+- [x] Implement Goals wrapper:
+  - [x] GoalFramework discriminator (okr, v2mom)
+  - [x] GoalItems() abstraction (Objectives or Methods)
+  - [x] ResultItems() abstraction (Key Results or Measures)
+  - [x] GoalLabel()/ResultLabel() for rendering
+  - [x] ResultItemsByPhase() for roadmap alignment
 - [x] Merge OKR types (combine best of both):
   - [x] Merge Objective types (added Rationale, Category, Tags from PRD; kept Title, Progress, Risks, ParentID, AlignedWith)
   - [x] Merge KeyResult types (added PhaseTargets, MeasurementMethod, Tags from PRD; kept Score, DueDate, Status)
