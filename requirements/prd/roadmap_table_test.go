@@ -3,6 +3,8 @@ package prd
 import (
 	"strings"
 	"testing"
+
+	"github.com/grokify/structured-requirements/roadmap"
 )
 
 func TestToSwimlaneTable(t *testing.T) {
@@ -191,9 +193,9 @@ func TestSwimlaneLabel(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := swimlaneLabel(tt.input)
+		got := roadmap.SwimlaneLabel(tt.input)
 		if got != tt.expected {
-			t.Errorf("swimlaneLabel(%q) = %q, want %q", tt.input, got, tt.expected)
+			t.Errorf("SwimlaneLabel(%q) = %q, want %q", tt.input, got, tt.expected)
 		}
 	}
 }
@@ -211,9 +213,9 @@ func TestStatusIcon(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := statusIcon(tt.input)
+		got := roadmap.StatusIcon(tt.input)
 		if got != tt.expected {
-			t.Errorf("statusIcon(%q) = %q, want %q", tt.input, got, tt.expected)
+			t.Errorf("StatusIcon(%q) = %q, want %q", tt.input, got, tt.expected)
 		}
 	}
 }
