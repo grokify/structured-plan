@@ -321,14 +321,19 @@ func TestMarkdownGeneration(t *testing.T) {
 			ValueProposition: "Save time and money",
 		},
 		Objectives: Objectives{
-			BusinessObjectives: []Objective{
-				{ID: "bo-1", Description: "Increase revenue by 20%"},
-			},
-			ProductGoals: []Objective{
-				{ID: "pg-1", Description: "Launch MVP"},
-			},
-			SuccessMetrics: []SuccessMetric{
-				{ID: "sm-1", Name: "NPS", Description: "Net Promoter Score", Metric: "NPS", Target: "> 50"},
+			OKRs: []OKR{
+				{
+					Objective: Objective{ID: "o-1", Description: "Increase revenue by 20%"},
+					KeyResults: []KeyResult{
+						{ID: "kr-1", Description: "NPS", Metric: "NPS", Target: "> 50"},
+					},
+				},
+				{
+					Objective: Objective{ID: "o-2", Description: "Launch MVP"},
+					KeyResults: []KeyResult{
+						{ID: "kr-2", Description: "MVP launch date", Target: "Q1 2026"},
+					},
+				},
 			},
 		},
 		Personas: []Persona{
@@ -455,6 +460,77 @@ func TestMarkdownGenerationEmptyDocument(t *testing.T) {
 	}
 	if !strings.Contains(md, "# Empty Document") {
 		t.Error("expected markdown to contain document title")
+	}
+}
+
+// TestMarkdownGenerationWithSwimlaneTable tests markdown generation with swimlane table.
+func TestMarkdownGenerationWithSwimlaneTable(t *testing.T) {
+	doc := Document{
+		Metadata: Metadata{
+			ID:        "prd-swimlane",
+			Title:     "Swimlane Test",
+			Version:   "1.0.0",
+			Status:    StatusDraft,
+			CreatedAt: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
+			UpdatedAt: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
+			Authors:   []Person{{Name: "Author"}},
+		},
+		ExecutiveSummary: ExecutiveSummary{
+			ProblemStatement: "Problem",
+			ProposedSolution: "Solution",
+		},
+		Roadmap: Roadmap{
+			Phases: []Phase{
+				{
+					ID:   "phase-1",
+					Name: "MVP",
+					Type: PhaseTypeQuarter,
+					Deliverables: []Deliverable{
+						{ID: "d1", Title: "User Auth", Type: DeliverableFeature, Status: DeliverableCompleted},
+						{ID: "d2", Title: "CI/CD", Type: DeliverableInfrastructure, Status: DeliverableInProgress},
+					},
+				},
+				{
+					ID:   "phase-2",
+					Name: "Beta",
+					Type: PhaseTypeQuarter,
+					Deliverables: []Deliverable{
+						{ID: "d3", Title: "Dashboard", Type: DeliverableFeature},
+						{ID: "d4", Title: "API Docs", Type: DeliverableDocumentation},
+					},
+				},
+			},
+		},
+	}
+
+	opts := MarkdownOptions{
+		IncludeFrontmatter:   false,
+		IncludeSwimlaneTable: true,
+	}
+	md := doc.ToMarkdown(opts)
+
+	// Check for swimlane table elements
+	if !strings.Contains(md, "Swimlane View") {
+		t.Error("expected markdown to contain Swimlane View heading")
+	}
+	if !strings.Contains(md, "| Swimlane |") {
+		t.Error("expected markdown to contain swimlane table header")
+	}
+	// Phase columns now use **Phase N**<br>Name format
+	if !strings.Contains(md, "**Phase 1**<br>MVP") {
+		t.Error("expected markdown to contain Phase 1 with MVP description")
+	}
+	if !strings.Contains(md, "**Phase 2**<br>Beta") {
+		t.Error("expected markdown to contain Phase 2 with Beta description")
+	}
+	if !strings.Contains(md, "**Features**") {
+		t.Error("expected markdown to contain Features swimlane")
+	}
+	if !strings.Contains(md, "User Auth") {
+		t.Error("expected markdown to contain User Auth deliverable")
+	}
+	if !strings.Contains(md, "✅") {
+		t.Error("expected markdown to contain completed status icon")
 	}
 }
 

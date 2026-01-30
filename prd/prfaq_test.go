@@ -20,8 +20,11 @@ func TestGeneratePRFAQView(t *testing.T) {
 			ExpectedOutcomes: []string{"50% time savings", "Reduced errors"},
 		},
 		Objectives: Objectives{
-			BusinessObjectives: []Objective{
-				{ID: "BO-1", Description: "Capture 10% market share in year one"},
+			OKRs: []OKR{
+				{
+					Objective:  Objective{ID: "O-1", Description: "Capture 10% market share in year one"},
+					KeyResults: []KeyResult{{ID: "KR-1", Description: "Market share", Target: "10%"}},
+				},
 			},
 		},
 		Personas: []Persona{
@@ -145,8 +148,11 @@ func TestRenderPRFAQMarkdown(t *testing.T) {
 			ProposedSolution: "Test solution for PR/FAQ",
 		},
 		Objectives: Objectives{
-			BusinessObjectives: []Objective{
-				{ID: "BO-1", Description: "Test business goal"},
+			OKRs: []OKR{
+				{
+					Objective:  Objective{ID: "O-1", Description: "Test business goal"},
+					KeyResults: []KeyResult{{ID: "KR-1", Description: "Goal metric", Target: "100%"}},
+				},
 			},
 		},
 		Personas: []Persona{

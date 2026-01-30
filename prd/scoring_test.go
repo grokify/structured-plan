@@ -39,14 +39,19 @@ func TestScore(t *testing.T) {
 					},
 				},
 				Objectives: Objectives{
-					BusinessObjectives: []Objective{
-						{ID: "BO-001", Description: "Increase user engagement"},
-					},
-					ProductGoals: []Objective{
-						{ID: "PG-001", Description: "Improve search accuracy"},
-					},
-					SuccessMetrics: []SuccessMetric{
-						{ID: "SM-001", Name: "Search CTR", Target: "30%"},
+					OKRs: []OKR{
+						{
+							Objective: Objective{ID: "O-001", Description: "Increase user engagement"},
+							KeyResults: []KeyResult{
+								{ID: "KR-001", Description: "Search CTR", Target: "30%"},
+							},
+						},
+						{
+							Objective: Objective{ID: "O-002", Description: "Improve search accuracy"},
+							KeyResults: []KeyResult{
+								{ID: "KR-002", Description: "Accuracy improvement", Target: "95%"},
+							},
+						},
 					},
 				},
 			},

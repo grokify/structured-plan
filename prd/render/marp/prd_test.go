@@ -68,7 +68,7 @@ func TestPRDRenderer_Render(t *testing.T) {
 	}
 
 	// Check metrics slide
-	if !strings.Contains(content, "Success Metrics") {
+	if !strings.Contains(content, "Key Results") {
 		t.Error("Missing metrics slide")
 	}
 
@@ -220,18 +220,18 @@ func createTestPRD() *prd.Document {
 			ValueProposition: "Save time with automated testing",
 		},
 		Objectives: prd.Objectives{
-			BusinessObjectives: []prd.Objective{
-				{ID: "BO-1", Description: "Increase developer productivity"},
-			},
-			ProductGoals: []prd.Objective{
-				{ID: "PG-1", Description: "Reduce test execution time"},
-			},
-			SuccessMetrics: []prd.SuccessMetric{
+			OKRs: []prd.OKR{
 				{
-					ID:              "SM-1",
-					Name:            "Test Coverage",
-					Target:          ">80%",
-					CurrentBaseline: "50%",
+					Objective: prd.Objective{ID: "O-1", Description: "Increase developer productivity"},
+					KeyResults: []prd.KeyResult{
+						{ID: "KR-1", Description: "Test Coverage", Target: ">80%", Baseline: "50%"},
+					},
+				},
+				{
+					Objective: prd.Objective{ID: "O-2", Description: "Reduce test execution time"},
+					KeyResults: []prd.KeyResult{
+						{ID: "KR-2", Description: "Execution time", Target: "<5min"},
+					},
 				},
 			},
 		},

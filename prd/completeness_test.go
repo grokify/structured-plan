@@ -38,18 +38,20 @@ func TestCompletenessMinimalDocument(t *testing.T) {
 			ExpectedOutcomes: []string{"Outcome 1", "Outcome 2", "Outcome 3"},
 		},
 		Objectives: Objectives{
-			BusinessObjectives: []Objective{
-				{ID: "bo-1", Description: "Business objective 1"},
-				{ID: "bo-2", Description: "Business objective 2"},
-			},
-			ProductGoals: []Objective{
-				{ID: "pg-1", Description: "Product goal 1"},
-				{ID: "pg-2", Description: "Product goal 2"},
-			},
-			SuccessMetrics: []SuccessMetric{
-				{ID: "sm-1", Name: "Metric 1", Target: "100"},
-				{ID: "sm-2", Name: "Metric 2", Target: "200"},
-				{ID: "sm-3", Name: "Metric 3", Target: "300"},
+			OKRs: []OKR{
+				{
+					Objective: Objective{ID: "o-1", Description: "Business objective 1"},
+					KeyResults: []KeyResult{
+						{ID: "kr-1", Description: "Metric 1", Target: "100"},
+						{ID: "kr-2", Description: "Metric 2", Target: "200"},
+					},
+				},
+				{
+					Objective: Objective{ID: "o-2", Description: "Product goal 1"},
+					KeyResults: []KeyResult{
+						{ID: "kr-3", Description: "Metric 3", Target: "300"},
+					},
+				},
 			},
 		},
 		Personas: []Persona{

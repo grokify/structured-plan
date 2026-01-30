@@ -28,15 +28,20 @@ func TestGenerateSixPagerView(t *testing.T) {
 			},
 		},
 		Objectives: Objectives{
-			BusinessObjectives: []Objective{
-				{ID: "BO-1", Description: "Increase user retention by 20%"},
-			},
-			ProductGoals: []Objective{
-				{ID: "PG-1", Description: "Reduce task completion time by 50%"},
-			},
-			SuccessMetrics: []SuccessMetric{
-				{ID: "SM-1", Name: "Task Completion Time", Target: "< 5 minutes", CurrentBaseline: "10 minutes", MeasurementMethod: "Analytics"},
-				{ID: "SM-2", Name: "User Satisfaction", Target: "NPS > 50", CurrentBaseline: "NPS 30"},
+			OKRs: []OKR{
+				{
+					Objective: Objective{ID: "O-1", Description: "Increase user retention by 20%"},
+					KeyResults: []KeyResult{
+						{ID: "KR-1", Description: "Task Completion Time", Target: "< 5 minutes", Baseline: "10 minutes", MeasurementMethod: "Analytics"},
+						{ID: "KR-2", Description: "User Satisfaction", Target: "NPS > 50", Baseline: "NPS 30"},
+					},
+				},
+				{
+					Objective: Objective{ID: "O-2", Description: "Reduce task completion time by 50%"},
+					KeyResults: []KeyResult{
+						{ID: "KR-3", Description: "Time reduction", Target: "50%"},
+					},
+				},
 			},
 		},
 		Personas: []Persona{
@@ -214,11 +219,13 @@ func TestRenderSixPagerMarkdown(t *testing.T) {
 			ProposedSolution: "Test solution description",
 		},
 		Objectives: Objectives{
-			BusinessObjectives: []Objective{
-				{ID: "BO-1", Description: "Test business goal"},
-			},
-			SuccessMetrics: []SuccessMetric{
-				{ID: "SM-1", Name: "Test Metric", Target: "100%"},
+			OKRs: []OKR{
+				{
+					Objective: Objective{ID: "O-1", Description: "Test business goal"},
+					KeyResults: []KeyResult{
+						{ID: "KR-1", Description: "Test Metric", Target: "100%"},
+					},
+				},
 			},
 		},
 		Personas: []Persona{

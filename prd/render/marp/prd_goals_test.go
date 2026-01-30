@@ -223,11 +223,13 @@ func createTestPRDWithoutGoals() *prd.Document {
 			ExpectedOutcomes: []string{"Faster feedback", "Better quality"},
 		},
 		Objectives: prd.Objectives{
-			BusinessObjectives: []prd.Objective{
-				{ID: "BO-1", Description: "Increase developer productivity"},
-			},
-			SuccessMetrics: []prd.SuccessMetric{
-				{ID: "SM-1", Name: "Test Coverage", Target: ">80%"},
+			OKRs: []prd.OKR{
+				{
+					Objective: prd.Objective{ID: "O-1", Description: "Increase developer productivity"},
+					KeyResults: []prd.KeyResult{
+						{ID: "KR-1", Description: "Test Coverage", Target: ">80%"},
+					},
+				},
 			},
 		},
 	}
