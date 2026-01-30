@@ -264,6 +264,152 @@ Use these extensions for automatic type detection:
 | `priority` | Yes | Critical, High, Medium, Low |
 | `phase_id` | Yes | Reference to roadmap phase |
 
+### Roadmap and Swimlane Table
+
+The PRD roadmap is rendered as a swimlane table with phases as columns and deliverable types as rows.
+
+#### Roadmap Structure
+
+```json
+{
+  "roadmap": {
+    "phases": [
+      {
+        "id": "phase-1",
+        "name": "MVP",
+        "deliverables": [
+          {
+            "id": "d1",
+            "title": "User Authentication",
+            "type": "feature",
+            "status": "completed"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+#### Ensuring Items Appear in the Roadmap Table
+
+For a deliverable to appear in the swimlane table:
+
+1. **Add to a Phase**: The deliverable must be in a phase's `deliverables` array
+2. **Set the Type**: The `type` field determines which swimlane row the item appears in
+3. **Set Status (optional)**: The `status` field adds a status icon
+
+#### Deliverable Types (Swimlanes)
+
+| Type Value | Swimlane Row | Description |
+|------------|--------------|-------------|
+| `feature` | Features | Product features and capabilities |
+| `integration` | Integrations | Third-party integrations |
+| `infrastructure` | Infrastructure | Platform, CI/CD, monitoring |
+| `documentation` | Documentation | User guides, API docs |
+| `milestone` | Milestones | Release milestones, checkpoints |
+| `rollout` | Rollout | Customer/segment deployment phases |
+
+#### Deliverable Status Icons
+
+| Status Value | Icon | Description |
+|--------------|------|-------------|
+| `completed` | ✅ | Work is done |
+| `in_progress` | 🔄 | Currently being worked on |
+| `not_started` | ⏳ | Planned but not started |
+| `blocked` | 🚫 | Blocked by dependency |
+
+#### Example: Complete Deliverable
+
+```json
+{
+  "id": "auth-feature",
+  "title": "OAuth 2.0 Authentication",
+  "description": "Implement OAuth 2.0 with support for Google and GitHub providers",
+  "type": "feature",
+  "status": "in_progress"
+}
+```
+
+This appears in the **Features** row under the phase it belongs to, with a 🔄 icon.
+
+#### Common Issues
+
+| Problem | Cause | Solution |
+|---------|-------|----------|
+| Item not appearing | Missing or invalid `type` | Set `type` to a valid value |
+| Item in wrong row | Wrong `type` value | Check spelling (e.g., `feature` not `Feature`) |
+| Item in wrong column | Wrong phase | Move deliverable to correct phase's array |
+| No status icon | Missing `status` field | Add `status` field with valid value |
+
+#### Operational Rollout Swimlane
+
+The `rollout` type enables tracking customer/segment deployments across phases. This is useful for phased go-to-market strategies where features are deployed to different customer segments over time.
+
+**Recommended approach for calendar-tied phases:**
+
+When phases represent calendar periods (quarters, months), place rollouts in the phase when deployment actually occurs, not when development completes:
+
+| Swimlane | **Phase 1**<br>Q1 2026 | **Phase 2**<br>Q2 2026 | **Phase 3**<br>Q3 2026 |
+|----------|------------------------|------------------------|------------------------|
+| **Features** | • Auth<br>• Dashboard | • Reporting<br>• API v2 | • Analytics |
+| **Rollout** | | • ✅ Auth → Enterprise<br>• 🔄 Dashboard → Pilot | • Reporting → All |
+
+**Rationale:**
+
+- **Reflects reality** - Development and rollout rarely happen in the same calendar window
+- **Shows dependencies** - Clearly communicates "build first, then deploy"
+- **Planning accuracy** - Resource allocation aligns with actual work timing
+
+**Naming convention for rollout deliverables:**
+
+Use the `→` notation to distinguish rollout targets:
+
+```json
+{
+  "id": "rollout-auth-enterprise",
+  "title": "Auth → Enterprise customers",
+  "description": "Roll out Phase 1 Auth feature to enterprise segment",
+  "type": "rollout",
+  "status": "completed"
+}
+```
+
+**Example: Multi-phase customer rollout**
+
+```json
+{
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Q1 2026 - Build",
+      "deliverables": [
+        { "id": "f1", "title": "User Authentication", "type": "feature", "status": "completed" },
+        { "id": "f2", "title": "Dashboard", "type": "feature", "status": "completed" }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "Q2 2026 - Pilot",
+      "deliverables": [
+        { "id": "f3", "title": "Reporting", "type": "feature", "status": "in_progress" },
+        { "id": "r1", "title": "Auth → Enterprise (Acme, TechCo)", "type": "rollout", "status": "completed" },
+        { "id": "r2", "title": "Dashboard → Pilot customers", "type": "rollout", "status": "in_progress" }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Q3 2026 - GA",
+      "deliverables": [
+        { "id": "r3", "title": "Auth → All customers", "type": "rollout", "status": "not_started" },
+        { "id": "r4", "title": "Dashboard → All customers", "type": "rollout", "status": "not_started" },
+        { "id": "r5", "title": "Reporting → Enterprise", "type": "rollout", "status": "not_started" }
+      ]
+    }
+  ]
+}
+```
+
 ### Non-Functional Requirements
 
 | Category | Description | Example Metrics |

@@ -7,6 +7,72 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.4.0",
+      "date": "2026-01-29",
+      "highlights": [
+        { "description": "Add OKR (Objectives and Key Results) structure replacing legacy goals fields", "commit": "" },
+        { "description": "Add CLI `filter` command with tag-based filtering (OR/AND logic)", "commit": "" },
+        { "description": "Add roadmap swimlane table with auto-derived OKR swimlanes", "commit": "" }
+      ],
+      "added": [
+        { "description": "Add OKR structure with nested Objectives and KeyResults replacing legacy goals", "commit": "7f96f4d" },
+        { "description": "Add KeyResult type with baseline, target, current, confidence, and phase targets", "commit": "7f96f4d" },
+        { "description": "Add PhaseTarget type for roadmap-aligned OKR progress tracking", "commit": "7f96f4d" },
+        { "description": "Add CLI `filter` command for tag-based PRD filtering", "commit": "471ab77" },
+        { "description": "Add FilterByTags() method to PRD/MRD/TRD for OR-logic tag filtering", "commit": "" },
+        { "description": "Add FilterByTagsAll() method for AND-logic tag filtering", "commit": "" },
+        { "description": "Add ValidateTag() and ValidateTags() for kebab-case tag validation", "commit": "3d3eb3b" },
+        { "description": "Add roadmap swimlane table with ToSwimlaneTable() method", "commit": "813616e" },
+        { "description": "Add ToSwimlaneTableWithOKRs() for combined deliverables and OKR swimlanes", "commit": "813616e" },
+        { "description": "Add StatusLegend() for roadmap status icon reference table", "commit": "813616e" },
+        { "description": "Add Objectives overview list in markdown output", "commit": "7f96f4d" },
+        { "description": "Add common package with shared Person and Approver types", "commit": "fc0a9dc" },
+        { "description": "Add FormatPersonMarkdown() and FormatPeopleMarkdown() utilities", "commit": "fc0a9dc" },
+        { "description": "Add new PRD sections: Appendices, CurrentState, OpenItems, SecurityModel", "commit": "a589855" },
+        { "description": "Add OpenItem type for pending decisions with options and tradeoffs", "commit": "a589855" },
+        { "description": "Add Option type with pros/cons/effort/risk for decision tracking", "commit": "a589855" },
+        { "description": "Add generic appendix helpers: NewTableAppendix, NewTextAppendix, NewCodeAppendix", "commit": "a589855" },
+        { "description": "Add DeliverableRollout type for operational customer rollout swimlanes", "commit": "813616e" },
+        { "description": "Add Marp presentation template for structured-plan overview", "commit": "aa9478c" },
+        { "description": "Add TODO.md documenting restructuring plan for structured-plan rename", "commit": "aa9478c" }
+      ],
+      "changed": [
+        { "description": "Replace BusinessObjectives, ProductGoals, SuccessMetrics with OKR structure", "commit": "7f96f4d" },
+        { "description": "Show objectives in all phases where their Key Results appear (not just first phase)", "commit": "7f96f4d" }
+      ],
+      "improved": [
+        { "description": "Enhance roadmap table formatting with 'Phase N' headers and bullet list items", "commit": "" },
+        { "description": "Enhance author formatting with email links and roles", "commit": "" },
+        { "description": "Ensure deterministic ordering for functional and non-functional requirement categories", "commit": "" },
+        { "description": "Ensure deterministic ordering for compliance controls frameworks", "commit": "" }
+      ],
+      "refactored": [
+        { "description": "Simplify appendix system by removing domain-specific schemas", "commit": "" },
+        { "description": "Use type aliases for backwards-compatible Person and Approver types", "commit": "" }
+      ],
+      "documentation": [
+        { "description": "Add roadmap and swimlane table documentation to README", "commit": "" },
+        { "description": "Add operational rollout swimlane guidance", "commit": "" }
+      ]
+    },
+    {
+      "version": "v0.3.2",
+      "date": "2026-01-28",
+      "fixed": [
+        { "description": "Reduce requirements table title column width to 70%", "commit": "e9c3017" }
+      ],
+      "dependencies": [
+        { "description": "Update go.mod dependencies", "commit": "c8bd2b7" }
+      ]
+    },
+    {
+      "version": "v0.3.1",
+      "date": "2026-01-27",
+      "fixed": [
+        { "description": "Balance title and description column widths in requirements table", "commit": "5891df5" }
+      ]
+    },
+    {
       "version": "v0.3.0",
       "date": "2026-01-26",
       "highlights": [
