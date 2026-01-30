@@ -84,13 +84,13 @@ structured-requirements/          structured-plan/
 ```
 
 Tasks:
-- [ ] Create `requirements/` directory
-- [ ] Move `prd/` → `requirements/prd/`
-- [ ] Move `mrd/` → `requirements/mrd/`
-- [ ] Move `trd/` → `requirements/trd/`
-- [ ] Update all internal imports
-- [ ] Update tests
-- [ ] Verify build passes
+- [x] Create `requirements/` directory
+- [x] Move `prd/` → `requirements/prd/`
+- [x] Move `mrd/` → `requirements/mrd/`
+- [x] Move `trd/` → `requirements/trd/`
+- [x] Update all internal imports
+- [x] Update tests
+- [x] Verify build passes
 
 ### 1.2 Extract roadmap from PRD to top-level
 
@@ -167,18 +167,18 @@ type Deliverable struct {
 **At Portfolio level**: Deliverables are PRDs (with `prd_ref` and optional summary)
 
 Tasks:
-- [ ] Identify roadmap types to extract from `prd/`:
-  - [ ] `Phase`, `Deliverable`, `DeliverableType`, `DeliverableStatus`
-  - [ ] `RoadmapTableOptions`, swimlane table generation
-  - [ ] `StatusLegend()`, status icons
-  - [ ] `Rollout` types (DeliverableRollout)
-- [ ] Create `roadmap/` package with unified types
+- [x] Identify roadmap types to extract from `prd/`:
+  - [x] `Phase`, `Deliverable`, `DeliverableType`, `DeliverableStatus`
+  - [x] `RoadmapTableOptions`, swimlane table generation
+  - [x] `StatusLegend()`, status icons
+  - [ ] `Rollout` types (DeliverableRollout) - not yet implemented
+- [x] Create `roadmap/` package with unified types
 - [ ] Add `DeliverableType` value for `prd` (portfolio-level deliverables)
 - [ ] Add `PRDRef` field to Deliverable for portfolio→PRD linking
-- [ ] Move extracted types to `roadmap/`
-- [ ] Update `prd.Roadmap` to embed/alias `roadmap.Roadmap`
-- [ ] Update imports throughout
-- [ ] Verify build and tests pass
+- [x] Move extracted types to `roadmap/`
+- [x] Update `prd.Roadmap` to embed/alias `roadmap.Roadmap`
+- [x] Update imports throughout
+- [x] Verify build and tests pass
 
 ### 1.3 Update CLI structure
 
@@ -425,18 +425,20 @@ type Objective struct {
 - [x] Analyze structured-goals V2MOM features
 - [x] Decide on integration approach: Consolidate into structured-plan
 - [x] Design framework-agnostic Goals wrapper (V2MOM or OKR)
-- [ ] Create `goals/` package structure:
+- [x] Create `goals/` package structure:
   ```
   goals/
-  ├── goals.go       # Goals wrapper with Framework discriminator
-  ├── abstract.go    # GoalItem, ResultItem abstractions
+  ├── goals.go       # Goals wrapper with Framework discriminator (TODO)
+  ├── abstract.go    # GoalItem, ResultItem abstractions (TODO)
   ├── okr/
-  │   ├── okr.go     # OKR types (merged from structured-goals + PRD)
-  │   ├── progress.go
-  │   └── render/
+  │   ├── okr.go     # OKR types (merged from structured-goals)
+  │   ├── validation.go
+  │   └── render/marp/
   └── v2mom/
       ├── v2mom.go   # V2MOM types (from structured-goals)
-      └── render/
+      ├── validation.go
+      ├── terminology.go
+      └── render/marp/
   ```
 - [ ] Implement Goals wrapper:
   - [ ] GoalFramework discriminator (okr, v2mom)
