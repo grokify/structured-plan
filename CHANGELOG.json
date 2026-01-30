@@ -29,11 +29,15 @@
         { "description": "Add common/decision.go with OpenItem, Option, DecisionRecord types", "commit": "8f2ba1c" },
         { "description": "Add common/glossary.go with GlossaryTerm type", "commit": "8f2ba1c" },
         { "description": "Add common/custom.go with CustomSection type", "commit": "8f2ba1c" },
-        { "description": "Add common/nongoals.go with NonGoal type", "commit": "8f2ba1c" }
+        { "description": "Add common/nongoals.go with NonGoal type", "commit": "8f2ba1c" },
+        { "description": "Add GoReleaser with multi-platform builds (linux, darwin, windows on amd64/arm64)", "commit": "d38d5b0" },
+        { "description": "Add Homebrew tap publishing to grokify/homebrew-tap", "commit": "d38d5b0" },
+        { "description": "Add release workflow triggered on version tags", "commit": "d38d5b0" }
       ],
       "changed": [
         { "description": "Rename module from github.com/grokify/structured-requirements to github.com/grokify/structured-plan", "commit": "5cde98e" },
-        { "description": "Deprecate ToSwimlaneTableWithOKRs() in favor of ToSwimlaneTableWithGoals()", "commit": "288156d" }
+        { "description": "Deprecate ToSwimlaneTableWithOKRs() in favor of ToSwimlaneTableWithGoals()", "commit": "288156d" },
+        { "description": "Consolidate CLI: migrate merge command to splan and remove legacy srequirements", "commit": "20b77f0" }
       ],
       "refactored": [
         { "description": "Consolidate OKR types into goals/okr package with merged fields from PRD", "commit": "d68dc6b" },
@@ -41,7 +45,8 @@
         { "description": "Add Rationale, Category, Tags to Objective from PRD", "commit": "d68dc6b" },
         { "description": "Update PRD to use goals/okr types via type aliases", "commit": "d68dc6b" },
         { "description": "Extract common types from PRD/MRD/TRD to common/ package", "commit": "8f2ba1c" },
-        { "description": "Update PRD/MRD/TRD to use common types via type aliases", "commit": "8f2ba1c" }
+        { "description": "Update PRD/MRD/TRD to use common types via type aliases", "commit": "8f2ba1c" },
+        { "description": "Migrate merge command to splan CLI and remove legacy srequirements CLI", "commit": "20b77f0" }
       ],
       "documentation": [
         { "description": "Document Phase 5 decision: structured-roadmap renamed to structured-tasks", "commit": "052e728" }

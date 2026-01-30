@@ -28,66 +28,78 @@ Each document type supports:
 
 ## Installation
 
-```bash
-go install github.com/grokify/structured-plan/cmd/srequirements@latest
-```
-
-Or build from source:
+### Homebrew (macOS/Linux)
 
 ```bash
-git clone https://github.com/grokify/structured-plan.git
-cd structured-prd
-go build -o srequirements ./cmd/srequirements
+brew install grokify/tap/splan
 ```
+
+### Go Install
+
+```bash
+go install github.com/grokify/structured-plan/cmd/splan@latest
+```
+
+### Download Binary
+
+Pre-built binaries for Linux, macOS, and Windows are available on the [releases page](https://github.com/grokify/structured-plan/releases).
 
 ## CLI Usage
 
-The `srequirements` CLI provides commands for each document type:
+The `splan` CLI provides commands for working with planning documents:
 
 ```bash
 # PRD commands
-srequirements prd generate <file.json>      # Generate markdown from PRD
-srequirements prd validate <file.json>      # Validate PRD structure
-srequirements prd check <file.json>         # Check PRD completeness
+splan requirements prd generate <file.json>   # Generate markdown from PRD
+splan requirements prd validate <file.json>   # Validate PRD structure
+splan requirements prd check <file.json>      # Check PRD completeness
+splan requirements prd score <file.json>      # Score PRD quality
+splan requirements prd filter <file.json>     # Filter PRD by tags
 
 # MRD commands
-srequirements mrd generate <file.json>      # Generate markdown from MRD
-srequirements mrd validate <file.json>      # Validate MRD structure
+splan requirements mrd generate <file.json>   # Generate markdown from MRD
+splan requirements mrd validate <file.json>   # Validate MRD structure
 
 # TRD commands
-srequirements trd generate <file.json>      # Generate markdown from TRD
-srequirements trd validate <file.json>      # Validate TRD structure
+splan requirements trd generate <file.json>   # Generate markdown from TRD
+splan requirements trd validate <file.json>   # Validate TRD structure
+
+# Utility commands
+splan merge file1.json file2.json -o out.json # Merge JSON files
+splan schema generate                          # Generate JSON schemas
 ```
+
+**Shorthand:** Use `req` instead of `requirements` (e.g., `splan req prd generate`).
 
 ### Generate Options
 
 ```bash
-srequirements prd generate input.json -o output.md    # Custom output path
-srequirements prd generate input.json --no-frontmatter # Without YAML frontmatter
-srequirements prd generate input.json --margin 1in    # Custom page margin
-srequirements prd generate input.json --mainfont Arial # Custom font
+splan req prd generate input.json -o output.md    # Custom output path
+splan req prd generate input.json --no-frontmatter # Without YAML frontmatter
+splan req prd generate input.json --margin 1in    # Custom page margin
+splan req prd generate input.json --mainfont Arial # Custom font
 ```
 
 ### Check Options (PRD only)
 
 ```bash
-srequirements prd check input.json          # Human-readable completeness report
-srequirements prd check input.json --json   # JSON output for programmatic use
+splan req prd check input.json          # Human-readable completeness report
+splan req prd check input.json --json   # JSON output for programmatic use
 ```
 
 ### Examples
 
 ```bash
 # Validate and generate markdown
-srequirements mrd validate examples/agent-platform.mrd.json
-srequirements mrd generate examples/agent-platform.mrd.json
+splan req mrd validate examples/agent-platform.mrd.json
+splan req mrd generate examples/agent-platform.mrd.json
 
-srequirements prd validate examples/agent-control-plane.prd.json
-srequirements prd generate examples/agent-control-plane.prd.json
-srequirements prd check examples/agent-control-plane.prd.json
+splan req prd validate examples/agent-control-plane.prd.json
+splan req prd generate examples/agent-control-plane.prd.json
+splan req prd check examples/agent-control-plane.prd.json
 
-srequirements trd validate examples/agent-control-plane.trd.json
-srequirements trd generate examples/agent-control-plane.trd.json
+splan req trd validate examples/agent-control-plane.trd.json
+splan req trd generate examples/agent-control-plane.trd.json
 ```
 
 ## Library Usage
@@ -496,7 +508,7 @@ Use the `→` notation to distinguish rollout targets:
 
 ## PRD Completeness Check
 
-The `srequirements prd check` command analyzes a PRD for completeness and quality, providing:
+The `splan req prd check` command analyzes a PRD for completeness and quality, providing:
 
 - **Overall score** (0-100%) and letter grade (A-F)
 - **Section-by-section breakdown** for both required and optional sections
@@ -565,7 +577,7 @@ The generated markdown includes YAML frontmatter compatible with Pandoc:
 
 ```bash
 # Generate markdown
-srequirements prd generate myproduct.prd.json -o myproduct.md
+splan req prd generate myproduct.prd.json -o myproduct.md
 
 # Convert to PDF with Pandoc
 pandoc myproduct.md -o myproduct.pdf --pdf-engine=xelatex

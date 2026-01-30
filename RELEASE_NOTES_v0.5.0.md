@@ -9,6 +9,8 @@ This release marks the rename from `structured-requirements` to `structured-plan
 ## Highlights
 
 - **Repository Rename**: `structured-requirements` → `structured-plan`
+- **Unified CLI**: New `splan` CLI replaces `srequirements`
+- **Homebrew Support**: Install via `brew install grokify/tap/splan`
 - **Framework-Agnostic Goals**: New `goals/` package supporting both OKR and V2MOM
 - **Common Types Extraction**: Shared types moved to `common/` package for consistency
 - **Dynamic Roadmap Labels**: Roadmap tables automatically use correct terminology (Objectives/Methods)
@@ -150,14 +152,51 @@ The structured-plan ecosystem now includes:
 
 ## Installation
 
+### Homebrew (macOS/Linux)
+
+```bash
+brew install grokify/tap/splan
+```
+
+### Go Install
+
+```bash
+go install github.com/grokify/structured-plan/cmd/splan@v0.5.0
+```
+
+### Go Module
+
 ```bash
 go get github.com/grokify/structured-plan@v0.5.0
 ```
 
-Or install the CLI:
+### Download Binary
+
+Pre-built binaries for Linux, macOS, and Windows are available on the [releases page](https://github.com/grokify/structured-plan/releases/tag/v0.5.0).
+
+## CLI Changes
+
+The CLI has been renamed from `srequirements` to `splan` with a new hierarchical command structure:
 
 ```bash
-go install github.com/grokify/structured-plan/cmd/splan@v0.5.0
+# Old (deprecated)
+srequirements prd generate file.json
+
+# New
+splan requirements prd generate file.json
+splan req prd generate file.json  # 'req' is an alias
+```
+
+### Available Commands
+
+```
+splan
+├── merge              # Merge multiple JSON files
+├── requirements       # Requirements documents (alias: req)
+│   ├── prd           # PRD commands (generate, validate, check, score, filter)
+│   ├── mrd           # MRD commands (generate, validate)
+│   └── trd           # TRD commands (generate, validate)
+└── schema            # JSON Schema generation
 ```
 
 ## Full Changelog
