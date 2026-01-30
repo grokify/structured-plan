@@ -165,7 +165,11 @@ type Risk struct {
 	Owner       string          `json:"owner,omitempty"`
 	Status      RiskStatus      `json:"status,omitempty"`
 	DueDate     string          `json:"due_date,omitempty"`
+	Tags        []string        `json:"tags,omitempty"` // For filtering by topic/domain
 	Notes       string          `json:"notes,omitempty"`
+
+	// AppendixRefs references appendices with additional details for this risk.
+	AppendixRefs []string `json:"appendix_refs,omitempty"`
 }
 
 // GlossaryTerm defines a glossary entry.
