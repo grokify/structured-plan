@@ -1,4 +1,4 @@
-# Structured Requirements Documents
+# Structured Plan
 
 [![Build Status][build-status-svg]][build-status-url]
 [![Lint Status][lint-status-svg]][lint-status-url]
@@ -7,24 +7,38 @@
 [![Visualization][viz-svg]][viz-url]
 [![License][license-svg]][license-url]
 
-A structured format for requirements documents with Go data types, JSON serialization, and markdown generation. Supports three document types that form a natural workflow:
-
-**MRD** (Market Requirements) → **PRD** (Product Requirements) → **TRD** (Technical Requirements)
+A unified planning system with Go data types, JSON serialization, and markdown generation. Supports requirements documents, goal frameworks, and roadmaps.
 
 ## Overview
 
-This library provides comprehensive, machine-readable formats for requirements documents:
+This library provides comprehensive, machine-readable formats for planning documents:
+
+### Requirements Documents
 
 - **MRD** - Market Requirements Document: Market analysis, competitive landscape, buyer personas, positioning
 - **PRD** - Product Requirements Document: Personas, user stories, functional/non-functional requirements, roadmap
 - **TRD** - Technical Requirements Document: Architecture, technology stack, APIs, security design, deployment
 
+### Goal Frameworks
+
+- **OKR** - Objectives and Key Results: Objectives with measurable key results and phase targets
+- **V2MOM** - Vision, Values, Methods, Obstacles, Measures: Salesforce-style goal alignment
+
+### Roadmap
+
+- **Roadmap** - Standalone roadmaps with phases, deliverables, and swimlane visualization
+
+The natural workflow from market to implementation:
+
+**MRD** (Market) → **PRD** (Product) → **TRD** (Technical)
+
 Each document type supports:
 
 - Mandatory and optional sections for flexibility
-- JSON serialization with Go types
+- JSON serialization with Go types (camelCase field names)
 - Markdown generation with Pandoc-compatible YAML frontmatter
 - Validation of required fields
+- Framework-agnostic goals (OKR or V2MOM)
 
 ## Installation
 
@@ -104,6 +118,8 @@ splan req trd generate examples/agent-control-plane.trd.json
 
 ## Library Usage
 
+### Requirements Documents
+
 ```go
 package main
 
@@ -111,9 +127,9 @@ import (
     "encoding/json"
     "os"
 
-    "github.com/grokify/structured-plan/prd"
-    "github.com/grokify/structured-plan/mrd"
-    "github.com/grokify/structured-plan/trd"
+    "github.com/grokify/structured-plan/requirements/prd"
+    "github.com/grokify/structured-plan/requirements/mrd"
+    "github.com/grokify/structured-plan/requirements/trd"
 )
 
 func main() {
@@ -144,6 +160,69 @@ func main() {
     data, _ := json.MarshalIndent(doc, "", "  ")
     os.WriteFile("output.prd.json", data, 0600)
 }
+```
+
+### Goals (OKR and V2MOM)
+
+The `goals` package provides a framework-agnostic interface for both OKR and V2MOM:
+
+```go
+import (
+    "github.com/grokify/structured-plan/goals"
+    "github.com/grokify/structured-plan/goals/okr"
+    "github.com/grokify/structured-plan/goals/v2mom"
+)
+
+// Create OKR-based goals
+okrSet := okr.OKRSet{
+    Objectives: []okr.Objective{
+        {
+            ID:          "obj-1",
+            Description: "Increase customer satisfaction",
+            KeyResults: []okr.KeyResult{
+                {ID: "kr-1", Description: "NPS score", Target: "> 50"},
+            },
+        },
+    },
+}
+g := goals.NewOKR(okrSet)
+
+// Or create V2MOM-based goals
+v := v2mom.V2MOM{
+    Vision: "Be the market leader",
+    Methods: []v2mom.Method{
+        {ID: "m-1", Description: "Launch enterprise features"},
+    },
+}
+g := goals.NewV2MOM(v)
+
+// Framework-agnostic access
+for _, item := range g.GoalItems() {
+    fmt.Println(item.Description())  // Works with both OKR and V2MOM
+}
+
+// Dynamic labels based on framework
+fmt.Println(g.GoalLabel())   // "Objectives" (OKR) or "Methods" (V2MOM)
+fmt.Println(g.ResultLabel()) // "Key Results" (OKR) or "Measures" (V2MOM)
+```
+
+### PRD with Goals
+
+PRDs support framework-agnostic goals via the `ProductGoals` field:
+
+```go
+import (
+    "github.com/grokify/structured-plan/requirements/prd"
+    "github.com/grokify/structured-plan/goals"
+)
+
+doc := prd.Document{
+    // ... metadata, executive summary, etc.
+    ProductGoals: goals.NewOKR(okrSet),  // or goals.NewV2MOM(v2mom)
+}
+
+// Roadmap tables use correct terminology automatically
+table := doc.ToSwimlaneTableWithGoals(opts)  // Uses "Objectives" or "Methods"
 ```
 
 ## Evaluation Integration
