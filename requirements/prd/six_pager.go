@@ -14,14 +14,14 @@ type SixPagerView struct {
 	Version string `json:"version"`
 	Author  string `json:"author"`
 	Date    string `json:"date"`
-	PRDID   string `json:"prd_id"`
+	PRDID   string `json:"prdId"`
 
 	// The six sections
-	PressRelease    PressReleaseSection    `json:"press_release"`
+	PressRelease    PressReleaseSection    `json:"pressRelease"`
 	FAQ             FAQSection             `json:"faq"`
-	CustomerProblem CustomerProblemSection `json:"customer_problem"`
+	CustomerProblem CustomerProblemSection `json:"customerProblem"`
 	Solution        SolutionSection        `json:"solution"`
-	SuccessMetrics  SuccessMetricsSection  `json:"success_metrics"`
+	SuccessMetrics  SuccessMetricsSection  `json:"successMetrics"`
 	Timeline        TimelineSection        `json:"timeline"`
 }
 
@@ -30,11 +30,11 @@ type PressReleaseSection struct {
 	Headline      string   `json:"headline"`
 	Subheadline   string   `json:"subheadline"`
 	Summary       string   `json:"summary"`
-	ProblemSolved string   `json:"problem_solved"`
+	ProblemSolved string   `json:"problemSolved"`
 	Solution      string   `json:"solution"`
 	Quote         Quote    `json:"quote,omitempty"`
-	CustomerQuote Quote    `json:"customer_quote,omitempty"`
-	CallToAction  string   `json:"call_to_action"`
+	CustomerQuote Quote    `json:"customerQuote,omitempty"`
+	CallToAction  string   `json:"callToAction"`
 	Benefits      []string `json:"benefits"`
 }
 
@@ -47,9 +47,9 @@ type Quote struct {
 
 // FAQSection contains anticipated questions and answers.
 type FAQSection struct {
-	CustomerFAQs  []FAQ `json:"customer_faqs"`
-	InternalFAQs  []FAQ `json:"internal_faqs"`
-	TechnicalFAQs []FAQ `json:"technical_faqs,omitempty"`
+	CustomerFAQs  []FAQ `json:"customerFaqs"`
+	InternalFAQs  []FAQ `json:"internalFaqs"`
+	TechnicalFAQs []FAQ `json:"technicalFaqs,omitempty"`
 }
 
 // FAQ represents a question and answer pair.
@@ -63,7 +63,7 @@ type CustomerProblemSection struct {
 	Statement           string                `json:"statement"`
 	Impact              string                `json:"impact"`
 	Personas            []PersonaSnapshot     `json:"personas"`
-	CurrentAlternatives []AlternativeSnapshot `json:"current_alternatives"`
+	CurrentAlternatives []AlternativeSnapshot `json:"currentAlternatives"`
 	Evidence            []EvidenceSnapshot    `json:"evidence,omitempty"`
 }
 
@@ -71,7 +71,7 @@ type CustomerProblemSection struct {
 type PersonaSnapshot struct {
 	Name       string   `json:"name"`
 	Role       string   `json:"role"`
-	PainPoints []string `json:"pain_points"`
+	PainPoints []string `json:"painPoints"`
 }
 
 // AlternativeSnapshot describes current alternatives/workarounds.
@@ -90,8 +90,8 @@ type EvidenceSnapshot struct {
 // SolutionSection describes the proposed solution.
 type SolutionSection struct {
 	Overview        string            `json:"overview"`
-	HowItWorks      string            `json:"how_it_works"`
-	KeyFeatures     []FeatureSnapshot `json:"key_features"`
+	HowItWorks      string            `json:"howItWorks"`
+	KeyFeatures     []FeatureSnapshot `json:"keyFeatures"`
 	Differentiators []string          `json:"differentiators"`
 	Scope           ScopeSnapshot     `json:"scope"`
 }
@@ -105,16 +105,16 @@ type FeatureSnapshot struct {
 
 // ScopeSnapshot defines what's in and out of scope.
 type ScopeSnapshot struct {
-	InScope    []string `json:"in_scope"`
-	OutOfScope []string `json:"out_of_scope"`
+	InScope    []string `json:"inScope"`
+	OutOfScope []string `json:"outOfScope"`
 }
 
 // SuccessMetricsSection defines how success will be measured.
 type SuccessMetricsSection struct {
-	PrimaryMetric    MetricSnapshot   `json:"primary_metric"`
-	SecondaryMetrics []MetricSnapshot `json:"secondary_metrics"`
+	PrimaryMetric    MetricSnapshot   `json:"primaryMetric"`
+	SecondaryMetrics []MetricSnapshot `json:"secondaryMetrics"`
 	Guardrails       []MetricSnapshot `json:"guardrails,omitempty"`
-	BusinessGoals    []string         `json:"business_goals"`
+	BusinessGoals    []string         `json:"businessGoals"`
 }
 
 // MetricSnapshot is a brief metric summary.
@@ -130,7 +130,7 @@ type TimelineSection struct {
 	Phases       []PhaseSnapshot `json:"phases"`
 	Dependencies []string        `json:"dependencies"`
 	Risks        []RiskSnapshot  `json:"risks"`
-	TeamNeeds    string          `json:"team_needs,omitempty"`
+	TeamNeeds    string          `json:"teamNeeds,omitempty"`
 }
 
 // PhaseSnapshot is a brief phase summary.

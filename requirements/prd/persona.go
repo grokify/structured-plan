@@ -17,25 +17,25 @@ type Persona struct {
 	Role                 string               `json:"role"`                // Job title
 	Description          string               `json:"description"`         // Background and context
 	Goals                []string             `json:"goals"`               // What they want to achieve
-	PainPoints           []string             `json:"pain_points"`         // Current frustrations
+	PainPoints           []string             `json:"painPoints"`          // Current frustrations
 	Behaviors            []string             `json:"behaviors,omitempty"` // Typical patterns
-	TechnicalProficiency TechnicalProficiency `json:"technical_proficiency,omitempty"`
+	TechnicalProficiency TechnicalProficiency `json:"technicalProficiency,omitempty"`
 	Demographics         *Demographics        `json:"demographics,omitempty"`
 	Motivations          []string             `json:"motivations,omitempty"`
 	Frustrations         []string             `json:"frustrations,omitempty"`
-	PreferredChannels    []string             `json:"preferred_channels,omitempty"` // How they prefer to interact
-	Quote                string               `json:"quote,omitempty"`              // Representative quote
-	ImageURL             string               `json:"image_url,omitempty"`
-	IsPrimary            bool                 `json:"is_primary,omitempty"`  // Is this the primary persona?
-	LibraryRef           string               `json:"library_ref,omitempty"` // Reference to persona in library (for tracking origin)
-	Tags                 []string             `json:"tags,omitempty"`        // For filtering by topic/domain
+	PreferredChannels    []string             `json:"preferredChannels,omitempty"` // How they prefer to interact
+	Quote                string               `json:"quote,omitempty"`             // Representative quote
+	ImageURL             string               `json:"imageUrl,omitempty"`
+	IsPrimary            bool                 `json:"isPrimary,omitempty"`  // Is this the primary persona?
+	LibraryRef           string               `json:"libraryRef,omitempty"` // Reference to persona in library (for tracking origin)
+	Tags                 []string             `json:"tags,omitempty"`       // For filtering by topic/domain
 }
 
 // Demographics contains optional demographic information.
 type Demographics struct {
-	AgeRange    string `json:"age_range,omitempty"`
+	AgeRange    string `json:"ageRange,omitempty"`
 	Location    string `json:"location,omitempty"`
 	Industry    string `json:"industry,omitempty"`
-	CompanySize string `json:"company_size,omitempty"`
+	CompanySize string `json:"companySize,omitempty"`
 	Experience  string `json:"experience,omitempty"` // Years of experience
 }

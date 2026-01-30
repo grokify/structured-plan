@@ -3,10 +3,10 @@ package prd
 // ReviewsDefinition contains review outcomes and quality assessments.
 type ReviewsDefinition struct {
 	// ReviewBoardSummary is a summary from the review board.
-	ReviewBoardSummary string `json:"review_board_summary,omitempty"`
+	ReviewBoardSummary string `json:"reviewBoardSummary,omitempty"`
 
 	// QualityScores contains scores across quality dimensions.
-	QualityScores *QualityScores `json:"quality_scores,omitempty"`
+	QualityScores *QualityScores `json:"qualityScores,omitempty"`
 
 	// Decision is the review decision.
 	Decision ReviewDecision `json:"decision,omitempty"`
@@ -15,22 +15,22 @@ type ReviewsDefinition struct {
 	Blockers []Blocker `json:"blockers,omitempty"`
 
 	// RevisionTriggers are issues requiring revision.
-	RevisionTriggers []RevisionTrigger `json:"revision_triggers,omitempty"`
+	RevisionTriggers []RevisionTrigger `json:"revisionTriggers,omitempty"`
 }
 
 // QualityScores contains scores across the 10 quality dimensions.
 type QualityScores struct {
-	ProblemDefinition    float64 `json:"problem_definition"`
-	UserUnderstanding    float64 `json:"user_understanding"`
-	MarketAwareness      float64 `json:"market_awareness"`
-	SolutionFit          float64 `json:"solution_fit"`
-	ScopeDiscipline      float64 `json:"scope_discipline"`
-	RequirementsQuality  float64 `json:"requirements_quality"`
-	UXCoverage           float64 `json:"ux_coverage"`
-	TechnicalFeasibility float64 `json:"technical_feasibility"`
-	MetricsQuality       float64 `json:"metrics_quality"`
-	RiskManagement       float64 `json:"risk_management"`
-	OverallScore         float64 `json:"overall_score"`
+	ProblemDefinition    float64 `json:"problemDefinition"`
+	UserUnderstanding    float64 `json:"userUnderstanding"`
+	MarketAwareness      float64 `json:"marketAwareness"`
+	SolutionFit          float64 `json:"solutionFit"`
+	ScopeDiscipline      float64 `json:"scopeDiscipline"`
+	RequirementsQuality  float64 `json:"requirementsQuality"`
+	UXCoverage           float64 `json:"uxCoverage"`
+	TechnicalFeasibility float64 `json:"technicalFeasibility"`
+	MetricsQuality       float64 `json:"metricsQuality"`
+	RiskManagement       float64 `json:"riskManagement"`
+	OverallScore         float64 `json:"overallScore"`
 }
 
 // ReviewDecision represents the outcome of a review.
@@ -65,7 +65,7 @@ type Blocker struct {
 // RevisionTrigger represents an issue that requires revision.
 type RevisionTrigger struct {
 	// IssueID is the unique identifier for this issue.
-	IssueID string `json:"issue_id"`
+	IssueID string `json:"issueId"`
 
 	// Category is the scoring category related to this issue.
 	Category string `json:"category"`
@@ -77,5 +77,5 @@ type RevisionTrigger struct {
 	Description string `json:"description"`
 
 	// RecommendedOwner suggests who should address this issue.
-	RecommendedOwner string `json:"recommended_owner,omitempty"`
+	RecommendedOwner string `json:"recommendedOwner,omitempty"`
 }

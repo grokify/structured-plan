@@ -33,12 +33,12 @@ const (
 // Document represents a complete Technical Requirements Document.
 type Document struct {
 	Metadata          Metadata         `json:"metadata"`
-	ExecutiveSummary  ExecutiveSummary `json:"executive_summary"`
+	ExecutiveSummary  ExecutiveSummary `json:"executiveSummary"`
 	Architecture      Architecture     `json:"architecture"`
-	TechnologyStack   TechnologyStack  `json:"technology_stack"`
-	APISpecifications []APISpec        `json:"api_specifications,omitempty"`
-	DataModel         *DataModel       `json:"data_model,omitempty"`
-	SecurityDesign    SecurityDesign   `json:"security_design"`
+	TechnologyStack   TechnologyStack  `json:"technologyStack"`
+	APISpecifications []APISpec        `json:"apiSpecifications,omitempty"`
+	DataModel         *DataModel       `json:"dataModel,omitempty"`
+	SecurityDesign    SecurityDesign   `json:"securityDesign"`
 	Performance       Performance      `json:"performance"`
 	Scalability       *Scalability     `json:"scalability,omitempty"`
 	Deployment        Deployment       `json:"deployment"`
@@ -51,7 +51,7 @@ type Document struct {
 	Constraints    []Constraint    `json:"constraints,omitempty"`
 	Assumptions    []Assumption    `json:"assumptions,omitempty"`
 	Glossary       []GlossaryTerm  `json:"glossary,omitempty"`
-	CustomSections []CustomSection `json:"custom_sections,omitempty"`
+	CustomSections []CustomSection `json:"customSections,omitempty"`
 }
 
 // Note: Status type and constants are defined in common/ and aliased above.
@@ -62,13 +62,13 @@ type Metadata struct {
 	Title            string       `json:"title"`
 	Version          string       `json:"version"`
 	Status           Status       `json:"status"`
-	CreatedAt        time.Time    `json:"created_at"`
-	UpdatedAt        time.Time    `json:"updated_at"`
+	CreatedAt        time.Time    `json:"createdAt"`
+	UpdatedAt        time.Time    `json:"updatedAt"`
 	Authors          []Person     `json:"authors"`
 	Reviewers        []Person     `json:"reviewers,omitempty"`
 	Approvers        []Approver   `json:"approvers,omitempty"`
 	Tags             []string     `json:"tags,omitempty"`
-	RelatedDocuments []RelatedDoc `json:"related_documents,omitempty"`
+	RelatedDocuments []RelatedDoc `json:"relatedDocuments,omitempty"`
 }
 
 // RelatedDoc represents a related document reference.
@@ -83,9 +83,9 @@ type RelatedDoc struct {
 type ExecutiveSummary struct {
 	Purpose           string   `json:"purpose"`
 	Scope             string   `json:"scope"`
-	TechnicalApproach string   `json:"technical_approach"`
-	KeyDecisions      []string `json:"key_decisions,omitempty"`
-	OutOfScope        []string `json:"out_of_scope,omitempty"`
+	TechnicalApproach string   `json:"technicalApproach"`
+	KeyDecisions      []string `json:"keyDecisions,omitempty"`
+	OutOfScope        []string `json:"outOfScope,omitempty"`
 }
 
 // Architecture contains system architecture details.
@@ -95,8 +95,8 @@ type Architecture struct {
 	Patterns      []string       `json:"patterns,omitempty"` // e.g., "Microservices", "Event-driven"
 	Components    []Component    `json:"components"`
 	Diagrams      []Diagram      `json:"diagrams,omitempty"`
-	DataFlows     []DataFlow     `json:"data_flows,omitempty"`
-	ArchDecisions []ArchDecision `json:"architecture_decisions,omitempty"`
+	DataFlows     []DataFlow     `json:"dataFlows,omitempty"`
+	ArchDecisions []ArchDecision `json:"architectureDecisions,omitempty"`
 }
 
 // Component represents a system component.
@@ -128,7 +128,7 @@ type DataFlow struct {
 	Name        string `json:"name"`
 	Source      string `json:"source"`      // Component ID
 	Destination string `json:"destination"` // Component ID
-	DataType    string `json:"data_type,omitempty"`
+	DataType    string `json:"dataType,omitempty"`
 	Protocol    string `json:"protocol,omitempty"` // HTTP, gRPC, AMQP, etc.
 	Description string `json:"description,omitempty"`
 }
@@ -151,7 +151,7 @@ type TechnologyStack struct {
 	Languages      []Technology `json:"languages,omitempty"`
 	Frameworks     []Technology `json:"frameworks,omitempty"`
 	Databases      []Technology `json:"databases,omitempty"`
-	MessageQueues  []Technology `json:"message_queues,omitempty"`
+	MessageQueues  []Technology `json:"messageQueues,omitempty"`
 	Caching        []Technology `json:"caching,omitempty"`
 	Infrastructure []Technology `json:"infrastructure,omitempty"`
 	Monitoring     []Technology `json:"monitoring,omitempty"`
@@ -176,11 +176,11 @@ type APISpec struct {
 	Type        string        `json:"type"` // REST, gRPC, GraphQL, WebSocket
 	Version     string        `json:"version,omitempty"`
 	Description string        `json:"description,omitempty"`
-	BaseURL     string        `json:"base_url,omitempty"`
+	BaseURL     string        `json:"baseUrl,omitempty"`
 	Auth        string        `json:"auth,omitempty"` // OAuth2, API Key, mTLS, etc.
 	Endpoints   []APIEndpoint `json:"endpoints,omitempty"`
-	SpecURL     string        `json:"spec_url,omitempty"` // OpenAPI, Proto file, etc.
-	RateLimit   string        `json:"rate_limit,omitempty"`
+	SpecURL     string        `json:"specUrl,omitempty"` // OpenAPI, Proto file, etc.
+	RateLimit   string        `json:"rateLimit,omitempty"`
 	Tags        []string      `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
@@ -199,7 +199,7 @@ type DataModel struct {
 	Overview   string      `json:"overview"`
 	Entities   []Entity    `json:"entities,omitempty"`
 	Diagrams   []Diagram   `json:"diagrams,omitempty"`
-	DataStores []DataStore `json:"data_stores,omitempty"`
+	DataStores []DataStore `json:"dataStores,omitempty"`
 	Migrations string      `json:"migrations,omitempty"` // Migration strategy
 }
 
@@ -240,10 +240,10 @@ type SecurityDesign struct {
 	AuthN            *AuthN            `json:"authentication,omitempty"`
 	AuthZ            *AuthZ            `json:"authorization,omitempty"`
 	Encryption       *Encryption       `json:"encryption,omitempty"`
-	NetworkSecurity  *NetworkSecurity  `json:"network_security,omitempty"`
+	NetworkSecurity  *NetworkSecurity  `json:"networkSecurity,omitempty"`
 	Compliance       []string          `json:"compliance,omitempty"` // SOC2, HIPAA, PCI-DSS, etc.
-	ThreatModel      []Threat          `json:"threat_model,omitempty"`
-	SecurityControls []SecurityControl `json:"security_controls,omitempty"`
+	ThreatModel      []Threat          `json:"threatModel,omitempty"`
+	SecurityControls []SecurityControl `json:"securityControls,omitempty"`
 }
 
 // AuthN represents authentication design.
@@ -251,7 +251,7 @@ type AuthN struct {
 	Method      string `json:"method"` // OAuth2, SAML, mTLS, API Key
 	Provider    string `json:"provider,omitempty"`
 	MFA         bool   `json:"mfa,omitempty"`
-	SessionMgmt string `json:"session_management,omitempty"`
+	SessionMgmt string `json:"sessionManagement,omitempty"`
 	Details     string `json:"details,omitempty"`
 }
 
@@ -265,9 +265,9 @@ type AuthZ struct {
 
 // Encryption represents encryption design.
 type Encryption struct {
-	AtRest    string `json:"at_rest,omitempty"`    // AES-256, etc.
-	InTransit string `json:"in_transit,omitempty"` // TLS 1.3, mTLS
-	KeyMgmt   string `json:"key_management,omitempty"`
+	AtRest    string `json:"atRest,omitempty"`    // AES-256, etc.
+	InTransit string `json:"inTransit,omitempty"` // TLS 1.3, mTLS
+	KeyMgmt   string `json:"keyManagement,omitempty"`
 	Details   string `json:"details,omitempty"`
 }
 
@@ -275,8 +275,8 @@ type Encryption struct {
 type NetworkSecurity struct {
 	Firewall      string `json:"firewall,omitempty"`
 	WAF           string `json:"waf,omitempty"`
-	DDoS          string `json:"ddos_protection,omitempty"`
-	NetworkPolicy string `json:"network_policy,omitempty"`
+	DDoS          string `json:"ddosProtection,omitempty"`
+	NetworkPolicy string `json:"networkPolicy,omitempty"`
 	Segmentation  string `json:"segmentation,omitempty"`
 	Details       string `json:"details,omitempty"`
 }
@@ -333,10 +333,10 @@ type Benchmark struct {
 // Scalability contains scalability design.
 type Scalability struct {
 	Overview        string  `json:"overview"`
-	HorizontalScale string  `json:"horizontal_scaling,omitempty"`
-	VerticalScale   string  `json:"vertical_scaling,omitempty"`
-	LoadBalancing   string  `json:"load_balancing,omitempty"`
-	AutoScaling     string  `json:"auto_scaling,omitempty"`
+	HorizontalScale string  `json:"horizontalScaling,omitempty"`
+	VerticalScale   string  `json:"verticalScaling,omitempty"`
+	LoadBalancing   string  `json:"loadBalancing,omitempty"`
+	AutoScaling     string  `json:"autoScaling,omitempty"`
 	Limits          []Limit `json:"limits,omitempty"`
 }
 
@@ -355,8 +355,8 @@ type Deployment struct {
 	Strategy       string        `json:"strategy,omitempty"`       // Blue-green, Canary, Rolling
 	Infrastructure string        `json:"infrastructure,omitempty"` // Kubernetes, VMs, Serverless
 	Regions        []string      `json:"regions,omitempty"`
-	HA             string        `json:"high_availability,omitempty"`
-	DR             string        `json:"disaster_recovery,omitempty"`
+	HA             string        `json:"highAvailability,omitempty"`
+	DR             string        `json:"disasterRecovery,omitempty"`
 }
 
 // Environment represents a deployment environment.
@@ -365,7 +365,7 @@ type Environment struct {
 	Purpose     string `json:"purpose,omitempty"`
 	URL         string `json:"url,omitempty"`
 	Resources   string `json:"resources,omitempty"`
-	AccessLevel string `json:"access_level,omitempty"`
+	AccessLevel string `json:"accessLevel,omitempty"`
 }
 
 // Integration represents an external integration.
@@ -375,8 +375,8 @@ type Integration struct {
 	Type          string   `json:"type"`      // API, SDK, Webhook, File
 	Direction     string   `json:"direction"` // Inbound, Outbound, Bidirectional
 	Protocol      string   `json:"protocol,omitempty"`
-	AuthMethod    string   `json:"auth_method,omitempty"`
-	DataFormat    string   `json:"data_format,omitempty"`
+	AuthMethod    string   `json:"authMethod,omitempty"`
+	DataFormat    string   `json:"dataFormat,omitempty"`
 	Frequency     string   `json:"frequency,omitempty"` // Real-time, Batch, On-demand
 	Description   string   `json:"description,omitempty"`
 	Documentation string   `json:"documentation,omitempty"`
@@ -385,9 +385,9 @@ type Integration struct {
 
 // Development contains development standards.
 type Development struct {
-	CodingStandards string   `json:"coding_standards,omitempty"`
-	BranchStrategy  string   `json:"branch_strategy,omitempty"`
-	CodeReview      string   `json:"code_review,omitempty"`
+	CodingStandards string   `json:"codingStandards,omitempty"`
+	BranchStrategy  string   `json:"branchStrategy,omitempty"`
+	CodeReview      string   `json:"codeReview,omitempty"`
 	Documentation   string   `json:"documentation,omitempty"`
 	Tools           []string `json:"tools,omitempty"`
 }
@@ -395,13 +395,13 @@ type Development struct {
 // Testing contains testing strategy.
 type Testing struct {
 	Strategy     string   `json:"strategy"`
-	UnitTests    string   `json:"unit_tests,omitempty"`
-	Integration  string   `json:"integration_tests,omitempty"`
+	UnitTests    string   `json:"unitTests,omitempty"`
+	Integration  string   `json:"integrationTests,omitempty"`
 	E2E          string   `json:"e2e_tests,omitempty"`
-	Performance  string   `json:"performance_tests,omitempty"`
-	Security     string   `json:"security_tests,omitempty"`
-	Coverage     string   `json:"coverage_requirements,omitempty"`
-	Environments []string `json:"test_environments,omitempty"`
+	Performance  string   `json:"performanceTests,omitempty"`
+	Security     string   `json:"securityTests,omitempty"`
+	Coverage     string   `json:"coverageRequirements,omitempty"`
+	Environments []string `json:"testEnvironments,omitempty"`
 }
 
 // Risk represents a technical risk.

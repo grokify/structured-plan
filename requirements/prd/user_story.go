@@ -16,15 +16,15 @@ const (
 // UserStory represents a user story with acceptance criteria.
 type UserStory struct {
 	ID                 string                `json:"id"`
-	PersonaID          string                `json:"persona_id"` // Reference to persona
+	PersonaID          string                `json:"personaId"` // Reference to persona
 	Title              string                `json:"title"`
-	AsA                string                `json:"as_a"`    // Persona role (e.g., "developer", "admin")
-	IWant              string                `json:"i_want"`  // Desired action/feature
-	SoThat             string                `json:"so_that"` // Benefit/reason
-	AcceptanceCriteria []AcceptanceCriterion `json:"acceptance_criteria"`
+	AsA                string                `json:"asA"`    // Persona role (e.g., "developer", "admin")
+	IWant              string                `json:"iWant"`  // Desired action/feature
+	SoThat             string                `json:"soThat"` // Benefit/reason
+	AcceptanceCriteria []AcceptanceCriterion `json:"acceptanceCriteria"`
 	Priority           Priority              `json:"priority"`
-	PhaseID            string                `json:"phase_id"` // Reference to roadmap phase
-	StoryPoints        *int                  `json:"story_points,omitempty"`
+	PhaseID            string                `json:"phaseId"` // Reference to roadmap phase
+	StoryPoints        *int                  `json:"storyPoints,omitempty"`
 	Dependencies       []string              `json:"dependencies,omitempty"` // Dependent story IDs
 	Epic               string                `json:"epic,omitempty"`         // Parent epic
 	Tags               []string              `json:"tags,omitempty"`         // For filtering by topic/domain

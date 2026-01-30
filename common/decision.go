@@ -34,16 +34,16 @@ type OpenItem struct {
 	Stakeholders []string `json:"stakeholders,omitempty"`
 
 	// DueDate is when this decision needs to be made.
-	DueDate *time.Time `json:"due_date,omitempty"`
+	DueDate *time.Time `json:"dueDate,omitempty"`
 
 	// CreatedAt is when this open item was created.
-	CreatedAt *time.Time `json:"created_at,omitempty"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
 
 	// Resolution documents the final decision once made.
 	Resolution *OpenItemResolution `json:"resolution,omitempty"`
 
 	// RelatedIDs links to related requirements, risks, or other items.
-	RelatedIDs []string `json:"related_ids,omitempty"`
+	RelatedIDs []string `json:"relatedIds,omitempty"`
 
 	// Tags for filtering by topic/domain.
 	Tags []string `json:"tags,omitempty"`
@@ -82,7 +82,7 @@ type Option struct {
 	Recommended bool `json:"recommended,omitempty"`
 
 	// RecommendationRationale explains why this option is recommended (if applicable).
-	RecommendationRationale string `json:"recommendation_rationale,omitempty"`
+	RecommendationRationale string `json:"recommendationRationale,omitempty"`
 }
 
 // OpenItemStatus represents the status of an open item.
@@ -126,7 +126,7 @@ const (
 // OpenItemResolution documents how an open item was resolved.
 type OpenItemResolution struct {
 	// ChosenOptionID is the ID of the option that was selected.
-	ChosenOptionID string `json:"chosen_option_id,omitempty"`
+	ChosenOptionID string `json:"chosenOptionId,omitempty"`
 
 	// Decision summarizes the final decision.
 	Decision string `json:"decision"`
@@ -135,10 +135,10 @@ type OpenItemResolution struct {
 	Rationale string `json:"rationale,omitempty"`
 
 	// DecidedBy is who made the final decision.
-	DecidedBy string `json:"decided_by,omitempty"`
+	DecidedBy string `json:"decidedBy,omitempty"`
 
 	// DecidedAt is when the decision was made.
-	DecidedAt *time.Time `json:"decided_at,omitempty"`
+	DecidedAt *time.Time `json:"decidedAt,omitempty"`
 
 	// Notes captures any additional context.
 	Notes string `json:"notes,omitempty"`
@@ -157,10 +157,10 @@ type DecisionRecord struct {
 	Rationale string `json:"rationale,omitempty"`
 
 	// AlternativesConsidered lists other options that were evaluated.
-	AlternativesConsidered []string `json:"alternatives_considered,omitempty"`
+	AlternativesConsidered []string `json:"alternativesConsidered,omitempty"`
 
 	// MadeBy is the person or group who made the decision.
-	MadeBy string `json:"made_by,omitempty"`
+	MadeBy string `json:"madeBy,omitempty"`
 
 	// Date is when the decision was made.
 	Date time.Time `json:"date,omitempty"`
@@ -169,7 +169,7 @@ type DecisionRecord struct {
 	Status DecisionStatus `json:"status,omitempty"`
 
 	// RelatedIDs are IDs of related items (requirements, risks, etc.).
-	RelatedIDs []string `json:"related_ids,omitempty"`
+	RelatedIDs []string `json:"relatedIds,omitempty"`
 }
 
 // DecisionStatus represents the status of a decision.

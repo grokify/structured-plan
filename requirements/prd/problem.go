@@ -9,7 +9,7 @@ type ProblemDefinition struct {
 	Statement string `json:"statement"`
 
 	// UserImpact describes how users are affected by this problem.
-	UserImpact string `json:"user_impact,omitempty"`
+	UserImpact string `json:"userImpact,omitempty"`
 
 	// Evidence supports the existence and severity of the problem.
 	Evidence []Evidence `json:"evidence,omitempty"`
@@ -18,13 +18,13 @@ type ProblemDefinition struct {
 	Confidence float64 `json:"confidence,omitempty"`
 
 	// RootCauses are the underlying causes of the problem.
-	RootCauses []string `json:"root_causes,omitempty"`
+	RootCauses []string `json:"rootCauses,omitempty"`
 
 	// AffectedSegments are user segments affected by this problem.
-	AffectedSegments []string `json:"affected_segments,omitempty"`
+	AffectedSegments []string `json:"affectedSegments,omitempty"`
 
 	// SecondaryProblems are related or secondary problems.
-	SecondaryProblems []ProblemDefinition `json:"secondary_problems,omitempty"`
+	SecondaryProblems []ProblemDefinition `json:"secondaryProblems,omitempty"`
 }
 
 // Evidence supports a problem statement or claim.
@@ -39,7 +39,7 @@ type Evidence struct {
 	Summary string `json:"summary,omitempty"`
 
 	// SampleSize is the number of data points (for quantitative evidence).
-	SampleSize int `json:"sample_size,omitempty"`
+	SampleSize int `json:"sampleSize,omitempty"`
 
 	// Strength indicates how strong the evidence is.
 	Strength EvidenceStrength `json:"strength,omitempty"`

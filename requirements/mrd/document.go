@@ -33,20 +33,20 @@ const (
 // Document represents a complete Market Requirements Document.
 type Document struct {
 	Metadata             Metadata             `json:"metadata"`
-	ExecutiveSummary     ExecutiveSummary     `json:"executive_summary"`
-	MarketOverview       MarketOverview       `json:"market_overview"`
-	TargetMarket         TargetMarket         `json:"target_market"`
-	CompetitiveLandscape CompetitiveLandscape `json:"competitive_landscape"`
-	MarketRequirements   []MarketRequirement  `json:"market_requirements"`
+	ExecutiveSummary     ExecutiveSummary     `json:"executiveSummary"`
+	MarketOverview       MarketOverview       `json:"marketOverview"`
+	TargetMarket         TargetMarket         `json:"targetMarket"`
+	CompetitiveLandscape CompetitiveLandscape `json:"competitiveLandscape"`
+	MarketRequirements   []MarketRequirement  `json:"marketRequirements"`
 	Positioning          Positioning          `json:"positioning"`
-	GoToMarket           *GoToMarket          `json:"go_to_market,omitempty"`
-	SuccessMetrics       []SuccessMetric      `json:"success_metrics"`
+	GoToMarket           *GoToMarket          `json:"goToMarket,omitempty"`
+	SuccessMetrics       []SuccessMetric      `json:"successMetrics"`
 
 	// Optional sections
 	Risks          []Risk          `json:"risks,omitempty"`
 	Assumptions    []Assumption    `json:"assumptions,omitempty"`
 	Glossary       []GlossaryTerm  `json:"glossary,omitempty"`
-	CustomSections []CustomSection `json:"custom_sections,omitempty"`
+	CustomSections []CustomSection `json:"customSections,omitempty"`
 }
 
 // Note: Status type and constants are defined in common/ and aliased above.
@@ -57,8 +57,8 @@ type Metadata struct {
 	Title     string     `json:"title"`
 	Version   string     `json:"version"`
 	Status    Status     `json:"status"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
 	Authors   []Person   `json:"authors"`
 	Reviewers []Person   `json:"reviewers,omitempty"`
 	Approvers []Approver `json:"approvers,omitempty"`
@@ -67,19 +67,19 @@ type Metadata struct {
 
 // ExecutiveSummary provides high-level market overview.
 type ExecutiveSummary struct {
-	MarketOpportunity string   `json:"market_opportunity"`
-	ProposedOffering  string   `json:"proposed_offering"`
-	KeyFindings       []string `json:"key_findings"`
+	MarketOpportunity string   `json:"marketOpportunity"`
+	ProposedOffering  string   `json:"proposedOffering"`
+	KeyFindings       []string `json:"keyFindings"`
 	Recommendation    string   `json:"recommendation,omitempty"`
 }
 
 // MarketOverview contains market size and growth analysis.
 type MarketOverview struct {
-	TAM         MarketSize `json:"tam"`                    // Total Addressable Market
-	SAM         MarketSize `json:"sam"`                    // Serviceable Addressable Market
-	SOM         MarketSize `json:"som"`                    // Serviceable Obtainable Market
-	GrowthRate  string     `json:"growth_rate,omitempty"`  // e.g., "46.3% CAGR"
-	MarketStage string     `json:"market_stage,omitempty"` // Emerging, Growth, Mature, Declining
+	TAM         MarketSize `json:"tam"`                   // Total Addressable Market
+	SAM         MarketSize `json:"sam"`                   // Serviceable Addressable Market
+	SOM         MarketSize `json:"som"`                   // Serviceable Obtainable Market
+	GrowthRate  string     `json:"growthRate,omitempty"`  // e.g., "46.3% CAGR"
+	MarketStage string     `json:"marketStage,omitempty"` // Emerging, Growth, Mature, Declining
 	Trends      []Trend    `json:"trends,omitempty"`
 	Drivers     []string   `json:"drivers,omitempty"`  // What's driving growth
 	Barriers    []string   `json:"barriers,omitempty"` // Barriers to entry
@@ -103,12 +103,12 @@ type Trend struct {
 
 // TargetMarket defines the target market segments.
 type TargetMarket struct {
-	PrimarySegments   []MarketSegment `json:"primary_segments"`
-	SecondarySegments []MarketSegment `json:"secondary_segments,omitempty"`
-	BuyerPersonas     []BuyerPersona  `json:"buyer_personas,omitempty"`
-	Verticals         []string        `json:"verticals,omitempty"`        // Industry verticals
-	GeographicFocus   []string        `json:"geographic_focus,omitempty"` // Regions
-	CompanySize       []string        `json:"company_size,omitempty"`     // SMB, Mid-Market, Enterprise
+	PrimarySegments   []MarketSegment `json:"primarySegments"`
+	SecondarySegments []MarketSegment `json:"secondarySegments,omitempty"`
+	BuyerPersonas     []BuyerPersona  `json:"buyerPersonas,omitempty"`
+	Verticals         []string        `json:"verticals,omitempty"`       // Industry verticals
+	GeographicFocus   []string        `json:"geographicFocus,omitempty"` // Regions
+	CompanySize       []string        `json:"companySize,omitempty"`     // SMB, Mid-Market, Enterprise
 }
 
 // MarketSegment represents a market segment.
@@ -129,22 +129,22 @@ type BuyerPersona struct {
 	Name               string   `json:"name"`
 	Title              string   `json:"title"` // Job title
 	Description        string   `json:"description"`
-	BuyingRole         string   `json:"buying_role"` // Decision Maker, Influencer, User, Gatekeeper
-	BudgetAuthority    bool     `json:"budget_authority"`
-	PainPoints         []string `json:"pain_points"`
+	BuyingRole         string   `json:"buyingRole"` // Decision Maker, Influencer, User, Gatekeeper
+	BudgetAuthority    bool     `json:"budgetAuthority"`
+	PainPoints         []string `json:"painPoints"`
 	Goals              []string `json:"goals"`
-	BuyingCriteria     []string `json:"buying_criteria,omitempty"`
-	InformationSources []string `json:"information_sources,omitempty"` // Where they get info
-	Tags               []string `json:"tags,omitempty"`                // For filtering by topic/domain
+	BuyingCriteria     []string `json:"buyingCriteria,omitempty"`
+	InformationSources []string `json:"informationSources,omitempty"` // Where they get info
+	Tags               []string `json:"tags,omitempty"`               // For filtering by topic/domain
 }
 
 // CompetitiveLandscape contains competitive analysis.
 type CompetitiveLandscape struct {
 	Overview        string       `json:"overview"`
 	Competitors     []Competitor `json:"competitors"`
-	MarketPosition  string       `json:"market_position,omitempty"`  // Our current position
-	Differentiators []string     `json:"differentiators,omitempty"`  // Key differentiators
-	CompetitiveGaps []string     `json:"competitive_gaps,omitempty"` // Gaps to address
+	MarketPosition  string       `json:"marketPosition,omitempty"`  // Our current position
+	Differentiators []string     `json:"differentiators,omitempty"` // Key differentiators
+	CompetitiveGaps []string     `json:"competitiveGaps,omitempty"` // Gaps to address
 }
 
 // Competitor represents a competitor analysis.
@@ -153,13 +153,13 @@ type Competitor struct {
 	Name        string   `json:"name"`
 	Description string   `json:"description,omitempty"`
 	Category    string   `json:"category,omitempty"` // Direct, Indirect, Substitute
-	MarketShare string   `json:"market_share,omitempty"`
+	MarketShare string   `json:"marketShare,omitempty"`
 	Strengths   []string `json:"strengths"`
 	Weaknesses  []string `json:"weaknesses"`
 	Pricing     string   `json:"pricing,omitempty"`
 	Positioning string   `json:"positioning,omitempty"`
-	ThreatLevel string   `json:"threat_level,omitempty"` // High, Medium, Low
-	Tags        []string `json:"tags,omitempty"`         // For filtering by topic/domain
+	ThreatLevel string   `json:"threatLevel,omitempty"` // High, Medium, Low
+	Tags        []string `json:"tags,omitempty"`        // For filtering by topic/domain
 }
 
 // MarketRequirement represents a market-level requirement.
@@ -189,23 +189,23 @@ const (
 // Positioning defines market positioning strategy.
 type Positioning struct {
 	Statement       string   `json:"statement"` // Positioning statement
-	TargetAudience  string   `json:"target_audience"`
+	TargetAudience  string   `json:"targetAudience"`
 	Category        string   `json:"category"` // Market category
-	KeyBenefits     []string `json:"key_benefits"`
+	KeyBenefits     []string `json:"keyBenefits"`
 	Differentiators []string `json:"differentiators"`
-	ProofPoints     []string `json:"proof_points,omitempty"` // Evidence supporting claims
+	ProofPoints     []string `json:"proofPoints,omitempty"` // Evidence supporting claims
 	Tagline         string   `json:"tagline,omitempty"`
 }
 
 // GoToMarket contains go-to-market strategy elements.
 type GoToMarket struct {
-	LaunchStrategy       string           `json:"launch_strategy,omitempty"`
-	LaunchTiming         string           `json:"launch_timing,omitempty"`
-	PricingStrategy      *PricingStrategy `json:"pricing_strategy,omitempty"`
-	DistributionChannels []string         `json:"distribution_channels,omitempty"`
-	PartnerStrategy      string           `json:"partner_strategy,omitempty"`
-	MarketingStrategy    string           `json:"marketing_strategy,omitempty"`
-	SalesStrategy        string           `json:"sales_strategy,omitempty"`
+	LaunchStrategy       string           `json:"launchStrategy,omitempty"`
+	LaunchTiming         string           `json:"launchTiming,omitempty"`
+	PricingStrategy      *PricingStrategy `json:"pricingStrategy,omitempty"`
+	DistributionChannels []string         `json:"distributionChannels,omitempty"`
+	PartnerStrategy      string           `json:"partnerStrategy,omitempty"`
+	MarketingStrategy    string           `json:"marketingStrategy,omitempty"`
+	SalesStrategy        string           `json:"salesStrategy,omitempty"`
 	Milestones           []Milestone      `json:"milestones,omitempty"`
 }
 
@@ -223,7 +223,7 @@ type PricingTier struct {
 	Price       string   `json:"price"`
 	Billing     string   `json:"billing,omitempty"` // Monthly, Annual
 	Features    []string `json:"features,omitempty"`
-	TargetBuyer string   `json:"target_buyer,omitempty"`
+	TargetBuyer string   `json:"targetBuyer,omitempty"`
 }
 
 // Milestone represents a go-to-market milestone.
@@ -231,7 +231,7 @@ type Milestone struct {
 	ID          string    `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description,omitempty"`
-	TargetDate  time.Time `json:"target_date,omitempty"`
+	TargetDate  time.Time `json:"targetDate,omitempty"`
 	Status      string    `json:"status,omitempty"`
 	Tags        []string  `json:"tags,omitempty"` // For filtering by topic/domain
 }
@@ -244,7 +244,7 @@ type SuccessMetric struct {
 	Metric            string   `json:"metric"`
 	Target            string   `json:"target"`
 	Timeframe         string   `json:"timeframe,omitempty"`
-	MeasurementMethod string   `json:"measurement_method,omitempty"`
+	MeasurementMethod string   `json:"measurementMethod,omitempty"`
 	Tags              []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 

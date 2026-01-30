@@ -25,11 +25,11 @@ type Phase struct {
 	ID              string        `json:"id"`   // e.g., "phase-1", "q1-2026"
 	Name            string        `json:"name"` // e.g., "MVP", "Q1 2026"
 	Type            PhaseType     `json:"type"`
-	StartDate       *time.Time    `json:"start_date,omitempty"`
-	EndDate         *time.Time    `json:"end_date,omitempty"`
+	StartDate       *time.Time    `json:"startDate,omitempty"`
+	EndDate         *time.Time    `json:"endDate,omitempty"`
 	Goals           []string      `json:"goals"`
 	Deliverables    []Deliverable `json:"deliverables"`
-	SuccessCriteria []string      `json:"success_criteria"`
+	SuccessCriteria []string      `json:"successCriteria"`
 	Dependencies    []string      `json:"dependencies,omitempty"` // Dependent phase IDs
 	Risks           []Risk        `json:"risks,omitempty"`
 	Status          PhaseStatus   `json:"status,omitempty"`

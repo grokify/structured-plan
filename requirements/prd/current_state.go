@@ -12,7 +12,7 @@ type CurrentState struct {
 	Problems []CurrentProblem `json:"problems,omitempty"`
 
 	// TargetState describes the desired future state.
-	TargetState string `json:"target_state"`
+	TargetState string `json:"targetState"`
 
 	// Metrics provides baseline metrics for comparison.
 	Metrics []BaselineMetric `json:"metrics,omitempty"`
@@ -57,10 +57,10 @@ type CurrentProblem struct {
 	Frequency string `json:"frequency,omitempty"`
 
 	// AffectedUsers describes who is impacted.
-	AffectedUsers string `json:"affected_users,omitempty"`
+	AffectedUsers string `json:"affectedUsers,omitempty"`
 
 	// RelatedIDs links to related requirements or risks.
-	RelatedIDs []string `json:"related_ids,omitempty"`
+	RelatedIDs []string `json:"relatedIds,omitempty"`
 }
 
 // BaselineMetric provides current state metrics for comparison.
@@ -72,13 +72,13 @@ type BaselineMetric struct {
 	Name string `json:"name"`
 
 	// CurrentValue is the baseline value.
-	CurrentValue string `json:"current_value"`
+	CurrentValue string `json:"currentValue"`
 
 	// TargetValue is the desired value after implementation.
-	TargetValue string `json:"target_value,omitempty"`
+	TargetValue string `json:"targetValue,omitempty"`
 
 	// MeasurementMethod describes how this is measured.
-	MeasurementMethod string `json:"measurement_method,omitempty"`
+	MeasurementMethod string `json:"measurementMethod,omitempty"`
 
 	// Source is where the current value was obtained.
 	Source string `json:"source,omitempty"`

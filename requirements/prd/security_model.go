@@ -7,26 +7,26 @@ type SecurityModel struct {
 	Overview string `json:"overview"`
 
 	// ThreatModel identifies assets, threat actors, and threats.
-	ThreatModel ThreatModel `json:"threat_model"`
+	ThreatModel ThreatModel `json:"threatModel"`
 
 	// AccessControl defines access control strategy.
-	AccessControl AccessControl `json:"access_control"`
+	AccessControl AccessControl `json:"accessControl"`
 
 	// Encryption specifies encryption requirements.
 	Encryption EncryptionRequirements `json:"encryption"`
 
 	// AuditLogging defines audit logging requirements.
-	AuditLogging AuditLogging `json:"audit_logging"`
+	AuditLogging AuditLogging `json:"auditLogging"`
 
 	// ComplianceControls maps to compliance frameworks.
 	// Key is framework name (e.g., "SOC2", "GDPR"), value is list of controls.
-	ComplianceControls map[string][]string `json:"compliance_controls,omitempty"`
+	ComplianceControls map[string][]string `json:"complianceControls,omitempty"`
 
 	// DataClassification defines data sensitivity levels.
-	DataClassification []DataClassification `json:"data_classification,omitempty"`
+	DataClassification []DataClassification `json:"dataClassification,omitempty"`
 
 	// AppendixRefs references appendices with additional security details.
-	AppendixRefs []string `json:"appendix_refs,omitempty"`
+	AppendixRefs []string `json:"appendixRefs,omitempty"`
 }
 
 // ThreatModel identifies security threats and mitigations.
@@ -35,13 +35,13 @@ type ThreatModel struct {
 	Assets []string `json:"assets"`
 
 	// ThreatActors are potential attackers.
-	ThreatActors []string `json:"threat_actors"`
+	ThreatActors []string `json:"threatActors"`
 
 	// KeyThreats lists major threats with mitigations.
-	KeyThreats []SecurityThreat `json:"key_threats"`
+	KeyThreats []SecurityThreat `json:"keyThreats"`
 
 	// TrustBoundaries identifies trust boundaries in the system.
-	TrustBoundaries []string `json:"trust_boundaries,omitempty"`
+	TrustBoundaries []string `json:"trustBoundaries,omitempty"`
 }
 
 // SecurityThreat represents a security threat.
@@ -65,7 +65,7 @@ type SecurityThreat struct {
 	Status string `json:"status,omitempty"`
 
 	// RelatedIDs links to related requirements or risks.
-	RelatedIDs []string `json:"related_ids,omitempty"`
+	RelatedIDs []string `json:"relatedIds,omitempty"`
 }
 
 // AccessControl defines access control strategy.
@@ -119,13 +119,13 @@ type SecurityRole struct {
 // EncryptionRequirements specifies encryption requirements.
 type EncryptionRequirements struct {
 	// AtRest describes encryption at rest.
-	AtRest EncryptionSpec `json:"at_rest"`
+	AtRest EncryptionSpec `json:"atRest"`
 
 	// InTransit describes encryption in transit.
-	InTransit EncryptionSpec `json:"in_transit"`
+	InTransit EncryptionSpec `json:"inTransit"`
 
 	// FieldLevel describes field-level encryption if applicable.
-	FieldLevel *EncryptionSpec `json:"field_level,omitempty"`
+	FieldLevel *EncryptionSpec `json:"fieldLevel,omitempty"`
 }
 
 // EncryptionSpec describes encryption configuration.
@@ -134,7 +134,7 @@ type EncryptionSpec struct {
 	Method string `json:"method"`
 
 	// KeyManagement describes key management approach.
-	KeyManagement string `json:"key_management"`
+	KeyManagement string `json:"keyManagement"`
 
 	// Rotation describes key rotation policy.
 	Rotation string `json:"rotation,omitempty"`

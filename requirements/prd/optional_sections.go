@@ -15,18 +15,18 @@ type Dependency struct {
 	Type        string `json:"type,omitempty"` // API, Service, Team, Vendor
 	Owner       string `json:"owner,omitempty"`
 	Status      string `json:"status,omitempty"` // Available, Pending, Blocked
-	DueDate     string `json:"due_date,omitempty"`
+	DueDate     string `json:"dueDate,omitempty"`
 }
 
 // TechnicalArchitecture contains technical design information.
 type TechnicalArchitecture struct {
 	Overview          string          `json:"overview"`
-	SystemDiagram     string          `json:"system_diagram,omitempty"` // URL or path to diagram
-	DataModel         string          `json:"data_model,omitempty"`     // URL or path to ERD
-	IntegrationPoints []Integration   `json:"integration_points,omitempty"`
-	TechnologyStack   TechnologyStack `json:"technology_stack,omitempty"`
-	SecurityDesign    string          `json:"security_design,omitempty"`
-	ScalabilityDesign string          `json:"scalability_design,omitempty"`
+	SystemDiagram     string          `json:"systemDiagram,omitempty"` // URL or path to diagram
+	DataModel         string          `json:"dataModel,omitempty"`     // URL or path to ERD
+	IntegrationPoints []Integration   `json:"integrationPoints,omitempty"`
+	TechnologyStack   TechnologyStack `json:"technologyStack,omitempty"`
+	SecurityDesign    string          `json:"securityDesign,omitempty"`
+	ScalabilityDesign string          `json:"scalabilityDesign,omitempty"`
 }
 
 // Integration represents an external integration point.
@@ -36,9 +36,9 @@ type Integration struct {
 	Type          string `json:"type"` // REST API, GraphQL, Event, Database
 	Description   string `json:"description"`
 	Protocol      string `json:"protocol,omitempty"`
-	AuthMethod    string `json:"auth_method,omitempty"`
-	DataFormat    string `json:"data_format,omitempty"` // JSON, XML, Protobuf
-	RateLimit     string `json:"rate_limit,omitempty"`
+	AuthMethod    string `json:"authMethod,omitempty"`
+	DataFormat    string `json:"dataFormat,omitempty"` // JSON, XML, Protobuf
+	RateLimit     string `json:"rateLimit,omitempty"`
 	Documentation string `json:"documentation,omitempty"` // URL to docs
 }
 
@@ -63,12 +63,12 @@ type Technology struct {
 
 // UXRequirements contains UX/UI requirements.
 type UXRequirements struct {
-	DesignPrinciples []string          `json:"design_principles,omitempty"`
+	DesignPrinciples []string          `json:"designPrinciples,omitempty"`
 	Wireframes       []Wireframe       `json:"wireframes,omitempty"`
-	InteractionFlows []InteractionFlow `json:"interaction_flows,omitempty"`
+	InteractionFlows []InteractionFlow `json:"interactionFlows,omitempty"`
 	Accessibility    AccessibilitySpec `json:"accessibility,omitempty"`
-	BrandGuidelines  string            `json:"brand_guidelines,omitempty"` // URL or path
-	DesignSystem     string            `json:"design_system,omitempty"`    // URL or path
+	BrandGuidelines  string            `json:"brandGuidelines,omitempty"` // URL or path
+	DesignSystem     string            `json:"designSystem,omitempty"`    // URL or path
 }
 
 // Wireframe represents a wireframe or mockup.
@@ -86,12 +86,12 @@ type InteractionFlow struct {
 	Title       string   `json:"title"`
 	Description string   `json:"description"`
 	Steps       []string `json:"steps"`
-	DiagramURL  string   `json:"diagram_url,omitempty"`
+	DiagramURL  string   `json:"diagramUrl,omitempty"`
 }
 
 // AccessibilitySpec defines accessibility requirements.
 type AccessibilitySpec struct {
 	Standard        string   `json:"standard"` // WCAG 2.1 AA
 	Requirements    []string `json:"requirements,omitempty"`
-	TestingApproach string   `json:"testing_approach,omitempty"`
+	TestingApproach string   `json:"testingApproach,omitempty"`
 }

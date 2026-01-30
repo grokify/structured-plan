@@ -13,7 +13,7 @@ const DefaultPersonaLibraryFilename = "personas.json"
 
 // PersonaLibrary manages reusable personas across documents.
 type PersonaLibrary struct {
-	SchemaVersion string           `json:"schema_version"`
+	SchemaVersion string           `json:"schemaVersion"`
 	Personas      []LibraryPersona `json:"personas"`
 	Metadata      LibraryMetadata  `json:"metadata,omitempty"`
 }
@@ -21,19 +21,19 @@ type PersonaLibrary struct {
 // LibraryPersona extends Persona with library-specific metadata.
 type LibraryPersona struct {
 	Persona
-	CreatedAt   time.Time `json:"created_at,omitempty"`
-	UpdatedAt   time.Time `json:"updated_at,omitempty"`
-	UsedInPRDs  []string  `json:"used_in_prds,omitempty"`        // Track which PRDs use this persona
-	Tags        []string  `json:"tags,omitempty"`                // For organization/filtering
-	Description string    `json:"library_description,omitempty"` // Additional context for library
+	CreatedAt   time.Time `json:"createdAt,omitempty"`
+	UpdatedAt   time.Time `json:"updatedAt,omitempty"`
+	UsedInPRDs  []string  `json:"usedInPrds,omitempty"`         // Track which PRDs use this persona
+	Tags        []string  `json:"tags,omitempty"`               // For organization/filtering
+	Description string    `json:"libraryDescription,omitempty"` // Additional context for library
 }
 
 // LibraryMetadata contains metadata about the persona library itself.
 type LibraryMetadata struct {
 	Name        string    `json:"name,omitempty"`
 	Description string    `json:"description,omitempty"`
-	CreatedAt   time.Time `json:"created_at,omitempty"`
-	UpdatedAt   time.Time `json:"updated_at,omitempty"`
+	CreatedAt   time.Time `json:"createdAt,omitempty"`
+	UpdatedAt   time.Time `json:"updatedAt,omitempty"`
 }
 
 // Common errors for persona library operations.

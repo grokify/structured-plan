@@ -18,11 +18,11 @@ type Appendix struct {
 
 	// ContentString is Markdown text content.
 	// Rendered before ContentTable if both are set.
-	ContentString string `json:"content_string,omitempty"`
+	ContentString string `json:"contentString,omitempty"`
 
 	// ContentTable is structured table data.
 	// Rendered after ContentString if both are set.
-	ContentTable *AppendixTable `json:"content_table,omitempty"`
+	ContentTable *AppendixTable `json:"contentTable,omitempty"`
 
 	// Schema is the standard schema type (for validation and rendering hints).
 	Schema AppendixSchema `json:"schema,omitempty"`
@@ -32,7 +32,7 @@ type Appendix struct {
 
 	// ReferencedBy lists IDs of items that reference this appendix.
 	// This is typically computed, not manually set.
-	ReferencedBy []string `json:"referenced_by,omitempty"`
+	ReferencedBy []string `json:"referencedBy,omitempty"`
 }
 
 // AppendixTable represents tabular data.

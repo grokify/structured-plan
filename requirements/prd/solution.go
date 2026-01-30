@@ -3,13 +3,13 @@ package prd
 // SolutionDefinition contains solution options and selection rationale.
 type SolutionDefinition struct {
 	// SolutionOptions are the possible solutions considered.
-	SolutionOptions []SolutionOption `json:"solution_options,omitempty"`
+	SolutionOptions []SolutionOption `json:"solutionOptions,omitempty"`
 
 	// SelectedSolutionID is the ID of the chosen solution.
-	SelectedSolutionID string `json:"selected_solution_id,omitempty"`
+	SelectedSolutionID string `json:"selectedSolutionId,omitempty"`
 
 	// SolutionRationale explains why the selected solution was chosen.
-	SolutionRationale string `json:"solution_rationale,omitempty"`
+	SolutionRationale string `json:"solutionRationale,omitempty"`
 
 	// Confidence is the confidence level in the solution (0.0-1.0).
 	Confidence float64 `json:"confidence,omitempty"`
@@ -27,7 +27,7 @@ type SolutionOption struct {
 	Description string `json:"description,omitempty"`
 
 	// ProblemsAddressed lists problem IDs this solution addresses.
-	ProblemsAddressed []string `json:"problems_addressed,omitempty"`
+	ProblemsAddressed []string `json:"problemsAddressed,omitempty"`
 
 	// Benefits are advantages of this solution.
 	Benefits []string `json:"benefits,omitempty"`
@@ -39,7 +39,7 @@ type SolutionOption struct {
 	Risks []string `json:"risks,omitempty"`
 
 	// EstimatedEffort is a high-level effort estimate.
-	EstimatedEffort string `json:"estimated_effort,omitempty"`
+	EstimatedEffort string `json:"estimatedEffort,omitempty"`
 }
 
 // SelectedSolution returns the selected solution option, or nil if none selected.

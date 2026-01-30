@@ -119,28 +119,28 @@ const (
 // Document represents a complete Product Requirements Document.
 type Document struct {
 	Metadata         Metadata         `json:"metadata"`
-	ExecutiveSummary ExecutiveSummary `json:"executive_summary"`
+	ExecutiveSummary ExecutiveSummary `json:"executiveSummary"`
 	Objectives       Objectives       `json:"objectives"`
 	Personas         []Persona        `json:"personas"`
-	UserStories      []UserStory      `json:"user_stories"`
+	UserStories      []UserStory      `json:"userStories"`
 	Requirements     Requirements     `json:"requirements"`
 	Roadmap          Roadmap          `json:"roadmap"`
 
 	// ProductGoals contains the product goals using the framework-agnostic Goals wrapper.
 	// This supports either OKR or V2MOM frameworks. When set, this takes precedence
 	// over the legacy Objectives field for roadmap rendering and other goal-related features.
-	ProductGoals *Goals `json:"product_goals,omitempty"`
+	ProductGoals *Goals `json:"productGoals,omitempty"`
 
 	// Optional sections
 	Assumptions      *AssumptionsConstraints `json:"assumptions,omitempty"`
-	OutOfScope       []string                `json:"out_of_scope,omitempty"`
-	TechArchitecture *TechnicalArchitecture  `json:"technical_architecture,omitempty"`
-	UXRequirements   *UXRequirements         `json:"ux_requirements,omitempty"`
+	OutOfScope       []string                `json:"outOfScope,omitempty"`
+	TechArchitecture *TechnicalArchitecture  `json:"technicalArchitecture,omitempty"`
+	UXRequirements   *UXRequirements         `json:"uxRequirements,omitempty"`
 	Risks            []Risk                  `json:"risks,omitempty"`
 	Glossary         []GlossaryTerm          `json:"glossary,omitempty"`
 
 	// Custom sections for project-specific needs
-	CustomSections []CustomSection `json:"custom_sections,omitempty"`
+	CustomSections []CustomSection `json:"customSections,omitempty"`
 
 	// Extended sections (from agent-team-prd merge)
 	// These provide additional structure for problem definition, market analysis,
@@ -159,23 +159,23 @@ type Document struct {
 	Decisions *DecisionsDefinition `json:"decisions,omitempty"`
 
 	// OpenItems contains pending decisions that need resolution.
-	OpenItems []OpenItem `json:"open_items,omitempty"`
+	OpenItems []OpenItem `json:"openItems,omitempty"`
 
 	// Reviews contains review outcomes and quality assessments.
 	Reviews *ReviewsDefinition `json:"reviews,omitempty"`
 
 	// RevisionHistory tracks changes to the PRD over time.
-	RevisionHistory []RevisionRecord `json:"revision_history,omitempty"`
+	RevisionHistory []RevisionRecord `json:"revisionHistory,omitempty"`
 
 	// Goals contains alignment with strategic goals (V2MOM, OKR).
 	Goals *GoalsAlignment `json:"goals,omitempty"`
 
 	// CurrentState documents the existing state before the proposed solution.
-	CurrentState *CurrentState `json:"current_state,omitempty"`
+	CurrentState *CurrentState `json:"currentState,omitempty"`
 
 	// SecurityModel documents security architecture and threat model.
 	// This section is strongly recommended for all PRDs.
-	SecurityModel *SecurityModel `json:"security_model,omitempty"`
+	SecurityModel *SecurityModel `json:"securityModel,omitempty"`
 
 	// Appendices contains supplementary information and domain-specific data.
 	Appendices []Appendix `json:"appendices,omitempty"`
@@ -261,24 +261,24 @@ type Metadata struct {
 	Title     string     `json:"title"`
 	Version   string     `json:"version"`
 	Status    Status     `json:"status"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
 	Authors   []Person   `json:"authors"`
 	Reviewers []Person   `json:"reviewers,omitempty"`
 	Approvers []Approver `json:"approvers,omitempty"`
 	Tags      []string   `json:"tags,omitempty"`
 
 	// SemanticVersioning indicates the Version field follows Semantic Versioning (semver.org).
-	SemanticVersioning bool `json:"semantic_versioning,omitempty"`
+	SemanticVersioning bool `json:"semanticVersioning,omitempty"`
 }
 
 // ExecutiveSummary provides high-level product overview.
 type ExecutiveSummary struct {
-	ProblemStatement string   `json:"problem_statement"`
-	ProposedSolution string   `json:"proposed_solution"`
-	ExpectedOutcomes []string `json:"expected_outcomes"`
-	TargetAudience   string   `json:"target_audience,omitempty"`
-	ValueProposition string   `json:"value_proposition,omitempty"`
+	ProblemStatement string   `json:"problemStatement"`
+	ProposedSolution string   `json:"proposedSolution"`
+	ExpectedOutcomes []string `json:"expectedOutcomes"`
+	TargetAudience   string   `json:"targetAudience,omitempty"`
+	ValueProposition string   `json:"valueProposition,omitempty"`
 }
 
 // Objectives defines business and product goals using OKR structure.

@@ -40,10 +40,10 @@ type Risk struct {
 	Owner       string          `json:"owner,omitempty"`
 	Status      RiskStatus      `json:"status,omitempty"`
 	Category    string          `json:"category,omitempty"` // Market, Competitive, Technical, etc.
-	DueDate     string          `json:"due_date,omitempty"`
+	DueDate     string          `json:"dueDate,omitempty"`
 	Tags        []string        `json:"tags,omitempty"`
 	Notes       string          `json:"notes,omitempty"`
 
 	// AppendixRefs references appendices with additional details for this risk.
-	AppendixRefs []string `json:"appendix_refs,omitempty"`
+	AppendixRefs []string `json:"appendixRefs,omitempty"`
 }

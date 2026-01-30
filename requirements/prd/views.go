@@ -12,23 +12,23 @@ type PMView struct {
 	Status         string           `json:"status"`
 	Owner          string           `json:"owner"`
 	Version        string           `json:"version"`
-	ProblemSummary string           `json:"problem_summary"`
+	ProblemSummary string           `json:"problemSummary"`
 	Personas       []PersonaSummary `json:"personas"`
 	Goals          []string         `json:"goals"`
-	NonGoals       []string         `json:"non_goals"`
+	NonGoals       []string         `json:"nonGoals"`
 	Solution       SolutionSummary  `json:"solution"`
 	Requirements   RequirementsList `json:"requirements"`
 	Metrics        MetricsSummary   `json:"metrics"`
 	Risks          []RiskSummary    `json:"risks"`
-	OpenQuestions  []string         `json:"open_questions,omitempty"`
+	OpenQuestions  []string         `json:"openQuestions,omitempty"`
 }
 
 // PersonaSummary is a condensed persona view.
 type PersonaSummary struct {
 	Name       string   `json:"name"`
 	Role       string   `json:"role"`
-	PainPoints []string `json:"pain_points"`
-	IsPrimary  bool     `json:"is_primary"`
+	PainPoints []string `json:"painPoints"`
+	IsPrimary  bool     `json:"isPrimary"`
 }
 
 // SolutionSummary is a condensed solution view.
@@ -160,18 +160,18 @@ type ExecView struct {
 	Header                ExecHeader   `json:"header"`
 	Strengths             []string     `json:"strengths"`
 	Blockers              []string     `json:"blockers"`
-	RequiredActions       []ExecAction `json:"required_actions"`
-	TopRisks              []ExecRisk   `json:"top_risks"`
-	RecommendationSummary string       `json:"recommendation_summary"`
+	RequiredActions       []ExecAction `json:"requiredActions"`
+	TopRisks              []ExecRisk   `json:"topRisks"`
+	RecommendationSummary string       `json:"recommendationSummary"`
 }
 
 // ExecHeader contains high-level decision info.
 type ExecHeader struct {
-	PRDID           string  `json:"prd_id"`
+	PRDID           string  `json:"prdId"`
 	Title           string  `json:"title"`
-	OverallDecision string  `json:"overall_decision"`
-	ConfidenceLevel string  `json:"confidence_level"`
-	OverallScore    float64 `json:"overall_score"`
+	OverallDecision string  `json:"overallDecision"`
+	ConfidenceLevel string  `json:"confidenceLevel"`
+	OverallScore    float64 `json:"overallScore"`
 }
 
 // ExecAction represents a required action.

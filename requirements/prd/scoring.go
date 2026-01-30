@@ -41,19 +41,19 @@ type CategoryScore struct {
 	Category       string  `json:"category"`
 	Weight         float64 `json:"weight"`
 	Score          float64 `json:"score"`
-	MaxScore       float64 `json:"max_score"`
+	MaxScore       float64 `json:"maxScore"`
 	Justification  string  `json:"justification"`
 	Evidence       string  `json:"evidence"`
-	BelowThreshold bool    `json:"below_threshold"`
+	BelowThreshold bool    `json:"belowThreshold"`
 }
 
 // ScoringResult contains the complete scoring output.
 type ScoringResult struct {
-	CategoryScores   []CategoryScore   `json:"category_scores"`
-	WeightedScore    float64           `json:"weighted_score"`
+	CategoryScores   []CategoryScore   `json:"categoryScores"`
+	WeightedScore    float64           `json:"weightedScore"`
 	Decision         string            `json:"decision"`
 	Blockers         []string          `json:"blockers"`
-	RevisionTriggers []RevisionTrigger `json:"revision_triggers"`
+	RevisionTriggers []RevisionTrigger `json:"revisionTriggers"`
 	Summary          string            `json:"summary"`
 }
 

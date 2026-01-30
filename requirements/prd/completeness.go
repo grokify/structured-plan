@@ -7,22 +7,22 @@ import (
 
 // CompletenessReport contains the results of a PRD completeness check.
 type CompletenessReport struct {
-	OverallScore     float64          `json:"overall_score"`     // 0-100
-	Grade            string           `json:"grade"`             // A, B, C, D, F
-	Sections         []SectionScore   `json:"sections"`          // Per-section scores
-	Recommendations  []Recommendation `json:"recommendations"`   // Improvement suggestions
-	Summary          string           `json:"summary"`           // Human-readable summary
-	RequiredComplete int              `json:"required_complete"` // Count of complete required sections
-	RequiredTotal    int              `json:"required_total"`    // Total required sections
-	OptionalComplete int              `json:"optional_complete"` // Count of complete optional sections
-	OptionalTotal    int              `json:"optional_total"`    // Total optional sections
+	OverallScore     float64          `json:"overallScore"`     // 0-100
+	Grade            string           `json:"grade"`            // A, B, C, D, F
+	Sections         []SectionScore   `json:"sections"`         // Per-section scores
+	Recommendations  []Recommendation `json:"recommendations"`  // Improvement suggestions
+	Summary          string           `json:"summary"`          // Human-readable summary
+	RequiredComplete int              `json:"requiredComplete"` // Count of complete required sections
+	RequiredTotal    int              `json:"requiredTotal"`    // Total required sections
+	OptionalComplete int              `json:"optionalComplete"` // Count of complete optional sections
+	OptionalTotal    int              `json:"optionalTotal"`    // Total optional sections
 }
 
 // SectionScore represents the completeness score for a document section.
 type SectionScore struct {
 	Name        string   `json:"name"`
-	Score       float64  `json:"score"`      // 0-100
-	MaxPoints   float64  `json:"max_points"` // Weight in overall score
+	Score       float64  `json:"score"`     // 0-100
+	MaxPoints   float64  `json:"maxPoints"` // Weight in overall score
 	Required    bool     `json:"required"`
 	Status      string   `json:"status"` // complete, partial, missing
 	Issues      []string `json:"issues,omitempty"`

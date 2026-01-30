@@ -16,7 +16,7 @@ type Person struct {
 // Approver represents a person with approval authority.
 type Approver struct {
 	Person
-	ApprovedAt *time.Time `json:"approved_at,omitempty"`
+	ApprovedAt *time.Time `json:"approvedAt,omitempty"`
 	Approved   bool       `json:"approved"`
 	Comments   string     `json:"comments,omitempty"`
 }

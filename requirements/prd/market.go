@@ -9,7 +9,7 @@ type MarketDefinition struct {
 	Differentiation []string `json:"differentiation,omitempty"`
 
 	// MarketRisks are risks related to market conditions or competition.
-	MarketRisks []string `json:"market_risks,omitempty"`
+	MarketRisks []string `json:"marketRisks,omitempty"`
 }
 
 // Alternative represents a competing product or alternative approach.
@@ -33,7 +33,7 @@ type Alternative struct {
 	Weaknesses []string `json:"weaknesses,omitempty"`
 
 	// WhyNotChosen explains why this alternative was not selected.
-	WhyNotChosen string `json:"why_not_chosen,omitempty"`
+	WhyNotChosen string `json:"whyNotChosen,omitempty"`
 }
 
 // AlternativeType categorizes alternatives.

@@ -289,7 +289,7 @@ type OKRSet struct {
 // This format is commonly used in PRDs for cleaner nesting.
 type OKR struct {
 	Objective  Objective   `json:"objective"`
-	KeyResults []KeyResult `json:"key_results"` // Alternative to Objective.KeyResults
+	KeyResults []KeyResult `json:"keyResults"` // Alternative to Objective.KeyResults
 }
 
 // ToObjectives converts an OKRSet to a flat list of Objectives.

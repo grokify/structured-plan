@@ -15,14 +15,14 @@ type GoalsAlignment struct {
 	V2MOM *v2mom.V2MOM `json:"v2mom,omitempty"`
 
 	// OKRRef is a reference to an external OKR document.
-	OKRRef *GoalReference `json:"okr_ref,omitempty"`
+	OKRRef *GoalReference `json:"okrRef,omitempty"`
 
 	// OKR is an embedded OKR document.
 	OKR *okr.OKRDocument `json:"okr,omitempty"`
 
 	// AlignedObjectives maps PRD objectives to goal IDs.
 	// Key is the PRD objective ID, value is the goal/method/objective ID.
-	AlignedObjectives map[string]string `json:"aligned_objectives,omitempty"`
+	AlignedObjectives map[string]string `json:"alignedObjectives,omitempty"`
 }
 
 // GoalReference represents a reference to an external goals document.

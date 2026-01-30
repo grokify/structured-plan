@@ -15,10 +15,10 @@ type PRFAQView struct {
 	Version string `json:"version"`
 	Author  string `json:"author"`
 	Date    string `json:"date"`
-	PRDID   string `json:"prd_id"`
+	PRDID   string `json:"prdId"`
 
 	// The two main sections
-	PressRelease PressReleaseSection `json:"press_release"`
+	PressRelease PressReleaseSection `json:"pressRelease"`
 	FAQ          FAQSection          `json:"faq"`
 }
 
