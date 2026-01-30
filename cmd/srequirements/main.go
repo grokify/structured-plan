@@ -48,14 +48,17 @@ Example usage:
 
 // Shared generate flags
 type generateFlags struct {
-	output        string
-	margin        string
-	mainFont      string
-	sansFont      string
-	monoFont      string
-	fontFamily    string
-	noFrontmatter bool
-	descLen       int
+	output           string
+	margin           string
+	mainFont         string
+	sansFont         string
+	monoFont         string
+	fontFamily       string
+	noFrontmatter    bool
+	noTOC            bool
+	noSwimlane       bool
+	descLen          int
+	swimlaneNoStatus bool
 }
 
 func init() {
@@ -132,6 +135,35 @@ var prdScoreFlags struct {
 	format string
 }
 
+var prdFilterFlags struct {
+	output     string
+	includeTags []string
+	excludeTags []string
+	matchAll   bool
+}
+
+var prdFilterCmd = &cobra.Command{
+	Use:   "filter <input.json>",
+	Short: "Filter PRD by tags and output filtered JSON",
+	Long: `Filter a Product Requirements Document by tags and output the filtered JSON.
+
+By default, uses OR logic (union) - includes entities with ANY of the specified tags.
+Use --all to require ALL tags (intersection).
+
+Entities that support tags: personas, user stories, requirements, roadmap phases,
+deliverables, OKRs (objectives and key results), and risks.`,
+	Example: `  # Include items with tag1 OR tag2 (union)
+  srequirements prd filter input.json --include tag1,tag2
+
+  # Include items with tag1 AND tag2 (intersection)
+  srequirements prd filter input.json --include tag1,tag2 --all
+
+  # Output to specific file
+  srequirements prd filter input.json --include mvp -o filtered.json`,
+	Args: cobra.ExactArgs(1),
+	RunE: runPRDFilter,
+}
+
 var prdScoreCmd = &cobra.Command{
 	Use:   "score <input.json>",
 	Short: "Score PRD quality with actionable feedback",
@@ -175,15 +207,24 @@ func init() {
 	prdGenerateCmd.Flags().StringVar(&prdGenerateFlags.monoFont, "monofont", "Courier New", "Monospace font family")
 	prdGenerateCmd.Flags().StringVar(&prdGenerateFlags.fontFamily, "fontfamily", "helvet", "LaTeX font family")
 	prdGenerateCmd.Flags().BoolVar(&prdGenerateFlags.noFrontmatter, "no-frontmatter", false, "Disable YAML frontmatter generation")
-	prdGenerateCmd.Flags().IntVar(&prdGenerateFlags.descLen, "desc-len", prd.DefaultDescriptionMaxLen, "Max length for description fields in tables")
+	prdGenerateCmd.Flags().BoolVar(&prdGenerateFlags.noTOC, "no-toc", false, "Disable Table of Contents generation")
+	prdGenerateCmd.Flags().IntVar(&prdGenerateFlags.descLen, "desc-len", prd.DefaultDescriptionMaxLen, "Max length for description fields in tables (0 = no limit)")
+	prdGenerateCmd.Flags().BoolVar(&prdGenerateFlags.noSwimlane, "no-swimlane", false, "Disable swimlane table view in roadmap section")
+	prdGenerateCmd.Flags().BoolVar(&prdGenerateFlags.swimlaneNoStatus, "swimlane-no-status", false, "Hide status icons in swimlane table")
 
 	prdCmd.AddCommand(prdGenerateCmd)
 	prdCmd.AddCommand(prdValidateCmd)
 	prdCmd.AddCommand(prdCheckCmd)
 	prdCmd.AddCommand(prdScoreCmd)
+	prdCmd.AddCommand(prdFilterCmd)
 
 	// PRD check flags
 	prdCheckCmd.Flags().BoolVar(&prdCheckFlags.json, "json", false, "Output report as JSON")
+
+	// PRD filter flags
+	prdFilterCmd.Flags().StringVarP(&prdFilterFlags.output, "output", "o", "", "Output JSON file path (default: stdout)")
+	prdFilterCmd.Flags().StringSliceVarP(&prdFilterFlags.includeTags, "include", "i", nil, "Tags to include (comma-separated)")
+	prdFilterCmd.Flags().BoolVarP(&prdFilterFlags.matchAll, "all", "a", false, "Require ALL tags (AND logic) instead of ANY (OR logic)")
 
 	// PRD score flags
 	prdScoreCmd.Flags().StringVarP(&prdScoreFlags.format, "format", "f", "terminal", "Output format (terminal, json, markdown)")
@@ -209,15 +250,30 @@ func runPRDGenerate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("parsing JSON: %w", err)
 	}
 
+	// Handle TOC option (default: enabled, disabled with --no-toc)
+	includeTOC := !prdGenerateFlags.noTOC
+	// Handle swimlane option (default: enabled, disabled with --no-swimlane)
+	includeSwimlane := !prdGenerateFlags.noSwimlane
+
 	opts := prd.MarkdownOptions{
-		IncludeFrontmatter: !prdGenerateFlags.noFrontmatter,
-		Margin:             prdGenerateFlags.margin,
-		MainFont:           prdGenerateFlags.mainFont,
-		SansFont:           prdGenerateFlags.sansFont,
-		MonoFont:           prdGenerateFlags.monoFont,
-		FontFamily:         prdGenerateFlags.fontFamily,
-		DescriptionMaxLen:  prdGenerateFlags.descLen,
+		IncludeFrontmatter:   !prdGenerateFlags.noFrontmatter,
+		Margin:               prdGenerateFlags.margin,
+		MainFont:             prdGenerateFlags.mainFont,
+		SansFont:             prdGenerateFlags.sansFont,
+		MonoFont:             prdGenerateFlags.monoFont,
+		FontFamily:           prdGenerateFlags.fontFamily,
+		DescriptionMaxLen:    prdGenerateFlags.descLen,
+		IncludeSwimlaneTable: includeSwimlane,
+		IncludeTOC:           &includeTOC,
 	}
+
+	// Configure swimlane table options
+	if includeSwimlane {
+		tableOpts := prd.DefaultRoadmapTableOptions()
+		tableOpts.IncludeStatus = !prdGenerateFlags.swimlaneNoStatus
+		opts.RoadmapTableOptions = &tableOpts
+	}
+
 	markdown := doc.ToMarkdown(opts)
 
 	if err := os.WriteFile(output, []byte(markdown), 0600); err != nil {
@@ -364,6 +420,60 @@ func runPRDScore(cmd *cobra.Command, args []string) error {
 	// Return non-zero exit code if PRD has blocking issues
 	if !report.Decision.Passed {
 		return fmt.Errorf("PRD evaluation: %s", report.Decision.Rationale)
+	}
+
+	return nil
+}
+
+func runPRDFilter(cmd *cobra.Command, args []string) error {
+	inputFile := args[0]
+
+	// Validate filter tags
+	if len(prdFilterFlags.includeTags) > 0 {
+		for _, tag := range prdFilterFlags.includeTags {
+			if err := prd.ValidateTag(tag); err != nil {
+				return fmt.Errorf("invalid filter tag: %w", err)
+			}
+		}
+	}
+
+	// Read input file
+	data, err := os.ReadFile(inputFile)
+	if err != nil {
+		return fmt.Errorf("reading input file: %w", err)
+	}
+
+	var doc prd.Document
+	if err := json.Unmarshal(data, &doc); err != nil {
+		return fmt.Errorf("parsing JSON: %w", err)
+	}
+
+	// Apply filter
+	var filtered prd.Document
+	if len(prdFilterFlags.includeTags) > 0 {
+		if prdFilterFlags.matchAll {
+			filtered = doc.FilterByTagsAll(prdFilterFlags.includeTags...)
+		} else {
+			filtered = doc.FilterByTags(prdFilterFlags.includeTags...)
+		}
+	} else {
+		filtered = doc
+	}
+
+	// Marshal output
+	output, err := json.MarshalIndent(filtered, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshaling filtered JSON: %w", err)
+	}
+
+	// Write output
+	if prdFilterFlags.output != "" {
+		if err := os.WriteFile(prdFilterFlags.output, output, 0600); err != nil {
+			return fmt.Errorf("writing output file: %w", err)
+		}
+		fmt.Printf("Filtered PRD written to: %s\n", prdFilterFlags.output)
+	} else {
+		fmt.Println(string(output))
 	}
 
 	return nil

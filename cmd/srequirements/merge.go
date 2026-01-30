@@ -67,13 +67,23 @@ func mergeFiles(files []string, output string) error {
 func deepMerge(a, b map[string]interface{}) map[string]interface{} {
 	for k, v := range b {
 		if va, ok := a[k]; ok {
-			if vaMap, ok := va.(map[string]interface{}); ok {
+			// Both have this key - check types for merging
+			switch vaTyped := va.(type) {
+			case map[string]interface{}:
+				// Both are maps - recursively merge
 				if vMap, ok := v.(map[string]interface{}); ok {
-					a[k] = deepMerge(vaMap, vMap)
+					a[k] = deepMerge(vaTyped, vMap)
+					continue
+				}
+			case []interface{}:
+				// Both are arrays - concatenate them
+				if vSlice, ok := v.([]interface{}); ok {
+					a[k] = append(vaTyped, vSlice...)
 					continue
 				}
 			}
 		}
+		// Key doesn't exist in a, or types don't match - use b's value
 		a[k] = v
 	}
 	return a
