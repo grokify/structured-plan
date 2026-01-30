@@ -2,7 +2,38 @@ package prd
 
 import (
 	"fmt"
+	"regexp"
 )
+
+// tagPattern matches valid kebab-case tags:
+// - Lowercase alphanumeric (a-z, 0-9)
+// - Segments separated by single hyphens
+// - No leading, trailing, or consecutive hyphens
+// Examples: "mvp", "phase-1", "2024-q1", "backend-api"
+var tagPattern = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
+
+// ValidateTag checks if a tag follows kebab-case conventions.
+// Valid tags are lowercase alphanumeric with single hyphens between segments.
+func ValidateTag(tag string) error {
+	if tag == "" {
+		return fmt.Errorf("tag cannot be empty")
+	}
+	if !tagPattern.MatchString(tag) {
+		return fmt.Errorf("invalid tag %q: must be lowercase alphanumeric with hyphens (e.g., 'my-tag', 'phase-1')", tag)
+	}
+	return nil
+}
+
+// ValidateTags checks multiple tags and returns all validation errors.
+func ValidateTags(tags []string) []error {
+	var errs []error
+	for _, tag := range tags {
+		if err := ValidateTag(tag); err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return errs
+}
 
 // ValidationResult contains validation errors and warnings.
 type ValidationResult struct {
@@ -55,13 +86,16 @@ func Validate(doc *Document) *ValidationResult {
 		result.addWarning("executive_summary.proposed_solution", "Proposed solution is empty")
 	}
 
-	// Objectives
-	if len(doc.Objectives.BusinessObjectives) == 0 && len(doc.Objectives.ProductGoals) == 0 {
-		result.addWarning("objectives", "No business objectives or product goals defined")
-	}
-
-	if len(doc.Objectives.SuccessMetrics) == 0 {
-		result.addWarning("objectives.success_metrics", "No success metrics defined")
+	// Objectives (OKRs)
+	if len(doc.Objectives.OKRs) == 0 {
+		result.addWarning("objectives", "No OKRs defined")
+	} else {
+		// Check that OKRs have key results
+		for i, okr := range doc.Objectives.OKRs {
+			if len(okr.KeyResults) == 0 {
+				result.addWarning(fmt.Sprintf("objectives.okrs[%d]", i), "OKR has no key results defined")
+			}
+		}
 	}
 
 	// Personas
@@ -79,6 +113,9 @@ func Validate(doc *Document) *ValidationResult {
 
 	// Validate traceability
 	result.validateTraceability(doc)
+
+	// Validate tags
+	result.validateTags(doc)
 
 	return result
 }
@@ -106,15 +143,12 @@ func (r *ValidationResult) validateIDs(doc *Document) {
 		ids[id] = location
 	}
 
-	// Check objective IDs
-	for i, obj := range doc.Objectives.BusinessObjectives {
-		checkID(obj.ID, fmt.Sprintf("objectives.business_objectives[%d].id", i))
-	}
-	for i, obj := range doc.Objectives.ProductGoals {
-		checkID(obj.ID, fmt.Sprintf("objectives.product_goals[%d].id", i))
-	}
-	for i, m := range doc.Objectives.SuccessMetrics {
-		checkID(m.ID, fmt.Sprintf("objectives.success_metrics[%d].id", i))
+	// Check OKR IDs
+	for i, okr := range doc.Objectives.OKRs {
+		checkID(okr.Objective.ID, fmt.Sprintf("objectives.okrs[%d].objective.id", i))
+		for j, kr := range okr.KeyResults {
+			checkID(kr.ID, fmt.Sprintf("objectives.okrs[%d].key_results[%d].id", i, j))
+		}
 	}
 
 	// Check persona IDs
@@ -174,20 +208,15 @@ func (r *ValidationResult) validateTraceability(doc *Document) {
 	// Build sets of defined IDs
 	definedIDs := make(map[string]bool)
 
-	// Collect all defined IDs
-	for _, obj := range doc.Objectives.BusinessObjectives {
-		if obj.ID != "" {
-			definedIDs[obj.ID] = true
+	// Collect all defined IDs from OKRs
+	for _, okr := range doc.Objectives.OKRs {
+		if okr.Objective.ID != "" {
+			definedIDs[okr.Objective.ID] = true
 		}
-	}
-	for _, obj := range doc.Objectives.ProductGoals {
-		if obj.ID != "" {
-			definedIDs[obj.ID] = true
-		}
-	}
-	for _, m := range doc.Objectives.SuccessMetrics {
-		if m.ID != "" {
-			definedIDs[m.ID] = true
+		for _, kr := range okr.KeyResults {
+			if kr.ID != "" {
+				definedIDs[kr.ID] = true
+			}
 		}
 	}
 	for _, p := range doc.Personas {
@@ -279,5 +308,60 @@ func (r *ValidationResult) validateTraceability(doc *Document) {
 				)
 			}
 		}
+	}
+}
+
+// validateTags checks all tags in the document follow kebab-case conventions.
+func (r *ValidationResult) validateTags(doc *Document) {
+	checkTags := func(tags []string, location string) {
+		for _, tag := range tags {
+			if err := ValidateTag(tag); err != nil {
+				r.addError(location, err.Error())
+			}
+		}
+	}
+
+	// Metadata tags
+	checkTags(doc.Metadata.Tags, "metadata.tags")
+
+	// Persona tags
+	for i, p := range doc.Personas {
+		checkTags(p.Tags, fmt.Sprintf("personas[%d].tags", i))
+	}
+
+	// User story tags
+	for i, s := range doc.UserStories {
+		checkTags(s.Tags, fmt.Sprintf("user_stories[%d].tags", i))
+	}
+
+	// Functional requirement tags
+	for i, req := range doc.Requirements.Functional {
+		checkTags(req.Tags, fmt.Sprintf("requirements.functional[%d].tags", i))
+	}
+
+	// Non-functional requirement tags
+	for i, nfr := range doc.Requirements.NonFunctional {
+		checkTags(nfr.Tags, fmt.Sprintf("requirements.non_functional[%d].tags", i))
+	}
+
+	// Roadmap phase and deliverable tags
+	for i, phase := range doc.Roadmap.Phases {
+		checkTags(phase.Tags, fmt.Sprintf("roadmap.phases[%d].tags", i))
+		for j, del := range phase.Deliverables {
+			checkTags(del.Tags, fmt.Sprintf("roadmap.phases[%d].deliverables[%d].tags", i, j))
+		}
+	}
+
+	// OKR tags (objectives and key results)
+	for i, okr := range doc.Objectives.OKRs {
+		checkTags(okr.Objective.Tags, fmt.Sprintf("objectives.okrs[%d].objective.tags", i))
+		for j, kr := range okr.KeyResults {
+			checkTags(kr.Tags, fmt.Sprintf("objectives.okrs[%d].key_results[%d].tags", i, j))
+		}
+	}
+
+	// Risk tags
+	for i, risk := range doc.Risks {
+		checkTags(risk.Tags, fmt.Sprintf("risks[%d].tags", i))
 	}
 }
