@@ -93,12 +93,9 @@ func GeneratePMView(doc *Document) *PMView {
 		})
 	}
 
-	// Goals from objectives
-	for _, obj := range doc.Objectives.BusinessObjectives {
-		view.Goals = append(view.Goals, obj.Description)
-	}
-	for _, obj := range doc.Objectives.ProductGoals {
-		view.Goals = append(view.Goals, obj.Description)
+	// Goals from OKRs
+	for _, okr := range doc.Objectives.OKRs {
+		view.Goals = append(view.Goals, okr.Objective.Description)
 	}
 
 	// Non-goals from out of scope
@@ -133,14 +130,16 @@ func GeneratePMView(doc *Document) *PMView {
 		}
 	}
 
-	// Metrics
-	if len(doc.Objectives.SuccessMetrics) > 0 {
-		// First metric as primary
-		view.Metrics.Primary = fmt.Sprintf("%s: %s", doc.Objectives.SuccessMetrics[0].Name, doc.Objectives.SuccessMetrics[0].Target)
-		// Rest as supporting
-		for i := 1; i < len(doc.Objectives.SuccessMetrics); i++ {
-			m := doc.Objectives.SuccessMetrics[i]
-			view.Metrics.Supporting = append(view.Metrics.Supporting, m.Name)
+	// Metrics from OKR Key Results
+	isFirst := true
+	for _, okr := range doc.Objectives.OKRs {
+		for _, kr := range okr.KeyResults {
+			if isFirst {
+				view.Metrics.Primary = fmt.Sprintf("%s: %s", kr.Description, kr.Target)
+				isFirst = false
+			} else {
+				view.Metrics.Supporting = append(view.Metrics.Supporting, kr.Description)
+			}
 		}
 	}
 

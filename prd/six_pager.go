@@ -232,12 +232,9 @@ func generatePressRelease(doc *Document) PressReleaseSection {
 		}
 	}
 
-	// Benefits from business objectives
-	for _, obj := range doc.Objectives.BusinessObjectives {
-		pr.Benefits = append(pr.Benefits, obj.Description)
-	}
-	for _, obj := range doc.Objectives.ProductGoals {
-		pr.Benefits = append(pr.Benefits, obj.Description)
+	// Benefits from OKR objectives
+	for _, okr := range doc.Objectives.OKRs {
+		pr.Benefits = append(pr.Benefits, okr.Objective.Description)
 	}
 
 	// Call to action
@@ -417,9 +414,9 @@ func generateSolution(doc *Document) SolutionSection {
 		sol.Differentiators = doc.Market.Differentiation
 	}
 
-	// Scope
-	for _, obj := range doc.Objectives.ProductGoals {
-		sol.Scope.InScope = append(sol.Scope.InScope, obj.Description)
+	// Scope from OKR objectives
+	for _, okr := range doc.Objectives.OKRs {
+		sol.Scope.InScope = append(sol.Scope.InScope, okr.Objective.Description)
 	}
 	sol.Scope.OutOfScope = doc.OutOfScope
 
@@ -429,30 +426,27 @@ func generateSolution(doc *Document) SolutionSection {
 func generateSuccessMetrics(doc *Document) SuccessMetricsSection {
 	sm := SuccessMetricsSection{}
 
-	// Metrics from objectives
-	if len(doc.Objectives.SuccessMetrics) > 0 {
-		first := doc.Objectives.SuccessMetrics[0]
-		sm.PrimaryMetric = MetricSnapshot{
-			Name:        first.Name,
-			Target:      first.Target,
-			Baseline:    first.CurrentBaseline,
-			Measurement: first.MeasurementMethod,
-		}
+	// Metrics from OKR Key Results
+	isFirst := true
+	for _, okr := range doc.Objectives.OKRs {
+		// Add objective description as business goal
+		sm.BusinessGoals = append(sm.BusinessGoals, okr.Objective.Description)
 
-		for i := 1; i < len(doc.Objectives.SuccessMetrics); i++ {
-			m := doc.Objectives.SuccessMetrics[i]
-			sm.SecondaryMetrics = append(sm.SecondaryMetrics, MetricSnapshot{
-				Name:        m.Name,
-				Target:      m.Target,
-				Baseline:    m.CurrentBaseline,
-				Measurement: m.MeasurementMethod,
-			})
+		// Add key results as metrics
+		for _, kr := range okr.KeyResults {
+			metric := MetricSnapshot{
+				Name:        kr.Description,
+				Target:      kr.Target,
+				Baseline:    kr.Baseline,
+				Measurement: kr.MeasurementMethod,
+			}
+			if isFirst {
+				sm.PrimaryMetric = metric
+				isFirst = false
+			} else {
+				sm.SecondaryMetrics = append(sm.SecondaryMetrics, metric)
+			}
 		}
-	}
-
-	// Business goals
-	for _, obj := range doc.Objectives.BusinessObjectives {
-		sm.BusinessGoals = append(sm.BusinessGoals, obj.Description)
 	}
 
 	return sm

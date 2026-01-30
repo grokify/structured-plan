@@ -92,8 +92,15 @@ func (r *PRDGoalsRenderer) Render(doc *prd.Document, opts *render.Options) ([]by
 		return nil, fmt.Errorf("rendering objectives slide: %w", err)
 	}
 
-	// Render success metrics slide
-	if len(doc.Objectives.SuccessMetrics) > 0 {
+	// Render success metrics slide (from OKR Key Results)
+	hasKeyResults := false
+	for _, okr := range doc.Objectives.OKRs {
+		if len(okr.KeyResults) > 0 {
+			hasKeyResults = true
+			break
+		}
+	}
+	if hasKeyResults {
 		if err := prdGoalsMetricsSlideTmpl.Execute(&buf, data); err != nil {
 			return nil, fmt.Errorf("rendering metrics slide: %w", err)
 		}
@@ -364,40 +371,26 @@ var prdGoalsPersonasSlideTmpl = template.Must(template.New("prdGoalsPersonasSlid
 
 `))
 
-var prdGoalsObjectivesSlideTmpl = template.Must(template.New("prdGoalsObjectivesSlide").Funcs(prdGoalsFuncMap).Parse(`## Objectives
+var prdGoalsObjectivesSlideTmpl = template.Must(template.New("prdGoalsObjectivesSlide").Funcs(prdGoalsFuncMap).Parse(`## OKRs (Objectives & Key Results)
 
-{{- if .PRD.Objectives.BusinessObjectives}}
-### Business Objectives
-{{range .PRD.Objectives.BusinessObjectives -}}
-- **{{.ID}}:** {{.Description}}
-{{end}}
+{{- range $i, $okr := .PRD.Objectives.OKRs}}
+### {{$okr.Objective.Description}}
+{{- range $okr.KeyResults}}
+- **{{.ID}}:** {{.Description}} → {{.Target}}
 {{- end}}
-
-{{- if .PRD.Objectives.ProductGoals}}
-### Product Goals
-{{range .PRD.Objectives.ProductGoals -}}
-- **{{.ID}}:** {{.Description}}
 {{end}}
-{{- end}}
 
 ---
 
 `))
 
-var prdGoalsMetricsSlideTmpl = template.Must(template.New("prdGoalsMetricsSlide").Parse(`## Success Metrics
+var prdGoalsMetricsSlideTmpl = template.Must(template.New("prdGoalsMetricsSlide").Parse(`## Key Results
 
-| Metric | Target | Baseline |
-|--------|--------|----------|
-{{- range .PRD.Objectives.SuccessMetrics}}
-| {{.Name}} | {{.Target}} | {{if .CurrentBaseline}}{{.CurrentBaseline}}{{else}}-{{end}} |
-{{- end}}
-
-{{- if gt (len .PRD.Objectives.SuccessMetrics) 0}}
-{{- with index .PRD.Objectives.SuccessMetrics 0}}
-{{- if .MeasurementMethod}}
-
-**Measurement:** {{.MeasurementMethod}}
-{{- end}}
+| Key Result | Target | Baseline |
+|------------|--------|----------|
+{{- range .PRD.Objectives.OKRs}}
+{{- range .KeyResults}}
+| {{.Description}} | {{.Target}} | {{if .Baseline}}{{.Baseline}}{{else}}-{{end}} |
 {{- end}}
 {{- end}}
 
@@ -586,9 +579,13 @@ var prdGoalsSummarySlideTmpl = template.Must(template.New("prdGoalsSummarySlide"
 
 **Solution:** {{.PRD.ExecutiveSummary.ProposedSolution}}
 
-{{- if .PRD.Objectives.SuccessMetrics}}
-{{- with index .PRD.Objectives.SuccessMetrics 0}}
-**Key Metric:** {{.Name}} → {{.Target}}
+{{- if .PRD.Objectives.OKRs}}
+{{- with index .PRD.Objectives.OKRs 0}}
+{{- if .KeyResults}}
+{{- with index .KeyResults 0}}
+**Key Metric:** {{.Description}} → {{.Target}}
+{{- end}}
+{{- end}}
 {{- end}}
 {{- end}}
 

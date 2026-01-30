@@ -297,42 +297,60 @@ func (d *Document) checkObjectives() SectionScore {
 	points := 0.0
 	maxPoints := 6.0
 
-	// Business objectives
-	if len(d.Objectives.BusinessObjectives) >= 2 {
+	// Check OKRs
+	numOKRs := len(d.Objectives.OKRs)
+	if numOKRs >= 2 {
 		points += 2
-	} else if len(d.Objectives.BusinessObjectives) > 0 {
+	} else if numOKRs > 0 {
 		points += 1
-		score.Issues = append(score.Issues, "Consider adding more business objectives (recommend 2+)")
+		score.Issues = append(score.Issues, "Consider adding more OKRs (recommend 2+)")
 	} else {
-		score.Issues = append(score.Issues, "Missing business objectives")
+		score.Issues = append(score.Issues, "Missing OKRs - define objectives and key results")
 	}
 
-	// Product goals
-	if len(d.Objectives.ProductGoals) >= 2 {
-		points += 2
-	} else if len(d.Objectives.ProductGoals) > 0 {
-		points += 1
-		score.Issues = append(score.Issues, "Consider adding more product goals (recommend 2+)")
-	} else {
-		score.Issues = append(score.Issues, "Missing product goals")
+	// Count total key results
+	totalKeyResults := 0
+	for _, okr := range d.Objectives.OKRs {
+		totalKeyResults += len(okr.KeyResults)
 	}
 
-	// Success metrics
-	if len(d.Objectives.SuccessMetrics) >= 3 {
+	// Check key results
+	if totalKeyResults >= 3 {
 		points += 2
-	} else if len(d.Objectives.SuccessMetrics) > 0 {
+	} else if totalKeyResults > 0 {
 		points += 1
-		score.Issues = append(score.Issues, "Consider adding more success metrics (recommend 3+)")
-	} else {
-		score.Issues = append(score.Issues, "Missing success metrics - how will you measure success?")
+		score.Issues = append(score.Issues, "Consider adding more key results (recommend 3+)")
+	} else if numOKRs > 0 {
+		score.Issues = append(score.Issues, "OKRs missing key results - how will you measure success?")
 	}
 
-	// Check quality of success metrics
-	for _, metric := range d.Objectives.SuccessMetrics {
-		if metric.Target == "" {
-			score.Issues = append(score.Issues, fmt.Sprintf("Success metric '%s' missing target value", metric.Name))
+	// Check key result quality
+	for _, okr := range d.Objectives.OKRs {
+		for _, kr := range okr.KeyResults {
+			if kr.Target == "" {
+				score.Issues = append(score.Issues, fmt.Sprintf("Key result '%s' missing target value", kr.Description))
+				break
+			}
+		}
+	}
+
+	// Check for phase targets (roadmap alignment)
+	hasPhaseTargets := false
+	for _, okr := range d.Objectives.OKRs {
+		for _, kr := range okr.KeyResults {
+			if len(kr.PhaseTargets) > 0 {
+				hasPhaseTargets = true
+				break
+			}
+		}
+		if hasPhaseTargets {
 			break
 		}
+	}
+	if hasPhaseTargets {
+		points += 2
+	} else if numOKRs > 0 {
+		score.Issues = append(score.Issues, "Consider adding phase targets to key results for roadmap alignment")
 	}
 
 	score.Score = (points / maxPoints) * 100

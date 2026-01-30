@@ -390,11 +390,11 @@ func scoreScopeDiscipline(doc *Document) CategoryScore {
 	var points float64
 	var evidence []string
 
-	// Check objectives (goals)
-	totalGoals := len(doc.Objectives.BusinessObjectives) + len(doc.Objectives.ProductGoals)
-	if totalGoals > 0 {
+	// Check objectives (goals) from OKRs
+	totalOKRs := len(doc.Objectives.OKRs)
+	if totalOKRs > 0 {
 		points += 3.0
-		evidence = append(evidence, fmt.Sprintf("%d goals/objectives defined", totalGoals))
+		evidence = append(evidence, fmt.Sprintf("%d OKRs defined", totalOKRs))
 	}
 
 	// Check out of scope (non-goals)
@@ -403,10 +403,14 @@ func scoreScopeDiscipline(doc *Document) CategoryScore {
 		evidence = append(evidence, fmt.Sprintf("%d out-of-scope items defined", len(doc.OutOfScope)))
 	}
 
-	// Check success metrics (success criteria)
-	if len(doc.Objectives.SuccessMetrics) > 0 {
+	// Check key results (success criteria) from OKRs
+	totalKeyResults := 0
+	for _, okr := range doc.Objectives.OKRs {
+		totalKeyResults += len(okr.KeyResults)
+	}
+	if totalKeyResults > 0 {
 		points += 2.0
-		evidence = append(evidence, "Success metrics defined")
+		evidence = append(evidence, fmt.Sprintf("%d key results defined", totalKeyResults))
 	}
 
 	// Check solution tradeoffs
@@ -606,43 +610,45 @@ func scoreMetricsQuality(doc *Document) CategoryScore {
 	var points float64
 	var evidence []string
 
-	// Check success metrics from objectives
-	if len(doc.Objectives.SuccessMetrics) > 0 {
-		points += 4.0
-		evidence = append(evidence, fmt.Sprintf("%d success metrics defined", len(doc.Objectives.SuccessMetrics)))
+	// Count key results from OKRs
+	totalKeyResults := 0
+	for _, okr := range doc.Objectives.OKRs {
+		totalKeyResults += len(okr.KeyResults)
+	}
 
-		// Check metric quality
+	if totalKeyResults > 0 {
+		points += 4.0
+		evidence = append(evidence, fmt.Sprintf("%d key results defined", totalKeyResults))
+
+		// Check key result quality
 		hasTargets := false
 		hasBaseline := false
-		for _, m := range doc.Objectives.SuccessMetrics {
-			if m.Target != "" {
-				hasTargets = true
-			}
-			if m.CurrentBaseline != "" {
-				hasBaseline = true
+		hasMeasurement := false
+		for _, okr := range doc.Objectives.OKRs {
+			for _, kr := range okr.KeyResults {
+				if kr.Target != "" {
+					hasTargets = true
+				}
+				if kr.Baseline != "" {
+					hasBaseline = true
+				}
+				if kr.MeasurementMethod != "" {
+					hasMeasurement = true
+				}
 			}
 		}
 		if hasTargets {
 			points += 2.0
-			evidence = append(evidence, "Targets defined for metrics")
+			evidence = append(evidence, "Targets defined for key results")
 		}
 		if hasBaseline {
 			points += 2.0
 			evidence = append(evidence, "Baselines documented")
 		}
-	}
-
-	// Check for measurement method
-	hasMeasurement := false
-	for _, m := range doc.Objectives.SuccessMetrics {
-		if m.MeasurementMethod != "" {
-			hasMeasurement = true
-			break
+		if hasMeasurement {
+			points += 2.0
+			evidence = append(evidence, "Measurement methods specified")
 		}
-	}
-	if hasMeasurement {
-		points += 2.0
-		evidence = append(evidence, "Measurement methods specified")
 	}
 
 	score.Score = minFloat(points, 10.0)

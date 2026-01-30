@@ -64,9 +64,7 @@ func New(id, title string, authors ...Person) *Document {
 		},
 		ExecutiveSummary: ExecutiveSummary{},
 		Objectives: Objectives{
-			BusinessObjectives: []Objective{},
-			ProductGoals:       []Objective{},
-			SuccessMetrics:     []SuccessMetric{},
+			OKRs: []OKR{},
 		},
 		Personas:     []Persona{},
 		UserStories:  []UserStory{},

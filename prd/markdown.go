@@ -2,7 +2,10 @@ package prd
 
 import (
 	"fmt"
+	"sort"
 	"strings"
+
+	"github.com/grokify/structured-requirements/common"
 )
 
 // MarkdownOptions configures markdown generation.
@@ -19,14 +22,22 @@ type MarkdownOptions struct {
 	MonoFont string
 	// FontFamily sets the LaTeX font family (e.g., "helvet")
 	FontFamily string
-	// DescriptionMaxLen sets the max length for description fields in tables (default: 100)
+	// DescriptionMaxLen sets the max length for description fields in tables (default: 0, no limit)
 	DescriptionMaxLen int
+	// IncludeSwimlaneTable adds a swimlane view of the roadmap (phases as columns, deliverable types as rows)
+	IncludeSwimlaneTable bool
+	// RoadmapTableOptions configures the swimlane/roadmap table generation
+	RoadmapTableOptions *RoadmapTableOptions
+	// IncludeTOC adds a Table of Contents with internal links (default: true)
+	IncludeTOC *bool
 }
 
 // DefaultDescriptionMaxLen is the default maximum length for description fields in tables.
-const DefaultDescriptionMaxLen = 100
+// A value of 0 means no truncation (full text is displayed).
+const DefaultDescriptionMaxLen = 0
 
 // DefaultMarkdownOptions returns sensible defaults for markdown generation.
+// By default, no text truncation is applied (DescriptionMaxLen = 0).
 func DefaultMarkdownOptions() MarkdownOptions {
 	return MarkdownOptions{
 		IncludeFrontmatter: true,
@@ -41,11 +52,6 @@ func DefaultMarkdownOptions() MarkdownOptions {
 
 // ToMarkdown converts a PRD Document to markdown format.
 func (d *Document) ToMarkdown(opts MarkdownOptions) string {
-	// Apply defaults for zero values
-	if opts.DescriptionMaxLen == 0 {
-		opts.DescriptionMaxLen = DefaultDescriptionMaxLen
-	}
-
 	var sb strings.Builder
 
 	// YAML Frontmatter
@@ -58,6 +64,12 @@ func (d *Document) ToMarkdown(opts MarkdownOptions) string {
 
 	// Metadata table
 	sb.WriteString(d.generateMetadataTable())
+
+	// Table of Contents (default: enabled)
+	includeTOC := opts.IncludeTOC == nil || *opts.IncludeTOC
+	if includeTOC {
+		sb.WriteString(d.generateTableOfContents(opts))
+	}
 
 	// Executive Summary
 	sb.WriteString(d.generateExecutiveSummary())
@@ -75,7 +87,7 @@ func (d *Document) ToMarkdown(opts MarkdownOptions) string {
 	sb.WriteString(d.generateRequirements(opts))
 
 	// Roadmap
-	sb.WriteString(d.generateRoadmap())
+	sb.WriteString(d.generateRoadmap(opts))
 
 	// Optional sections
 	if d.TechArchitecture != nil {
@@ -92,6 +104,22 @@ func (d *Document) ToMarkdown(opts MarkdownOptions) string {
 
 	if len(d.Risks) > 0 {
 		sb.WriteString(d.generateRisks())
+	}
+
+	if len(d.OpenItems) > 0 {
+		sb.WriteString(d.generateOpenItems())
+	}
+
+	if d.CurrentState != nil {
+		sb.WriteString(d.generateCurrentState())
+	}
+
+	if d.SecurityModel != nil {
+		sb.WriteString(d.generateSecurityModel())
+	}
+
+	if len(d.Appendices) > 0 {
+		sb.WriteString(d.generateAppendices())
 	}
 
 	if len(d.Glossary) > 0 {
@@ -173,19 +201,107 @@ func (d *Document) generateMetadataTable() string {
 	}
 
 	if len(d.Metadata.Authors) > 0 {
-		names := make([]string, len(d.Metadata.Authors))
-		for i, a := range d.Metadata.Authors {
-			names[i] = a.Name
-		}
-		sb.WriteString(fmt.Sprintf("| **Author(s)** | %s |\n", strings.Join(names, ", ")))
+		sb.WriteString(fmt.Sprintf("| **Author(s)** | %s |\n", common.FormatPeopleMarkdown(d.Metadata.Authors)))
 	}
 
 	if len(d.Metadata.Tags) > 0 {
 		sb.WriteString(fmt.Sprintf("| **Tags** | %s |\n", strings.Join(d.Metadata.Tags, ", ")))
 	}
 
+	sb.WriteString("\n")
+
+	if d.Metadata.SemanticVersioning {
+		sb.WriteString("*This document uses [Semantic Versioning](https://semver.org/).*\n\n")
+	}
+
+	sb.WriteString("---\n\n")
+	return sb.String()
+}
+
+func (d *Document) generateTableOfContents(_ MarkdownOptions) string {
+	var sb strings.Builder
+	sb.WriteString("## Table of Contents\n\n")
+
+	// Fixed sections (always present)
+	sb.WriteString("1. [Executive Summary](#1-executive-summary)\n")
+	sb.WriteString("2. [Objectives and Goals](#2-objectives-and-goals)\n")
+	sb.WriteString("3. [Personas](#3-personas)\n")
+	sb.WriteString("4. [User Stories](#4-user-stories)\n")
+	sb.WriteString("5. [Functional Requirements](#5-functional-requirements)\n")
+	sb.WriteString("6. [Non-Functional Requirements](#6-non-functional-requirements)\n")
+	sb.WriteString("7. [Roadmap](#7-roadmap)\n")
+
+	// Optional sections - track section number
+	sectionNum := 8
+
+	if d.TechArchitecture != nil {
+		sb.WriteString(fmt.Sprintf("%d. [Technical Architecture](#technical-architecture)\n", sectionNum))
+		sectionNum++
+	}
+
+	if d.Assumptions != nil {
+		sb.WriteString(fmt.Sprintf("%d. [Assumptions and Constraints](#assumptions-and-constraints)\n", sectionNum))
+		sectionNum++
+	}
+
+	if len(d.OutOfScope) > 0 {
+		sb.WriteString(fmt.Sprintf("%d. [Out of Scope](#out-of-scope)\n", sectionNum))
+		sectionNum++
+	}
+
+	if len(d.Risks) > 0 {
+		sb.WriteString(fmt.Sprintf("%d. [Risk Assessment](#risk-assessment)\n", sectionNum))
+		sectionNum++
+	}
+
+	if len(d.OpenItems) > 0 {
+		sb.WriteString(fmt.Sprintf("%d. [Open Items](#open-items)\n", sectionNum))
+		sectionNum++
+	}
+
+	if d.CurrentState != nil {
+		sb.WriteString(fmt.Sprintf("%d. [Current State](#current-state)\n", sectionNum))
+		sectionNum++
+	}
+
+	if d.SecurityModel != nil {
+		sb.WriteString(fmt.Sprintf("%d. [Security Model](#security-model)\n", sectionNum))
+		sectionNum++
+	}
+
+	if len(d.Appendices) > 0 {
+		sb.WriteString(fmt.Sprintf("%d. [Appendices](#appendices)\n", sectionNum))
+		sectionNum++
+	}
+
+	if len(d.Glossary) > 0 {
+		sb.WriteString(fmt.Sprintf("%d. [Glossary](#glossary)\n", sectionNum))
+		sectionNum++
+	}
+
+	// Custom sections
+	for _, cs := range d.CustomSections {
+		slug := toSlug(cs.Title)
+		sb.WriteString(fmt.Sprintf("%d. [%s](#%s)\n", sectionNum, cs.Title, slug))
+		sectionNum++
+	}
+
 	sb.WriteString("\n---\n\n")
 	return sb.String()
+}
+
+// toSlug converts a string to a URL-friendly slug for markdown anchors.
+func toSlug(s string) string {
+	s = strings.ToLower(s)
+	s = strings.ReplaceAll(s, " ", "-")
+	// Remove characters that aren't alphanumeric or hyphens
+	var result strings.Builder
+	for _, r := range s {
+		if (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9') || r == '-' {
+			result.WriteRune(r)
+		}
+	}
+	return result.String()
 }
 
 func (d *Document) generateExecutiveSummary() string {
@@ -224,43 +340,114 @@ func (d *Document) generateObjectives() string {
 	var sb strings.Builder
 	sb.WriteString("## 2. Objectives and Goals\n\n")
 
-	// Business Objectives
-	if len(d.Objectives.BusinessObjectives) > 0 {
-		sb.WriteString("### 2.1 Business Objectives\n\n")
-		sb.WriteString("| ID | Objective | Rationale | Aligned With |\n")
-		sb.WriteString("|----|-----------|-----------|---------------|\n")
-		for _, obj := range d.Objectives.BusinessObjectives {
-			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s |\n",
-				obj.ID, obj.Description, obj.Rationale, obj.AlignedWith))
-		}
-		sb.WriteString("\n")
-	}
-
-	// Product Goals
-	if len(d.Objectives.ProductGoals) > 0 {
-		sb.WriteString("### 2.2 Product Goals\n\n")
-		sb.WriteString("| ID | Goal | Rationale |\n")
-		sb.WriteString("|----|------|----------|\n")
-		for _, goal := range d.Objectives.ProductGoals {
-			sb.WriteString(fmt.Sprintf("| %s | %s | %s |\n",
-				goal.ID, goal.Description, goal.Rationale))
-		}
-		sb.WriteString("\n")
-	}
-
-	// Success Metrics
-	if len(d.Objectives.SuccessMetrics) > 0 {
-		sb.WriteString("### 2.3 Success Metrics\n\n")
-		sb.WriteString("| ID | Metric | Target | Measurement Method |\n")
-		sb.WriteString("|----|--------|--------|-------------------|\n")
-		for _, m := range d.Objectives.SuccessMetrics {
-			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s |\n",
-				m.ID, m.Name, m.Target, m.MeasurementMethod))
-		}
-		sb.WriteString("\n")
+	if len(d.Objectives.OKRs) > 0 {
+		sb.WriteString(d.generateOKRs())
 	}
 
 	sb.WriteString("---\n\n")
+	return sb.String()
+}
+
+func (d *Document) generateOKRs() string {
+	var sb strings.Builder
+
+	// Objectives overview - quick scan of all objectives
+	sb.WriteString("### 2.1 Objectives Overview\n\n")
+	for i, okr := range d.Objectives.OKRs {
+		obj := okr.Objective
+		timeframe := ""
+		if obj.Timeframe != "" {
+			timeframe = fmt.Sprintf(" (%s)", obj.Timeframe)
+		}
+		sb.WriteString(fmt.Sprintf("%d. **%s**%s\n", i+1, obj.Description, timeframe))
+	}
+	sb.WriteString("\n")
+
+	// Detailed OKRs with Key Results
+	sb.WriteString("### 2.2 OKRs (Objectives and Key Results)\n\n")
+
+	for i, okr := range d.Objectives.OKRs {
+		obj := okr.Objective
+
+		// Objective header with metadata
+		timeframe := ""
+		if obj.Timeframe != "" {
+			timeframe = fmt.Sprintf(" (%s)", obj.Timeframe)
+		}
+		sb.WriteString(fmt.Sprintf("#### Objective %d: %s%s\n\n", i+1, obj.Description, timeframe))
+
+		// Objective metadata table
+		if obj.Owner != "" || obj.Category != "" || obj.AlignedWith != "" {
+			sb.WriteString("| Attribute | Value |\n")
+			sb.WriteString("|-----------|-------|\n")
+			if obj.Category != "" {
+				sb.WriteString(fmt.Sprintf("| **Category** | %s |\n", obj.Category))
+			}
+			if obj.Owner != "" {
+				sb.WriteString(fmt.Sprintf("| **Owner** | %s |\n", obj.Owner))
+			}
+			if obj.AlignedWith != "" {
+				sb.WriteString(fmt.Sprintf("| **Aligned With** | %s |\n", obj.AlignedWith))
+			}
+			if obj.Rationale != "" {
+				sb.WriteString(fmt.Sprintf("| **Rationale** | %s |\n", obj.Rationale))
+			}
+			sb.WriteString("\n")
+		}
+
+		// Key Results table
+		sb.WriteString("**Key Results:**\n\n")
+		sb.WriteString("| KR | Description | Baseline | Target | Current | Confidence |\n")
+		sb.WriteString("|----|-------------|----------|--------|---------|------------|\n")
+
+		for j, kr := range okr.KeyResults {
+			baseline := kr.Baseline
+			if baseline == "" {
+				baseline = "-"
+			}
+			current := kr.Current
+			if current == "" {
+				current = "-"
+			}
+			confidence := "-"
+			if kr.Confidence > 0 {
+				confidence = fmt.Sprintf("%.0f%%", kr.Confidence*100)
+			}
+
+			// Format with unit if present
+			target := kr.Target
+			if kr.Unit != "" && target != "-" {
+				target = fmt.Sprintf("%s %s", kr.Target, kr.Unit)
+			}
+
+			sb.WriteString(fmt.Sprintf("| KR%d.%d | %s | %s | %s | %s | %s |\n",
+				i+1, j+1, kr.Description, baseline, target, current, confidence))
+		}
+		sb.WriteString("\n")
+
+		// Phase targets if present
+		for _, kr := range okr.KeyResults {
+			if len(kr.PhaseTargets) > 0 {
+				sb.WriteString(fmt.Sprintf("**%s - Phase Targets:**\n\n", kr.Description))
+				sb.WriteString("| Phase | Target | Status | Actual | Notes |\n")
+				sb.WriteString("|-------|--------|--------|--------|-------|\n")
+				for _, pt := range kr.PhaseTargets {
+					status := pt.Status
+					if status == "" {
+						status = "not_started"
+					}
+					actual := pt.Actual
+					if actual == "" {
+						actual = "-"
+					}
+					sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s | %s |\n",
+						pt.PhaseID, pt.Target, status, actual, pt.Notes))
+				}
+				sb.WriteString("\n")
+			}
+		}
+	}
+
 	return sb.String()
 }
 
@@ -349,8 +536,16 @@ func (d *Document) generateRequirements(opts MarkdownOptions) string {
 		categories[fr.Category] = append(categories[fr.Category], fr)
 	}
 
+	// Sort category names for consistent ordering
+	var categoryNames []string
+	for cat := range categories {
+		categoryNames = append(categoryNames, cat)
+	}
+	sort.Strings(categoryNames)
+
 	sectionNum := 1
-	for cat, reqs := range categories {
+	for _, cat := range categoryNames {
+		reqs := categories[cat]
 		sb.WriteString(fmt.Sprintf("### 5.%d %s\n\n", sectionNum, cat))
 		sb.WriteString("| ID | Title | Description | Priority | Phase |\n")
 		sb.WriteString("|------|-----------------|--------------------------------------------|----------|-------|\n")
@@ -371,8 +566,7 @@ func (d *Document) generateRequirements(opts MarkdownOptions) string {
 		nfrCategories[nfr.Category] = append(nfrCategories[nfr.Category], nfr)
 	}
 
-	sectionNum = 1
-	categoryNames := map[NFRCategory]string{
+	nfrCategoryDisplayNames := map[NFRCategory]string{
 		NFRPerformance:      "Performance",
 		NFRScalability:      "Scalability",
 		NFRReliability:      "Reliability",
@@ -388,8 +582,19 @@ func (d *Document) generateRequirements(opts MarkdownOptions) string {
 		NFRCostEfficiency:   "Cost Efficiency",
 	}
 
-	for cat, reqs := range nfrCategories {
-		catName := categoryNames[cat]
+	// Sort NFR category keys for consistent ordering
+	var nfrCategoryKeys []NFRCategory
+	for cat := range nfrCategories {
+		nfrCategoryKeys = append(nfrCategoryKeys, cat)
+	}
+	sort.Slice(nfrCategoryKeys, func(i, j int) bool {
+		return string(nfrCategoryKeys[i]) < string(nfrCategoryKeys[j])
+	})
+
+	sectionNum = 1
+	for _, cat := range nfrCategoryKeys {
+		reqs := nfrCategories[cat]
+		catName := nfrCategoryDisplayNames[cat]
 		if catName == "" {
 			catName = string(cat)
 		}
@@ -408,9 +613,30 @@ func (d *Document) generateRequirements(opts MarkdownOptions) string {
 	return sb.String()
 }
 
-func (d *Document) generateRoadmap() string {
+func (d *Document) generateRoadmap(opts MarkdownOptions) string {
 	var sb strings.Builder
 	sb.WriteString("## 7. Roadmap\n\n")
+
+	// Swimlane table view (phases as columns, deliverable types as rows)
+	if opts.IncludeSwimlaneTable && len(d.Roadmap.Phases) > 0 {
+		sb.WriteString("### 7.1 Roadmap Overview (Swimlane View)\n\n")
+		tableOpts := DefaultRoadmapTableOptions()
+		if opts.RoadmapTableOptions != nil {
+			tableOpts = *opts.RoadmapTableOptions
+		}
+		// Enable OKR swimlanes by default if OKRs with PhaseTargets exist
+		if len(d.Objectives.OKRs) > 0 {
+			tableOpts.IncludeOKRs = true
+		}
+		sb.WriteString(d.ToSwimlaneTableWithOKRs(tableOpts))
+		sb.WriteString("\n")
+		if tableOpts.IncludeStatus {
+			sb.WriteString("**Legend:**\n\n")
+			sb.WriteString(StatusLegend())
+			sb.WriteString("\n")
+		}
+		sb.WriteString("### 7.2 Phase Details\n\n")
+	}
 
 	for _, phase := range d.Roadmap.Phases {
 		sb.WriteString(fmt.Sprintf("### %s: %s\n\n", phase.ID, phase.Name))
@@ -456,15 +682,15 @@ func (d *Document) generateRoadmap() string {
 
 func (d *Document) generateTechArchitecture() string {
 	var sb strings.Builder
-	sb.WriteString("## 8. Technical Architecture\n\n")
+	sb.WriteString("## Technical Architecture\n\n")
 
 	if d.TechArchitecture.Overview != "" {
-		sb.WriteString("### 8.1 Overview\n\n")
+		sb.WriteString("### Overview\n\n")
 		sb.WriteString(d.TechArchitecture.Overview + "\n\n")
 	}
 
 	if len(d.TechArchitecture.IntegrationPoints) > 0 {
-		sb.WriteString("### 8.2 Integration Points\n\n")
+		sb.WriteString("### Integration Points\n\n")
 		sb.WriteString("| ID | Name | Type | Description | Auth Method |\n")
 		sb.WriteString("|----|------|------|-------------|-------------|\n")
 		for _, ip := range d.TechArchitecture.IntegrationPoints {
@@ -480,10 +706,10 @@ func (d *Document) generateTechArchitecture() string {
 
 func (d *Document) generateAssumptions() string {
 	var sb strings.Builder
-	sb.WriteString("## 9. Assumptions and Constraints\n\n")
+	sb.WriteString("## Assumptions and Constraints\n\n")
 
 	if len(d.Assumptions.Assumptions) > 0 {
-		sb.WriteString("### 9.1 Assumptions\n\n")
+		sb.WriteString("### Assumptions\n\n")
 		sb.WriteString("| ID | Assumption | Risk if Invalid |\n")
 		sb.WriteString("|----|------------|------------------|\n")
 		for _, a := range d.Assumptions.Assumptions {
@@ -494,7 +720,7 @@ func (d *Document) generateAssumptions() string {
 	}
 
 	if len(d.Assumptions.Constraints) > 0 {
-		sb.WriteString("### 9.2 Constraints\n\n")
+		sb.WriteString("### Constraints\n\n")
 		sb.WriteString("| ID | Type | Constraint | Impact | Mitigation |\n")
 		sb.WriteString("|----|------|------------|--------|------------|\n")
 		for _, c := range d.Assumptions.Constraints {
@@ -505,7 +731,7 @@ func (d *Document) generateAssumptions() string {
 	}
 
 	if len(d.Assumptions.Dependencies) > 0 {
-		sb.WriteString("### 9.3 Dependencies\n\n")
+		sb.WriteString("### Dependencies\n\n")
 		sb.WriteString("| ID | Name | Type | Status |\n")
 		sb.WriteString("|----|------|------|--------|\n")
 		for _, dep := range d.Assumptions.Dependencies {
@@ -521,7 +747,7 @@ func (d *Document) generateAssumptions() string {
 
 func (d *Document) generateOutOfScope() string {
 	var sb strings.Builder
-	sb.WriteString("## 10. Out of Scope\n\n")
+	sb.WriteString("## Out of Scope\n\n")
 
 	for _, item := range d.OutOfScope {
 		sb.WriteString(fmt.Sprintf("- %s\n", item))
@@ -533,22 +759,466 @@ func (d *Document) generateOutOfScope() string {
 
 func (d *Document) generateRisks() string {
 	var sb strings.Builder
-	sb.WriteString("## 11. Risk Assessment\n\n")
+	sb.WriteString("## Risk Assessment\n\n")
 
 	sb.WriteString("| ID | Risk | Probability | Impact | Mitigation | Status |\n")
 	sb.WriteString("|----|------|-------------|--------|------------|--------|\n")
 	for _, r := range d.Risks {
 		sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s | %s | %s |\n",
-			r.ID, truncate(r.Description, 50), r.Probability, r.Impact, truncate(r.Mitigation, 40), r.Status))
+			r.ID, r.Description, r.Probability, r.Impact, r.Mitigation, r.Status))
 	}
 	sb.WriteString("\n---\n\n")
 
 	return sb.String()
 }
 
+func (d *Document) generateOpenItems() string {
+	var sb strings.Builder
+	sb.WriteString("## Open Items\n\n")
+	sb.WriteString("*The following items require decisions. Please review the options and tradeoffs.*\n\n")
+
+	for i, item := range d.OpenItems {
+		// Item header with status
+		statusBadge := ""
+		switch item.Status {
+		case OpenItemStatusOpen:
+			statusBadge = "🔴 Open"
+		case OpenItemStatusInDiscussion:
+			statusBadge = "🟡 In Discussion"
+		case OpenItemStatusBlocked:
+			statusBadge = "⛔ Blocked"
+		case OpenItemStatusResolved:
+			statusBadge = "✅ Resolved"
+		case OpenItemStatusDeferred:
+			statusBadge = "⏸️ Deferred"
+		default:
+			statusBadge = "🔴 Open"
+		}
+
+		sb.WriteString(fmt.Sprintf("### %d. %s\n\n", i+1, item.Title))
+		sb.WriteString(fmt.Sprintf("**Status:** %s", statusBadge))
+		if item.Priority != "" {
+			sb.WriteString(fmt.Sprintf(" | **Priority:** %s", item.Priority))
+		}
+		if item.Owner != "" {
+			sb.WriteString(fmt.Sprintf(" | **Owner:** %s", item.Owner))
+		}
+		sb.WriteString("\n\n")
+
+		if item.Description != "" {
+			sb.WriteString(fmt.Sprintf("%s\n\n", item.Description))
+		}
+
+		if item.Context != "" {
+			sb.WriteString(fmt.Sprintf("**Context:** %s\n\n", item.Context))
+		}
+
+		// Options table
+		if len(item.Options) > 0 {
+			sb.WriteString("#### Options\n\n")
+			sb.WriteString("| Option | Description | Effort | Risk | Recommended |\n")
+			sb.WriteString("|--------|-------------|--------|------|-------------|\n")
+			for _, opt := range item.Options {
+				recommended := ""
+				if opt.Recommended {
+					recommended = "⭐ Yes"
+				}
+				sb.WriteString(fmt.Sprintf("| **%s** | %s | %s | %s | %s |\n",
+					opt.Title, opt.Description, opt.Effort, opt.Risk, recommended))
+			}
+			sb.WriteString("\n")
+
+			// Detailed pros/cons for each option
+			for _, opt := range item.Options {
+				if len(opt.Pros) > 0 || len(opt.Cons) > 0 {
+					sb.WriteString(fmt.Sprintf("**%s**", opt.Title))
+					if opt.Recommended {
+						sb.WriteString(" ⭐ *Recommended*")
+					}
+					sb.WriteString("\n\n")
+
+					if len(opt.Pros) > 0 {
+						sb.WriteString("*Pros:*\n")
+						for _, pro := range opt.Pros {
+							sb.WriteString(fmt.Sprintf("- ✅ %s\n", pro))
+						}
+					}
+					if len(opt.Cons) > 0 {
+						sb.WriteString("\n*Cons:*\n")
+						for _, con := range opt.Cons {
+							sb.WriteString(fmt.Sprintf("- ⚠️ %s\n", con))
+						}
+					}
+					if opt.RecommendationRationale != "" {
+						sb.WriteString(fmt.Sprintf("\n*Rationale:* %s\n", opt.RecommendationRationale))
+					}
+					sb.WriteString("\n")
+				}
+			}
+		}
+
+		// Resolution (if resolved)
+		if item.Resolution != nil && item.Resolution.Decision != "" {
+			sb.WriteString("#### Resolution\n\n")
+			sb.WriteString(fmt.Sprintf("**Decision:** %s\n\n", item.Resolution.Decision))
+			if item.Resolution.Rationale != "" {
+				sb.WriteString(fmt.Sprintf("**Rationale:** %s\n\n", item.Resolution.Rationale))
+			}
+			if item.Resolution.DecidedBy != "" {
+				sb.WriteString(fmt.Sprintf("**Decided by:** %s\n\n", item.Resolution.DecidedBy))
+			}
+		}
+
+		sb.WriteString("---\n\n")
+	}
+
+	return sb.String()
+}
+
+func (d *Document) generateCurrentState() string {
+	var sb strings.Builder
+	sb.WriteString("## Current State\n\n")
+
+	cs := d.CurrentState
+
+	// Overview
+	if cs.Overview != "" {
+		sb.WriteString("### Overview\n\n")
+		sb.WriteString(cs.Overview + "\n\n")
+	}
+
+	// Current Approaches
+	if len(cs.Approaches) > 0 {
+		sb.WriteString("### Current Approaches\n\n")
+		for _, approach := range cs.Approaches {
+			sb.WriteString(fmt.Sprintf("#### %s\n\n", approach.Name))
+			if approach.Description != "" {
+				sb.WriteString(approach.Description + "\n\n")
+			}
+			if approach.Usage != "" {
+				sb.WriteString(fmt.Sprintf("**Usage:** %s\n\n", approach.Usage))
+			}
+			if approach.Owner != "" {
+				sb.WriteString(fmt.Sprintf("**Owner:** %s\n\n", approach.Owner))
+			}
+			if len(approach.Problems) > 0 {
+				sb.WriteString("**Problems:**\n\n")
+				for _, p := range approach.Problems {
+					sb.WriteString(fmt.Sprintf("- %s\n", p))
+				}
+				sb.WriteString("\n")
+			}
+		}
+	}
+
+	// Problems with Current State
+	if len(cs.Problems) > 0 {
+		sb.WriteString("### Problems\n\n")
+		sb.WriteString("| ID | Problem | Impact | Frequency | Affected Users |\n")
+		sb.WriteString("|----|---------|--------|-----------|----------------|\n")
+		for _, p := range cs.Problems {
+			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s | %s |\n",
+				p.ID, p.Description, p.Impact, p.Frequency, p.AffectedUsers))
+		}
+		sb.WriteString("\n")
+	}
+
+	// Target State
+	if cs.TargetState != "" {
+		sb.WriteString("### Target State\n\n")
+		sb.WriteString(cs.TargetState + "\n\n")
+	}
+
+	// Baseline Metrics
+	if len(cs.Metrics) > 0 {
+		sb.WriteString("### Baseline Metrics\n\n")
+		sb.WriteString("| ID | Metric | Current Value | Target Value | Measurement Method |\n")
+		sb.WriteString("|----|--------|---------------|--------------|--------------------|\n")
+		for _, m := range cs.Metrics {
+			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s | %s |\n",
+				m.ID, m.Name, m.CurrentValue, m.TargetValue, m.MeasurementMethod))
+		}
+		sb.WriteString("\n")
+	}
+
+	// Diagrams
+	if len(cs.Diagrams) > 0 {
+		sb.WriteString("### Diagrams\n\n")
+		for _, diag := range cs.Diagrams {
+			sb.WriteString(fmt.Sprintf("- [%s](%s)", diag.Title, diag.URL))
+			if diag.Type != "" {
+				sb.WriteString(fmt.Sprintf(" (%s)", diag.Type))
+			}
+			if diag.Description != "" {
+				sb.WriteString(fmt.Sprintf(" - %s", diag.Description))
+			}
+			sb.WriteString("\n")
+		}
+		sb.WriteString("\n")
+	}
+
+	sb.WriteString("---\n\n")
+	return sb.String()
+}
+
+func (d *Document) generateSecurityModel() string {
+	var sb strings.Builder
+	sb.WriteString("## Security Model\n\n")
+
+	sm := d.SecurityModel
+
+	// Overview
+	if sm.Overview != "" {
+		sb.WriteString("### Overview\n\n")
+		sb.WriteString(sm.Overview + "\n\n")
+	}
+
+	// Threat Model
+	sb.WriteString("### Threat Model\n\n")
+
+	if len(sm.ThreatModel.Assets) > 0 {
+		sb.WriteString("**Assets:**\n\n")
+		for _, asset := range sm.ThreatModel.Assets {
+			sb.WriteString(fmt.Sprintf("- %s\n", asset))
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(sm.ThreatModel.ThreatActors) > 0 {
+		sb.WriteString("**Threat Actors:**\n\n")
+		for _, actor := range sm.ThreatModel.ThreatActors {
+			sb.WriteString(fmt.Sprintf("- %s\n", actor))
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(sm.ThreatModel.TrustBoundaries) > 0 {
+		sb.WriteString("**Trust Boundaries:**\n\n")
+		for _, boundary := range sm.ThreatModel.TrustBoundaries {
+			sb.WriteString(fmt.Sprintf("- %s\n", boundary))
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(sm.ThreatModel.KeyThreats) > 0 {
+		sb.WriteString("**Key Threats:**\n\n")
+		sb.WriteString("| ID | Category | Threat | Severity | Mitigation | Status |\n")
+		sb.WriteString("|----|----------|--------|----------|------------|--------|\n")
+		for _, t := range sm.ThreatModel.KeyThreats {
+			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s | %s | %s |\n",
+				t.ID, t.Category, t.Threat, t.Severity, t.Mitigation, t.Status))
+		}
+		sb.WriteString("\n")
+	}
+
+	// Access Control
+	sb.WriteString("### Access Control\n\n")
+	sb.WriteString(fmt.Sprintf("**Model:** %s\n\n", sm.AccessControl.Model))
+
+	if sm.AccessControl.Description != "" {
+		sb.WriteString(sm.AccessControl.Description + "\n\n")
+	}
+
+	if sm.AccessControl.Policies != "" {
+		sb.WriteString(fmt.Sprintf("**Policy Engine:** %s\n\n", sm.AccessControl.Policies))
+	}
+
+	if len(sm.AccessControl.Layers) > 0 {
+		sb.WriteString("**Layers:**\n\n")
+		sb.WriteString("| Layer | Controls | Description |\n")
+		sb.WriteString("|-------|----------|-------------|\n")
+		for _, layer := range sm.AccessControl.Layers {
+			controls := strings.Join(layer.Controls, ", ")
+			sb.WriteString(fmt.Sprintf("| %s | %s | %s |\n",
+				layer.Layer, controls, layer.Description))
+		}
+		sb.WriteString("\n")
+	}
+
+	if len(sm.AccessControl.Roles) > 0 {
+		sb.WriteString("**Roles:**\n\n")
+		sb.WriteString("| Role | Description | Permissions | Scope |\n")
+		sb.WriteString("|------|-------------|-------------|-------|\n")
+		for _, role := range sm.AccessControl.Roles {
+			perms := strings.Join(role.Permissions, ", ")
+			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s |\n",
+				role.Role, role.Description, perms, role.Scope))
+		}
+		sb.WriteString("\n")
+	}
+
+	// Encryption
+	sb.WriteString("### Encryption\n\n")
+
+	sb.WriteString("**At Rest:**\n\n")
+	sb.WriteString(fmt.Sprintf("- **Method:** %s\n", sm.Encryption.AtRest.Method))
+	sb.WriteString(fmt.Sprintf("- **Key Management:** %s\n", sm.Encryption.AtRest.KeyManagement))
+	if sm.Encryption.AtRest.Provider != "" {
+		sb.WriteString(fmt.Sprintf("- **Provider:** %s\n", sm.Encryption.AtRest.Provider))
+	}
+	if sm.Encryption.AtRest.Rotation != "" {
+		sb.WriteString(fmt.Sprintf("- **Rotation:** %s\n", sm.Encryption.AtRest.Rotation))
+	}
+	sb.WriteString("\n")
+
+	sb.WriteString("**In Transit:**\n\n")
+	sb.WriteString(fmt.Sprintf("- **Method:** %s\n", sm.Encryption.InTransit.Method))
+	sb.WriteString(fmt.Sprintf("- **Key Management:** %s\n", sm.Encryption.InTransit.KeyManagement))
+	if sm.Encryption.InTransit.Provider != "" {
+		sb.WriteString(fmt.Sprintf("- **Provider:** %s\n", sm.Encryption.InTransit.Provider))
+	}
+	sb.WriteString("\n")
+
+	if sm.Encryption.FieldLevel != nil {
+		sb.WriteString("**Field Level:**\n\n")
+		sb.WriteString(fmt.Sprintf("- **Method:** %s\n", sm.Encryption.FieldLevel.Method))
+		sb.WriteString(fmt.Sprintf("- **Key Management:** %s\n", sm.Encryption.FieldLevel.KeyManagement))
+		sb.WriteString("\n")
+	}
+
+	// Audit Logging
+	sb.WriteString("### Audit Logging\n\n")
+	sb.WriteString(fmt.Sprintf("**Scope:** %s\n\n", sm.AuditLogging.Scope))
+
+	if len(sm.AuditLogging.Events) > 0 {
+		sb.WriteString("**Events:**\n\n")
+		for _, event := range sm.AuditLogging.Events {
+			sb.WriteString(fmt.Sprintf("- %s\n", event))
+		}
+		sb.WriteString("\n")
+	}
+
+	if sm.AuditLogging.Format != "" {
+		sb.WriteString(fmt.Sprintf("**Format:** %s\n\n", sm.AuditLogging.Format))
+	}
+	sb.WriteString(fmt.Sprintf("**Retention:** %s\n\n", sm.AuditLogging.Retention))
+
+	if sm.AuditLogging.Immutability != "" {
+		sb.WriteString(fmt.Sprintf("**Immutability:** %s\n\n", sm.AuditLogging.Immutability))
+	}
+	if sm.AuditLogging.Destination != "" {
+		sb.WriteString(fmt.Sprintf("**Destination:** %s\n\n", sm.AuditLogging.Destination))
+	}
+
+	// Compliance Controls
+	if len(sm.ComplianceControls) > 0 {
+		sb.WriteString("### Compliance Controls\n\n")
+
+		// Sort framework names for consistent ordering
+		var frameworks []string
+		for framework := range sm.ComplianceControls {
+			frameworks = append(frameworks, framework)
+		}
+		sort.Strings(frameworks)
+
+		for _, framework := range frameworks {
+			controls := sm.ComplianceControls[framework]
+			sb.WriteString(fmt.Sprintf("**%s:**\n\n", framework))
+			for _, ctrl := range controls {
+				sb.WriteString(fmt.Sprintf("- %s\n", ctrl))
+			}
+			sb.WriteString("\n")
+		}
+	}
+
+	// Data Classification
+	if len(sm.DataClassification) > 0 {
+		sb.WriteString("### Data Classification\n\n")
+		sb.WriteString("| Level | Description | Handling | Examples |\n")
+		sb.WriteString("|-------|-------------|----------|----------|\n")
+		for _, dc := range sm.DataClassification {
+			examples := strings.Join(dc.Examples, ", ")
+			sb.WriteString(fmt.Sprintf("| %s | %s | %s | %s |\n",
+				dc.Level, dc.Description, dc.Handling, examples))
+		}
+		sb.WriteString("\n")
+	}
+
+	// Appendix References
+	if len(sm.AppendixRefs) > 0 {
+		sb.WriteString("### Related Appendices\n\n")
+		for _, ref := range sm.AppendixRefs {
+			sb.WriteString(fmt.Sprintf("- [%s](#appendix-%s)\n", ref, toSlug(ref)))
+		}
+		sb.WriteString("\n")
+	}
+
+	sb.WriteString("---\n\n")
+	return sb.String()
+}
+
+func (d *Document) generateAppendices() string {
+	var sb strings.Builder
+	sb.WriteString("## Appendices\n\n")
+
+	for i, appendix := range d.Appendices {
+		// Appendix header with anchor
+		sb.WriteString(fmt.Sprintf("### Appendix %s: %s {#appendix-%s}\n\n",
+			indexToLetter(i), appendix.Title, toSlug(appendix.ID)))
+
+		if appendix.Description != "" {
+			sb.WriteString(fmt.Sprintf("*%s*\n\n", appendix.Description))
+		}
+
+		// Show tags if present
+		if len(appendix.Tags) > 0 {
+			sb.WriteString(fmt.Sprintf("**Tags:** %s\n\n", strings.Join(appendix.Tags, ", ")))
+		}
+
+		// Schema indicator
+		if appendix.Schema != "" && appendix.Schema != AppendixSchemaCustom {
+			sb.WriteString(fmt.Sprintf("**Schema:** %s\n\n", appendix.Schema))
+		}
+
+		// Content string (rendered first)
+		if appendix.ContentString != "" {
+			sb.WriteString(appendix.ContentString + "\n\n")
+		}
+
+		// Content table (rendered after string)
+		if appendix.ContentTable != nil && len(appendix.ContentTable.Rows) > 0 {
+			// Headers
+			if len(appendix.ContentTable.Headers) > 0 {
+				sb.WriteString("| " + strings.Join(appendix.ContentTable.Headers, " | ") + " |\n")
+				sb.WriteString("|" + strings.Repeat("--------|", len(appendix.ContentTable.Headers)) + "\n")
+			}
+			// Rows
+			for _, row := range appendix.ContentTable.Rows {
+				sb.WriteString("| " + strings.Join(row, " | ") + " |\n")
+			}
+			sb.WriteString("\n")
+
+			// Caption
+			if appendix.ContentTable.Caption != "" {
+				sb.WriteString(fmt.Sprintf("*%s*\n\n", appendix.ContentTable.Caption))
+			}
+		}
+
+		// Referenced by
+		if len(appendix.ReferencedBy) > 0 {
+			sb.WriteString("**Referenced by:** ")
+			sb.WriteString(strings.Join(appendix.ReferencedBy, ", "))
+			sb.WriteString("\n\n")
+		}
+
+		sb.WriteString("---\n\n")
+	}
+
+	return sb.String()
+}
+
+// indexToLetter converts a 0-based index to a letter (A, B, C, ..., Z, AA, AB, ...).
+func indexToLetter(i int) string {
+	if i < 26 {
+		return string(rune('A' + i))
+	}
+	// For indices >= 26, use AA, AB, etc.
+	return string(rune('A'+i/26-1)) + string(rune('A'+i%26))
+}
+
 func (d *Document) generateGlossary() string {
 	var sb strings.Builder
-	sb.WriteString("## 12. Glossary\n\n")
+	sb.WriteString("## Glossary\n\n")
 
 	sb.WriteString("| Term | Definition |\n")
 	sb.WriteString("|------|------------|\n")
@@ -569,24 +1239,23 @@ func (d *Document) generateGlossary() string {
 func (d *Document) generateCustomSections() string {
 	var sb strings.Builder
 
-	sectionNum := 13
 	for _, cs := range d.CustomSections {
-		sb.WriteString(fmt.Sprintf("## %d. %s\n\n", sectionNum, cs.Title))
+		sb.WriteString(fmt.Sprintf("## %s\n\n", cs.Title))
 		if cs.Description != "" {
 			sb.WriteString(cs.Description + "\n\n")
 		}
 		// Content is interface{}, so we just note it exists
 		sb.WriteString("*See JSON source for detailed content.*\n\n")
 		sb.WriteString("---\n\n")
-		sectionNum++
 	}
 
 	return sb.String()
 }
 
 // truncate shortens a string to maxLen, adding "..." if truncated.
+// If maxLen is 0 or negative, the string is returned unchanged (no truncation).
 func truncate(s string, maxLen int) string {
-	if len(s) <= maxLen {
+	if maxLen <= 0 || len(s) <= maxLen {
 		return s
 	}
 	return s[:maxLen-3] + "..."
