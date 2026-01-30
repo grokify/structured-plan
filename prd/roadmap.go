@@ -32,6 +32,7 @@ type Phase struct {
 	Risks           []Risk        `json:"risks,omitempty"`
 	Status          PhaseStatus   `json:"status,omitempty"`
 	Progress        *int          `json:"progress,omitempty"` // 0-100 percentage
+	Tags            []string      `json:"tags,omitempty"`     // For filtering by topic/domain
 	Notes           string        `json:"notes,omitempty"`
 }
 
@@ -53,6 +54,7 @@ type Deliverable struct {
 	Description string            `json:"description"`
 	Type        DeliverableType   `json:"type"`
 	Status      DeliverableStatus `json:"status,omitempty"`
+	Tags        []string          `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // DeliverableType represents types of deliverables.
@@ -64,6 +66,7 @@ const (
 	DeliverableInfrastructure DeliverableType = "infrastructure"
 	DeliverableIntegration    DeliverableType = "integration"
 	DeliverableMilestone      DeliverableType = "milestone"
+	DeliverableRollout        DeliverableType = "rollout"
 )
 
 // DeliverableStatus represents the status of a deliverable.
