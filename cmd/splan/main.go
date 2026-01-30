@@ -7,10 +7,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 
 	"github.com/agentplexus/structured-evaluation/evaluation"
+	"github.com/grokify/structured-plan/goals/v2mom"
+	"github.com/grokify/structured-plan/goals/v2mom/render"
+	"github.com/grokify/structured-plan/goals/v2mom/render/marp"
 	"github.com/grokify/structured-plan/requirements/mrd"
 	"github.com/grokify/structured-plan/requirements/prd"
 	"github.com/grokify/structured-plan/requirements/prd/render/terminal"
@@ -42,8 +46,8 @@ Document types:
     - MRD (Market Requirements Document)
     - TRD (Technical Requirements Document)
 
-  Goals (coming soon):
-    - OKR (Objectives and Key Results)
+  Goals:
+    - OKR (Objectives and Key Results) - coming soon
     - V2MOM (Vision, Values, Methods, Obstacles, Measures)
 
   Roadmap (coming soon):
@@ -55,8 +59,8 @@ respective schemas.
 
 Example usage:
   splan requirements prd generate myproduct.prd.json
-  splan requirements mrd validate market-analysis.mrd.json
-  splan requirements trd generate architecture.trd.json -o output.md
+  splan goals v2mom validate my-v2mom.json
+  splan goals v2mom generate marp my-v2mom.json -o slides.md
   splan schema generate --type prd`,
 	Version: version,
 }
@@ -84,6 +88,7 @@ Supported document types:
 func init() {
 	// Add top-level commands
 	rootCmd.AddCommand(requirementsCmd)
+	rootCmd.AddCommand(goalsCmd)
 	rootCmd.AddCommand(schemaCmd)
 	rootCmd.AddCommand(mergeCmd)
 
@@ -91,6 +96,9 @@ func init() {
 	requirementsCmd.AddCommand(prdCmd)
 	requirementsCmd.AddCommand(mrdCmd)
 	requirementsCmd.AddCommand(trdCmd)
+
+	// Add goals subcommands
+	goalsCmd.AddCommand(v2momCmd)
 }
 
 // ============================================================================
@@ -175,6 +183,497 @@ func deepMerge(a, b map[string]interface{}) map[string]interface{} {
 		a[k] = v
 	}
 	return a
+}
+
+// ============================================================================
+// Goals Parent Command
+// ============================================================================
+
+var goalsCmd = &cobra.Command{
+	Use:   "goals",
+	Short: "Work with goal frameworks (OKR, V2MOM)",
+	Long: `Commands for generating and validating goal framework documents.
+
+Supported frameworks:
+  - v2mom: Vision, Values, Methods, Obstacles, Measures
+  - okr: Objectives and Key Results (coming soon)`,
+}
+
+// ============================================================================
+// V2MOM Commands
+// ============================================================================
+
+var v2momCmd = &cobra.Command{
+	Use:   "v2mom",
+	Short: "Work with V2MOM documents",
+	Long: `Commands for generating and validating V2MOM (Vision, Values, Methods, Obstacles, Measures) documents.
+
+V2MOM supports:
+  - JSON validation against the V2MOM schema
+  - Marp markdown slide generation
+  - Both traditional flat V2MOM and OKR-aligned nested structures
+  - Multiple terminology modes (V2MOM, OKR, hybrid)`,
+}
+
+var v2momValidateFlags struct {
+	structure string
+}
+
+var v2momValidateCmd = &cobra.Command{
+	Use:   "validate FILE",
+	Short: "Validate a V2MOM JSON file",
+	Long: `Validate a V2MOM JSON file against the schema and structural rules.
+
+Structure modes:
+  flat    - Traditional V2MOM (measures/obstacles at V2MOM level only)
+  nested  - OKR-aligned (measures under Methods, global obstacles allowed)
+  hybrid  - Both levels allowed (default)
+
+Examples:
+  splan goals v2mom validate my-v2mom.json
+  splan goals v2mom validate my-v2mom.json --structure=nested`,
+	Args: cobra.ExactArgs(1),
+	RunE: runV2MOMValidate,
+}
+
+var v2momGenerateCmd = &cobra.Command{
+	Use:   "generate",
+	Short: "Generate output from V2MOM",
+	Long:  `Generate various output formats from a V2MOM JSON file.`,
+}
+
+var v2momGenerateMarpFlags struct {
+	output      string
+	theme       string
+	terminology string
+}
+
+var v2momGenerateMarpCmd = &cobra.Command{
+	Use:   "marp FILE",
+	Short: "Generate Marp markdown slides",
+	Long: `Generate Marp markdown presentation slides from a V2MOM JSON file.
+
+Themes:
+  default   - Clean gradient theme (default)
+  corporate - Professional blue theme
+  minimal   - Simple grayscale theme
+
+Terminology:
+  v2mom  - Use V2MOM terms: Methods, Measures, Obstacles (default)
+  okr    - Use OKR terms: Objectives, Key Results, Risks
+  hybrid - Show both: Methods (Objectives), Measures (Key Results)
+
+Examples:
+  splan goals v2mom generate marp my-v2mom.json
+  splan goals v2mom generate marp my-v2mom.json -o slides.md
+  splan goals v2mom generate marp my-v2mom.json --theme=corporate --terminology=okr`,
+	Args: cobra.ExactArgs(1),
+	RunE: runV2MOMMarpGenerate,
+}
+
+var v2momInitFlags struct {
+	name      string
+	output    string
+	structure string
+}
+
+var v2momInitCmd = &cobra.Command{
+	Use:   "init",
+	Short: "Initialize a new V2MOM template",
+	Long: `Create a new V2MOM JSON template file with example content.
+
+Structure modes:
+  flat   - Traditional V2MOM with measures/obstacles at top level
+  nested - OKR-aligned with measures under methods (default)
+  hybrid - Both levels with examples
+
+Examples:
+  splan goals v2mom init
+  splan goals v2mom init --name "FY2026 Product Strategy"
+  splan goals v2mom init --name "Engineering Goals" -o engineering-v2mom.json --structure=nested`,
+	RunE: runV2MOMInit,
+}
+
+func init() {
+	// V2MOM validate flags
+	v2momValidateCmd.Flags().StringVar(&v2momValidateFlags.structure, "structure", "", "Structure mode to validate against (flat, nested, hybrid)")
+
+	// V2MOM generate marp flags
+	v2momGenerateMarpCmd.Flags().StringVarP(&v2momGenerateMarpFlags.output, "output", "o", "", "Output file path (default: stdout)")
+	v2momGenerateMarpCmd.Flags().StringVar(&v2momGenerateMarpFlags.theme, "theme", "default", "Slide theme (default, corporate, minimal)")
+	v2momGenerateMarpCmd.Flags().StringVar(&v2momGenerateMarpFlags.terminology, "terminology", "", "Display terminology (v2mom, okr, hybrid)")
+
+	// V2MOM init flags
+	v2momInitCmd.Flags().StringVar(&v2momInitFlags.name, "name", "My V2MOM", "Name for the V2MOM")
+	v2momInitCmd.Flags().StringVarP(&v2momInitFlags.output, "output", "o", "v2mom.json", "Output file path")
+	v2momInitCmd.Flags().StringVar(&v2momInitFlags.structure, "structure", "nested", "Structure mode (flat, nested, hybrid)")
+
+	// Add subcommands
+	v2momGenerateCmd.AddCommand(v2momGenerateMarpCmd)
+	v2momCmd.AddCommand(v2momValidateCmd)
+	v2momCmd.AddCommand(v2momGenerateCmd)
+	v2momCmd.AddCommand(v2momInitCmd)
+}
+
+func runV2MOMValidate(cmd *cobra.Command, args []string) error {
+	filepath := args[0]
+
+	// Check file exists
+	if _, err := os.Stat(filepath); os.IsNotExist(err) {
+		return fmt.Errorf("file not found: %s", filepath)
+	}
+
+	// Read and parse V2MOM
+	v, err := v2mom.ReadFile(filepath)
+	if err != nil {
+		return fmt.Errorf("reading V2MOM: %w", err)
+	}
+
+	// Set up validation options
+	opts := v2mom.DefaultValidationOptions()
+	if v2momValidateFlags.structure != "" {
+		opts.Structure = v2momValidateFlags.structure
+	}
+
+	// Validate
+	errs := v.Validate(opts)
+
+	// Report results
+	errors := v2mom.Errors(errs)
+	warnings := v2mom.Warnings(errs)
+
+	if len(warnings) > 0 {
+		fmt.Println("Warnings:")
+		for _, w := range warnings {
+			fmt.Printf("  - %s\n", w)
+		}
+		fmt.Println()
+	}
+
+	if len(errors) > 0 {
+		fmt.Println("Errors:")
+		for _, e := range errors {
+			fmt.Printf("  - %s\n", e)
+		}
+		return fmt.Errorf("validation failed with %d error(s)", len(errors))
+	}
+
+	// Print success info
+	fmt.Printf("Valid V2MOM: %s\n", filepath)
+	fmt.Printf("  Structure: %s\n", v.GetStructure())
+	fmt.Printf("  Methods: %d\n", len(v.Methods))
+	fmt.Printf("  Total Measures: %d\n", len(v.AllMeasures()))
+	fmt.Printf("  Total Obstacles: %d\n", len(v.AllObstacles()))
+
+	if v.Metadata != nil && v.Metadata.Name != "" {
+		fmt.Printf("  Name: %s\n", v.Metadata.Name)
+	}
+
+	return nil
+}
+
+func runV2MOMMarpGenerate(cmd *cobra.Command, args []string) error {
+	inputPath := args[0]
+
+	// Check file exists
+	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+		return fmt.Errorf("file not found: %s", inputPath)
+	}
+
+	// Read and parse V2MOM
+	v, err := v2mom.ReadFile(inputPath)
+	if err != nil {
+		return fmt.Errorf("reading V2MOM: %w", err)
+	}
+
+	// Create renderer and options
+	renderer := marp.New()
+	opts := render.DefaultOptions()
+	opts.Theme = v2momGenerateMarpFlags.theme
+	if v2momGenerateMarpFlags.terminology != "" {
+		opts.Terminology = v2momGenerateMarpFlags.terminology
+	}
+
+	// Render
+	output, err := renderer.Render(v, opts)
+	if err != nil {
+		return fmt.Errorf("rendering Marp: %w", err)
+	}
+
+	// Write output
+	if v2momGenerateMarpFlags.output != "" {
+		// Ensure output directory exists
+		dir := filepath.Dir(v2momGenerateMarpFlags.output)
+		if dir != "." && dir != "" {
+			if err := os.MkdirAll(dir, 0755); err != nil {
+				return fmt.Errorf("creating output directory: %w", err)
+			}
+		}
+
+		if err := os.WriteFile(v2momGenerateMarpFlags.output, output, 0600); err != nil {
+			return fmt.Errorf("writing output: %w", err)
+		}
+		fmt.Printf("Generated: %s\n", v2momGenerateMarpFlags.output)
+	} else {
+		// Write to stdout
+		fmt.Print(string(output))
+	}
+
+	return nil
+}
+
+func runV2MOMInit(cmd *cobra.Command, args []string) error {
+	// Check if file already exists
+	if _, err := os.Stat(v2momInitFlags.output); err == nil {
+		return fmt.Errorf("file already exists: %s (use -o to specify a different output path)", v2momInitFlags.output)
+	}
+
+	// Create template based on structure
+	var template *v2mom.V2MOM
+
+	switch v2momInitFlags.structure {
+	case "flat":
+		template = createFlatV2MOMTemplate(v2momInitFlags.name)
+	case "hybrid":
+		template = createHybridV2MOMTemplate(v2momInitFlags.name)
+	default: // "nested"
+		template = createNestedV2MOMTemplate(v2momInitFlags.name)
+	}
+
+	// Write to file
+	if err := template.WriteFile(v2momInitFlags.output); err != nil {
+		return fmt.Errorf("writing template: %w", err)
+	}
+
+	fmt.Printf("Created: %s\n", v2momInitFlags.output)
+	fmt.Printf("  Structure: %s\n", v2momInitFlags.structure)
+	fmt.Println("\nNext steps:")
+	fmt.Println("  1. Edit the file to add your vision, values, methods, and measures")
+	fmt.Println("  2. Run 'splan goals v2mom validate " + v2momInitFlags.output + "' to check your V2MOM")
+	fmt.Println("  3. Run 'splan goals v2mom generate marp " + v2momInitFlags.output + " -o slides.md' to create slides")
+
+	return nil
+}
+
+func createNestedV2MOMTemplate(name string) *v2mom.V2MOM {
+	now := time.Now()
+	return &v2mom.V2MOM{
+		Schema: "../schema/v2mom.schema.json",
+		Metadata: &v2mom.Metadata{
+			Name:        name,
+			Author:      "Your Name",
+			Team:        "Your Team",
+			FiscalYear:  fmt.Sprintf("FY%d", now.Year()),
+			Quarter:     "Q1",
+			Version:     "1.0.0",
+			Status:      v2mom.StatusDraft,
+			Structure:   v2mom.StructureNested,
+			Terminology: v2mom.TerminologyV2MOM,
+			CreatedAt:   now,
+			UpdatedAt:   now,
+		},
+		Vision: "Describe your vision here - what do you want to achieve?",
+		Values: []v2mom.Value{
+			{
+				Name:        "Value 1",
+				Description: "What's most important to you?",
+				Priority:    1,
+			},
+			{
+				Name:        "Value 2",
+				Description: "What's the second most important principle?",
+				Priority:    2,
+			},
+		},
+		Methods: []v2mom.Method{
+			{
+				ID:          "method-1",
+				Name:        "First Method/Objective",
+				Description: "How will you achieve your vision? What's the first major initiative?",
+				Priority:    v2mom.PriorityP0,
+				Status:      "Not Started",
+				Measures: []v2mom.Measure{
+					{
+						ID:       "m1-kr1",
+						Name:     "Key Result 1",
+						Target:   "Define your target",
+						Status:   "Not Started",
+						Progress: 0,
+					},
+					{
+						ID:       "m1-kr2",
+						Name:     "Key Result 2",
+						Target:   "Define your target",
+						Status:   "Not Started",
+						Progress: 0,
+					},
+				},
+				Obstacles: []v2mom.Obstacle{
+					{
+						Name:       "Method-specific obstacle",
+						Severity:   "Medium",
+						Mitigation: "How will you address this?",
+					},
+				},
+			},
+			{
+				ID:          "method-2",
+				Name:        "Second Method/Objective",
+				Description: "What's the second major initiative?",
+				Priority:    v2mom.PriorityP1,
+				Status:      "Not Started",
+				Measures: []v2mom.Measure{
+					{
+						ID:       "m2-kr1",
+						Name:     "Key Result 1",
+						Target:   "Define your target",
+						Status:   "Not Started",
+						Progress: 0,
+					},
+				},
+			},
+		},
+		Obstacles: []v2mom.Obstacle{
+			{
+				ID:          "obs-global-1",
+				Name:        "Global obstacle",
+				Description: "What's preventing success across multiple methods?",
+				Severity:    "High",
+				Likelihood:  "Medium",
+				Mitigation:  "How will you mitigate this risk?",
+				Status:      "Identified",
+			},
+		},
+	}
+}
+
+func createFlatV2MOMTemplate(name string) *v2mom.V2MOM {
+	now := time.Now()
+	return &v2mom.V2MOM{
+		Schema: "../schema/v2mom.schema.json",
+		Metadata: &v2mom.Metadata{
+			Name:        name,
+			Author:      "Your Name",
+			Team:        "Your Team",
+			FiscalYear:  fmt.Sprintf("FY%d", now.Year()),
+			Quarter:     "Q1",
+			Version:     "1.0.0",
+			Status:      v2mom.StatusDraft,
+			Structure:   v2mom.StructureFlat,
+			Terminology: v2mom.TerminologyV2MOM,
+			CreatedAt:   now,
+			UpdatedAt:   now,
+		},
+		Vision: "Describe your vision here - what do you want to achieve?",
+		Values: []v2mom.Value{
+			{
+				Name:        "Value 1",
+				Description: "What's most important to you?",
+				Priority:    1,
+			},
+			{
+				Name:        "Value 2",
+				Description: "What's the second most important principle?",
+				Priority:    2,
+			},
+		},
+		Methods: []v2mom.Method{
+			{
+				Name:        "First Method",
+				Description: "How will you achieve your vision?",
+				Priority:    v2mom.PriorityP0,
+			},
+			{
+				Name:        "Second Method",
+				Description: "What's the second major action?",
+				Priority:    v2mom.PriorityP1,
+			},
+		},
+		Obstacles: []v2mom.Obstacle{
+			{
+				Name:        "Obstacle 1",
+				Description: "What's preventing success?",
+				Severity:    "High",
+				Mitigation:  "How will you address this?",
+			},
+		},
+		Measures: []v2mom.Measure{
+			{
+				Name:   "Measure 1",
+				Target: "Define your target",
+				Status: "Not Started",
+			},
+			{
+				Name:   "Measure 2",
+				Target: "Define your target",
+				Status: "Not Started",
+			},
+		},
+	}
+}
+
+func createHybridV2MOMTemplate(name string) *v2mom.V2MOM {
+	now := time.Now()
+	return &v2mom.V2MOM{
+		Schema: "../schema/v2mom.schema.json",
+		Metadata: &v2mom.Metadata{
+			Name:        name,
+			Author:      "Your Name",
+			Team:        "Your Team",
+			FiscalYear:  fmt.Sprintf("FY%d", now.Year()),
+			Quarter:     "Q1",
+			Version:     "1.0.0",
+			Status:      v2mom.StatusDraft,
+			Structure:   v2mom.StructureHybrid,
+			Terminology: v2mom.TerminologyV2MOM,
+			CreatedAt:   now,
+			UpdatedAt:   now,
+		},
+		Vision: "Describe your vision here - what do you want to achieve?",
+		Values: []v2mom.Value{
+			{
+				Name:        "Value 1",
+				Description: "What's most important to you?",
+				Priority:    1,
+			},
+		},
+		Methods: []v2mom.Method{
+			{
+				ID:          "method-1",
+				Name:        "Method with nested measures",
+				Description: "This method has its own key results",
+				Priority:    v2mom.PriorityP0,
+				Status:      "Not Started",
+				Measures: []v2mom.Measure{
+					{
+						Name:   "Method-specific KR",
+						Target: "Define target",
+					},
+				},
+			},
+			{
+				ID:          "method-2",
+				Name:        "Method without nested measures",
+				Description: "This method uses global measures",
+				Priority:    v2mom.PriorityP1,
+			},
+		},
+		Obstacles: []v2mom.Obstacle{
+			{
+				Name:        "Global obstacle",
+				Description: "Affects multiple methods",
+				Severity:    "High",
+				Mitigation:  "Mitigation strategy",
+			},
+		},
+		Measures: []v2mom.Measure{
+			{
+				Name:        "North star metric",
+				Description: "Global measure spanning all methods",
+				Target:      "Define target",
+			},
+		},
+	}
 }
 
 // ============================================================================

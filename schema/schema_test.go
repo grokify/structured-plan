@@ -15,7 +15,8 @@ func TestPRDSchemaEmbedded(t *testing.T) {
 		t.Fatalf("PRDSchemaJSON is not valid JSON: %v", err)
 	}
 
-	expectedKeys := []string{"$schema", "$id", "title", "type", "properties", "$defs"}
+	// Schema uses $ref to point to Document definition
+	expectedKeys := []string{"$schema", "$id", "$ref", "$defs"}
 	for _, key := range expectedKeys {
 		if _, ok := schema[key]; !ok {
 			t.Errorf("PRDSchemaJSON missing expected key: %s", key)
@@ -29,12 +30,24 @@ func TestPRDSchemaExtendedSections(t *testing.T) {
 		t.Fatalf("PRDSchemaJSON is not valid JSON: %v", err)
 	}
 
-	props, ok := schema["properties"].(map[string]any)
+	// Get $defs.Document.properties since schema uses $ref
+	defs, ok := schema["$defs"].(map[string]any)
 	if !ok {
-		t.Fatal("properties is not an object")
+		t.Fatal("$defs is not an object")
 	}
 
-	extendedSections := []string{"problem", "market", "solution", "decisions", "reviews", "revision_history", "goals"}
+	document, ok := defs["Document"].(map[string]any)
+	if !ok {
+		t.Fatal("$defs.Document is not an object")
+	}
+
+	props, ok := document["properties"].(map[string]any)
+	if !ok {
+		t.Fatal("$defs.Document.properties is not an object")
+	}
+
+	// Check that extended sections are reflected from Go types (camelCase)
+	extendedSections := []string{"problem", "market", "solution", "decisions", "reviews", "revisionHistory", "goals"}
 	for _, section := range extendedSections {
 		if _, ok := props[section]; !ok {
 			t.Errorf("PRDSchemaJSON properties missing extended section: %s", section)
