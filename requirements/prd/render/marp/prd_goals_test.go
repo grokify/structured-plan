@@ -4,10 +4,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/grokify/structured-goals/okr"
-	"github.com/grokify/structured-goals/v2mom"
-	"github.com/grokify/structured-requirements/prd"
-	"github.com/grokify/structured-requirements/prd/render"
+	"github.com/grokify/structured-requirements/goals/okr"
+	"github.com/grokify/structured-requirements/goals/v2mom"
+	"github.com/grokify/structured-requirements/requirements/prd"
+	"github.com/grokify/structured-requirements/requirements/prd/render"
 )
 
 func TestPRDGoalsRenderer_Format(t *testing.T) {
