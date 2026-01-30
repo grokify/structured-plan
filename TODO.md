@@ -682,19 +682,19 @@ type NonGoal struct {
 
 ### 6.4 Tasks
 
-- [ ] Create `common/status.go` with Status type and constants
-- [ ] Create `common/assumption.go` with unified Assumption type
-- [ ] Create `common/constraint.go` with unified Constraint type
-- [ ] Create `common/risk.go` with unified Risk type
-- [ ] Create `common/decision.go` with OpenItem, Option, DecisionRecord
-- [ ] Create `common/glossary.go` with GlossaryTerm
-- [ ] Create `common/custom.go` with CustomSection
-- [ ] Create `common/nongoals.go` with NonGoal type
-- [ ] Update PRD to use common types (type aliases for backwards compat)
-- [ ] Update MRD to use common types
-- [ ] Update TRD to use common types
-- [ ] Add OpenItems to MRD and TRD documents
-- [ ] Add NonGoals to MRD (PRD has OutOfScope, TRD has in ExecutiveSummary)
+- [x] Create `common/status.go` with Status type and constants
+- [x] Create `common/assumption.go` with unified Assumption type
+- [x] Create `common/constraint.go` with unified Constraint type
+- [x] Create `common/risk.go` with unified Risk type
+- [x] Create `common/decision.go` with OpenItem, Option, DecisionRecord
+- [x] Create `common/glossary.go` with GlossaryTerm
+- [x] Create `common/custom.go` with CustomSection
+- [x] Create `common/nongoals.go` with NonGoal type
+- [x] Update PRD to use common types (type aliases for backwards compat)
+- [x] Update MRD to use common types (Status, GlossaryTerm, CustomSection)
+- [x] Update TRD to use common types (Status, GlossaryTerm, CustomSection)
+- [ ] Add OpenItems to MRD and TRD documents (deferred to v0.6.0)
+- [ ] Add NonGoals to MRD (deferred to v0.6.0)
 
 ---
 

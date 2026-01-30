@@ -30,6 +30,70 @@ type (
 	PhaseTarget = okr.PhaseTarget
 )
 
+// Common type aliases for backward compatibility.
+// These allow existing PRD code to continue using prd.Status, prd.Risk, etc.
+type (
+	// Status represents the document lifecycle status.
+	Status = common.Status
+
+	// Risk represents a project risk.
+	Risk = common.Risk
+
+	// RiskProbability represents risk probability levels.
+	RiskProbability = common.RiskProbability
+
+	// RiskImpact represents risk impact levels.
+	RiskImpact = common.RiskImpact
+
+	// RiskStatus represents risk status.
+	RiskStatus = common.RiskStatus
+
+	// Assumption represents a condition assumed to be true.
+	Assumption = common.Assumption
+
+	// Constraint represents a limitation on the project.
+	Constraint = common.Constraint
+
+	// ConstraintType represents types of constraints.
+	ConstraintType = common.ConstraintType
+
+	// GlossaryTerm defines a glossary entry.
+	GlossaryTerm = common.GlossaryTerm
+
+	// CustomSection allows project-specific sections.
+	CustomSection = common.CustomSection
+
+	// OpenItem represents a pending decision or question.
+	OpenItem = common.OpenItem
+
+	// Option represents one possible choice for an open item.
+	Option = common.Option
+
+	// OpenItemStatus represents the status of an open item.
+	OpenItemStatus = common.OpenItemStatus
+
+	// OpenItemResolution documents how an open item was resolved.
+	OpenItemResolution = common.OpenItemResolution
+
+	// EffortLevel represents effort estimates.
+	EffortLevel = common.EffortLevel
+
+	// RiskLevel represents risk levels for options.
+	RiskLevel = common.RiskLevel
+
+	// DecisionRecord documents a completed decision.
+	DecisionRecord = common.DecisionRecord
+
+	// DecisionStatus represents the status of a decision.
+	DecisionStatus = common.DecisionStatus
+
+	// Priority represents priority levels.
+	Priority = common.Priority
+
+	// NonGoal represents an explicit out-of-scope item.
+	NonGoal = common.NonGoal
+)
+
 // Document represents a complete Product Requirements Document.
 type Document struct {
 	Metadata         Metadata         `json:"metadata"`
@@ -90,14 +154,78 @@ type Document struct {
 	Appendices []Appendix `json:"appendices,omitempty"`
 }
 
-// Status represents the document lifecycle status.
-type Status string
-
+// Status constants re-exported from common for backward compatibility.
 const (
-	StatusDraft      Status = "draft"
-	StatusInReview   Status = "in_review"
-	StatusApproved   Status = "approved"
-	StatusDeprecated Status = "deprecated"
+	StatusDraft      = common.StatusDraft
+	StatusInReview   = common.StatusInReview
+	StatusApproved   = common.StatusApproved
+	StatusDeprecated = common.StatusDeprecated
+)
+
+// Risk constants re-exported from common for backward compatibility.
+const (
+	RiskProbabilityLow    = common.RiskProbabilityLow
+	RiskProbabilityMedium = common.RiskProbabilityMedium
+	RiskProbabilityHigh   = common.RiskProbabilityHigh
+
+	RiskImpactLow      = common.RiskImpactLow
+	RiskImpactMedium   = common.RiskImpactMedium
+	RiskImpactHigh     = common.RiskImpactHigh
+	RiskImpactCritical = common.RiskImpactCritical
+
+	RiskStatusOpen      = common.RiskStatusOpen
+	RiskStatusMitigated = common.RiskStatusMitigated
+	RiskStatusAccepted  = common.RiskStatusAccepted
+	RiskStatusClosed    = common.RiskStatusClosed
+)
+
+// Constraint type constants re-exported from common for backward compatibility.
+const (
+	ConstraintTechnical  = common.ConstraintTechnical
+	ConstraintBudget     = common.ConstraintBudget
+	ConstraintTimeline   = common.ConstraintTimeline
+	ConstraintRegulatory = common.ConstraintRegulatory
+	ConstraintResource   = common.ConstraintResource
+	ConstraintLegal      = common.ConstraintLegal
+)
+
+// OpenItem status constants re-exported from common for backward compatibility.
+const (
+	OpenItemStatusOpen         = common.OpenItemStatusOpen
+	OpenItemStatusInDiscussion = common.OpenItemStatusInDiscussion
+	OpenItemStatusBlocked      = common.OpenItemStatusBlocked
+	OpenItemStatusResolved     = common.OpenItemStatusResolved
+	OpenItemStatusDeferred     = common.OpenItemStatusDeferred
+)
+
+// Effort level constants re-exported from common for backward compatibility.
+const (
+	EffortLow    = common.EffortLow
+	EffortMedium = common.EffortMedium
+	EffortHigh   = common.EffortHigh
+)
+
+// Risk level constants re-exported from common for backward compatibility.
+const (
+	RiskLevelLow    = common.RiskLevelLow
+	RiskLevelMedium = common.RiskLevelMedium
+	RiskLevelHigh   = common.RiskLevelHigh
+)
+
+// Decision status constants re-exported from common for backward compatibility.
+const (
+	DecisionProposed   = common.DecisionProposed
+	DecisionAccepted   = common.DecisionAccepted
+	DecisionSuperseded = common.DecisionSuperseded
+	DecisionDeprecated = common.DecisionDeprecated
+)
+
+// Priority constants re-exported from common for backward compatibility.
+const (
+	PriorityCritical = common.PriorityCritical
+	PriorityHigh     = common.PriorityHigh
+	PriorityMedium   = common.PriorityMedium
+	PriorityLow      = common.PriorityLow
 )
 
 // Metadata contains document metadata.

@@ -13,6 +13,23 @@ type Person = common.Person
 // Approver is an alias for common.Approver for backwards compatibility.
 type Approver = common.Approver
 
+// Status is an alias for common.Status for backwards compatibility.
+type Status = common.Status
+
+// GlossaryTerm is an alias for common.GlossaryTerm for backwards compatibility.
+type GlossaryTerm = common.GlossaryTerm
+
+// CustomSection is an alias for common.CustomSection for backwards compatibility.
+type CustomSection = common.CustomSection
+
+// Status constants re-exported from common for backward compatibility.
+const (
+	StatusDraft      = common.StatusDraft
+	StatusInReview   = common.StatusInReview
+	StatusApproved   = common.StatusApproved
+	StatusDeprecated = common.StatusDeprecated
+)
+
 // Document represents a complete Market Requirements Document.
 type Document struct {
 	Metadata             Metadata             `json:"metadata"`
@@ -32,15 +49,7 @@ type Document struct {
 	CustomSections []CustomSection `json:"custom_sections,omitempty"`
 }
 
-// Status represents the document lifecycle status.
-type Status string
-
-const (
-	StatusDraft      Status = "draft"
-	StatusInReview   Status = "in_review"
-	StatusApproved   Status = "approved"
-	StatusDeprecated Status = "deprecated"
-)
+// Note: Status type and constants are defined in common/ and aliased above.
 
 // Metadata contains document metadata.
 type Metadata struct {
@@ -259,16 +268,4 @@ type Assumption struct {
 	Risk        string `json:"risk,omitempty"` // What if wrong
 }
 
-// GlossaryTerm defines a glossary entry.
-type GlossaryTerm struct {
-	Term       string `json:"term"`
-	Definition string `json:"definition"`
-	Acronym    string `json:"acronym,omitempty"`
-}
-
-// CustomSection allows document-specific sections.
-type CustomSection struct {
-	ID      string `json:"id"`
-	Title   string `json:"title"`
-	Content any    `json:"content"`
-}
+// Note: GlossaryTerm and CustomSection types are defined in common/ and aliased above.

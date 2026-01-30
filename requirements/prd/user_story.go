@@ -1,14 +1,7 @@
 package prd
 
-// Priority represents requirement priority levels.
-type Priority string
-
-const (
-	PriorityCritical Priority = "critical"
-	PriorityHigh     Priority = "high"
-	PriorityMedium   Priority = "medium"
-	PriorityLow      Priority = "low"
-)
+// Note: Priority type and constants are now defined in common/
+// and aliased in document.go for backward compatibility.
 
 // MoSCoW represents the MoSCoW prioritization method.
 type MoSCoW string
