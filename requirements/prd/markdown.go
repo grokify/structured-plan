@@ -370,14 +370,19 @@ func (d *Document) generateOKRs() string {
 		obj := okr.Objective
 
 		// Objective header with metadata
+		// Use Title if set, otherwise fall back to Description for backward compatibility
+		objTitle := obj.Title
+		if objTitle == "" {
+			objTitle = obj.Description
+		}
 		timeframe := ""
 		if obj.Timeframe != "" {
 			timeframe = fmt.Sprintf(" (%s)", obj.Timeframe)
 		}
-		sb.WriteString(fmt.Sprintf("#### Objective %d: %s%s\n\n", i+1, obj.Description, timeframe))
+		sb.WriteString(fmt.Sprintf("#### Objective %d: %s%s\n\n", i+1, objTitle, timeframe))
 
 		// Objective metadata table
-		if obj.Owner != "" || obj.Category != "" || obj.AlignedWith != "" {
+		if obj.Owner != "" || obj.Category != "" || len(obj.AlignedWith) > 0 {
 			sb.WriteString("| Attribute | Value |\n")
 			sb.WriteString("|-----------|-------|\n")
 			if obj.Category != "" {
@@ -386,8 +391,8 @@ func (d *Document) generateOKRs() string {
 			if obj.Owner != "" {
 				sb.WriteString(fmt.Sprintf("| **Owner** | %s |\n", obj.Owner))
 			}
-			if obj.AlignedWith != "" {
-				sb.WriteString(fmt.Sprintf("| **Aligned With** | %s |\n", obj.AlignedWith))
+			if len(obj.AlignedWith) > 0 {
+				sb.WriteString(fmt.Sprintf("| **Aligned With** | %s |\n", strings.Join(obj.AlignedWith, ", ")))
 			}
 			if obj.Rationale != "" {
 				sb.WriteString(fmt.Sprintf("| **Rationale** | %s |\n", obj.Rationale))
@@ -410,8 +415,8 @@ func (d *Document) generateOKRs() string {
 				current = "-"
 			}
 			confidence := "-"
-			if kr.Confidence > 0 {
-				confidence = fmt.Sprintf("%.0f%%", kr.Confidence*100)
+			if kr.Confidence != "" {
+				confidence = kr.Confidence
 			}
 
 			// Format with unit if present
@@ -420,8 +425,13 @@ func (d *Document) generateOKRs() string {
 				target = fmt.Sprintf("%s %s", kr.Target, kr.Unit)
 			}
 
+			// Use Title if set, otherwise fall back to Description for backward compatibility
+			krTitle := kr.Title
+			if krTitle == "" {
+				krTitle = kr.Description
+			}
 			sb.WriteString(fmt.Sprintf("| KR%d.%d | %s | %s | %s | %s | %s |\n",
-				i+1, j+1, kr.Description, baseline, target, current, confidence))
+				i+1, j+1, krTitle, baseline, target, current, confidence))
 		}
 		sb.WriteString("\n")
 

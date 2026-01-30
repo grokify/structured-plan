@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/grokify/structured-plan/common"
+	"github.com/grokify/structured-plan/goals/okr"
 )
 
 // Person is an alias for common.Person for backwards compatibility.
@@ -12,6 +13,22 @@ type Person = common.Person
 
 // Approver is an alias for common.Approver for backwards compatibility.
 type Approver = common.Approver
+
+// OKR type aliases from goals/okr for backward compatibility.
+// These allow existing PRD code to continue using prd.OKR, prd.Objective, etc.
+type (
+	// OKR represents an Objective with its Key Results.
+	OKR = okr.OKR
+
+	// Objective represents a qualitative, inspirational goal.
+	Objective = okr.Objective
+
+	// KeyResult represents a measurable outcome that indicates objective achievement.
+	KeyResult = okr.KeyResult
+
+	// PhaseTarget represents a Key Result target for a specific roadmap phase.
+	PhaseTarget = okr.PhaseTarget
+)
 
 // Document represents a complete Product Requirements Document.
 type Document struct {
@@ -113,48 +130,4 @@ type ExecutiveSummary struct {
 type Objectives struct {
 	// OKRs contains Objectives and Key Results in nested OKR format.
 	OKRs []OKR `json:"okrs"`
-}
-
-// OKR represents an Objective with its Key Results.
-// Following the OKR methodology used at Google, Intel, Intuit, and others.
-type OKR struct {
-	Objective  Objective   `json:"objective"`
-	KeyResults []KeyResult `json:"key_results"` // Must have 1+ Key Results
-}
-
-// Objective represents a qualitative, inspirational goal.
-type Objective struct {
-	ID          string   `json:"id"`
-	Description string   `json:"description"`
-	Rationale   string   `json:"rationale,omitempty"`
-	AlignedWith string   `json:"aligned_with,omitempty"` // Parent strategy/OKR
-	Category    string   `json:"category,omitempty"`     // Business, Product, Team, etc.
-	Owner       string   `json:"owner,omitempty"`        // Person or team responsible
-	Timeframe   string   `json:"timeframe,omitempty"`    // e.g., "Q1 2026", "H1 2026", "FY2026"
-	Tags        []string `json:"tags,omitempty"`         // For filtering by topic/domain
-}
-
-// KeyResult represents a measurable outcome that indicates objective achievement.
-type KeyResult struct {
-	ID                string        `json:"id"`
-	Description       string        `json:"description"`
-	Metric            string        `json:"metric"`                       // What is measured (e.g., "Monthly Active Users")
-	Baseline          string        `json:"baseline,omitempty"`           // Starting value
-	Target            string        `json:"target"`                       // Target value to achieve
-	Current           string        `json:"current,omitempty"`            // Current value (for tracking)
-	Unit              string        `json:"unit,omitempty"`               // e.g., "%", "users", "$"
-	MeasurementMethod string        `json:"measurement_method,omitempty"` // How it's measured
-	Owner             string        `json:"owner,omitempty"`              // Person or team responsible
-	Confidence        float64       `json:"confidence,omitempty"`         // 0.0-1.0 confidence score
-	PhaseTargets      []PhaseTarget `json:"phase_targets,omitempty"`      // Per-phase targets for roadmap alignment
-	Tags              []string      `json:"tags,omitempty"`               // For filtering by topic/domain
-}
-
-// PhaseTarget represents a Key Result target for a specific roadmap phase.
-type PhaseTarget struct {
-	PhaseID string `json:"phase_id"`         // Reference to roadmap phase
-	Target  string `json:"target"`           // Target value for this phase
-	Status  string `json:"status,omitempty"` // not_started, in_progress, achieved, missed
-	Actual  string `json:"actual,omitempty"` // Actual value achieved
-	Notes   string `json:"notes,omitempty"`  // Commentary on progress
 }

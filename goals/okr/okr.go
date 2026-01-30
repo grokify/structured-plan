@@ -10,6 +10,9 @@
 //   - Key Results are quantitative, measurable outcomes
 //   - Progress is scored 0.0-1.0, where 0.7 is typically considered success
 //   - OKRs are typically set quarterly with annual themes
+//
+// This package consolidates OKR types from both standalone OKR documents
+// and PRD-embedded OKRs, providing a single source of truth.
 package okr
 
 import (
@@ -43,6 +46,7 @@ const (
 )
 
 // OKRDocument represents a complete OKR document containing objectives.
+// Used for standalone OKR files (team/company OKRs).
 type OKRDocument struct {
 	Schema     string      `json:"$schema,omitempty"`
 	Metadata   *Metadata   `json:"metadata,omitempty"`
@@ -67,35 +71,53 @@ type Metadata struct {
 }
 
 // Objective represents an inspirational, qualitative goal.
+// Merged from standalone OKR and PRD objective types.
 type Objective struct {
 	ID          string      `json:"id,omitempty"`
-	Title       string      `json:"title"`
-	Description string      `json:"description,omitempty"`
-	Owner       string      `json:"owner,omitempty"`
-	Timeframe   string      `json:"timeframe,omitempty"` // Target period (e.g., "Q2 2026", "H1 2026", "FY2026")
-	Status      string      `json:"status,omitempty"`
-	KeyResults  []KeyResult `json:"keyResults"`
+	Title       string      `json:"title"`                 // Short display title
+	Description string      `json:"description,omitempty"` // Detailed description
+	Rationale   string      `json:"rationale,omitempty"`   // Why this objective matters (from PRD)
+	Category    string      `json:"category,omitempty"`    // Business, Product, Team, etc. (from PRD)
+	Owner       string      `json:"owner,omitempty"`       // Person or team responsible
+	Timeframe   string      `json:"timeframe,omitempty"`   // Target period (e.g., "Q2 2026")
+	Status      string      `json:"status,omitempty"`      // Draft, Active, Completed, Cancelled
+	KeyResults  []KeyResult `json:"keyResults"`            // Must have 1+ Key Results
 	Progress    float64     `json:"progress,omitempty"`    // Calculated from key results (0.0-1.0)
 	Risks       []Risk      `json:"risks,omitempty"`       // Objective-specific risks
 	ParentID    string      `json:"parentId,omitempty"`    // Link to parent/company objective
-	AlignedWith []string    `json:"alignedWith,omitempty"` // IDs of objectives this supports (company/team OKRs)
+	AlignedWith []string    `json:"alignedWith,omitempty"` // IDs of objectives this supports
+	Tags        []string    `json:"tags,omitempty"`        // For filtering by topic/domain (from PRD)
 }
 
 // KeyResult represents a measurable outcome for an Objective.
+// Merged from standalone OKR and PRD key result types.
 type KeyResult struct {
-	ID          string  `json:"id,omitempty"`
-	Title       string  `json:"title"`
-	Description string  `json:"description,omitempty"`
-	Owner       string  `json:"owner,omitempty"`
-	Metric      string  `json:"metric,omitempty"`     // What is being measured
-	Baseline    string  `json:"baseline,omitempty"`   // Starting value
-	Target      string  `json:"target,omitempty"`     // Target value to achieve
-	Current     string  `json:"current,omitempty"`    // Current value
-	Unit        string  `json:"unit,omitempty"`       // Unit of measurement
-	Score       float64 `json:"score,omitempty"`      // 0.0-1.0 achievement score
-	Confidence  string  `json:"confidence,omitempty"` // Low, Medium, High
-	Status      string  `json:"status,omitempty"`     // On Track, At Risk, Behind, Achieved
-	DueDate     string  `json:"dueDate,omitempty"`    // ISO 8601 date
+	ID                string        `json:"id,omitempty"`
+	Title             string        `json:"title"`                       // Short display title
+	Description       string        `json:"description,omitempty"`       // Detailed description
+	Owner             string        `json:"owner,omitempty"`             // Person or team responsible
+	Metric            string        `json:"metric,omitempty"`            // What is being measured
+	Baseline          string        `json:"baseline,omitempty"`          // Starting value
+	Target            string        `json:"target,omitempty"`            // Target value to achieve
+	Current           string        `json:"current,omitempty"`           // Current value
+	Unit              string        `json:"unit,omitempty"`              // Unit of measurement
+	MeasurementMethod string        `json:"measurementMethod,omitempty"` // How it's measured (from PRD)
+	Score             float64       `json:"score,omitempty"`             // 0.0-1.0 achievement score
+	Confidence        string        `json:"confidence,omitempty"`        // Low, Medium, High
+	Status            string        `json:"status,omitempty"`            // On Track, At Risk, Behind, Achieved
+	DueDate           string        `json:"dueDate,omitempty"`           // ISO 8601 date
+	PhaseTargets      []PhaseTarget `json:"phaseTargets,omitempty"`      // Per-phase targets for roadmap alignment (from PRD)
+	Tags              []string      `json:"tags,omitempty"`              // For filtering by topic/domain (from PRD)
+}
+
+// PhaseTarget represents a Key Result target for a specific roadmap phase.
+// This enables alignment between OKRs and roadmap phases.
+type PhaseTarget struct {
+	PhaseID string `json:"phaseId"`          // Reference to roadmap phase
+	Target  string `json:"target"`           // Target value for this phase
+	Status  string `json:"status,omitempty"` // not_started, in_progress, achieved, missed
+	Actual  string `json:"actual,omitempty"` // Actual value achieved
+	Notes   string `json:"notes,omitempty"`  // Commentary on progress
 }
 
 // Risk represents a challenge or risk to achieving objectives.
@@ -255,4 +277,44 @@ func New(id, name, owner string) *OKRDocument {
 func GenerateID() string {
 	now := time.Now()
 	return fmt.Sprintf("OKR-%d-%03d", now.Year(), now.YearDay())
+}
+
+// OKRSet represents a set of OKRs within a PRD or other document.
+// This is the embedded form (vs standalone OKRDocument).
+type OKRSet struct {
+	OKRs []OKR `json:"okrs"`
+}
+
+// OKR represents an Objective with its Key Results in nested form.
+// This format is commonly used in PRDs for cleaner nesting.
+type OKR struct {
+	Objective  Objective   `json:"objective"`
+	KeyResults []KeyResult `json:"key_results"` // Alternative to Objective.KeyResults
+}
+
+// ToObjectives converts an OKRSet to a flat list of Objectives.
+// Merges KeyResults from OKR struct into Objective.KeyResults.
+func (s *OKRSet) ToObjectives() []Objective {
+	objectives := make([]Objective, len(s.OKRs))
+	for i, okr := range s.OKRs {
+		obj := okr.Objective
+		// Merge KeyResults if Objective.KeyResults is empty
+		if len(obj.KeyResults) == 0 {
+			obj.KeyResults = okr.KeyResults
+		}
+		objectives[i] = obj
+	}
+	return objectives
+}
+
+// FromObjectives creates an OKRSet from a list of Objectives.
+func FromObjectives(objectives []Objective) *OKRSet {
+	okrs := make([]OKR, len(objectives))
+	for i, obj := range objectives {
+		okrs[i] = OKR{
+			Objective:  obj,
+			KeyResults: obj.KeyResults,
+		}
+	}
+	return &OKRSet{OKRs: okrs}
 }

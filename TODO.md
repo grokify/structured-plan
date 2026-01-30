@@ -445,17 +445,17 @@ type Objective struct {
   - [ ] GoalItems() abstraction (Objectives or Methods)
   - [ ] ResultItems() abstraction (Key Results or Measures)
   - [ ] GoalLabel()/ResultLabel() for rendering
-- [ ] Merge OKR types (combine best of both):
-  - [ ] Merge Objective types
-  - [ ] Merge KeyResult types (add PhaseTargets)
-  - [ ] Move PhaseTarget to okr package
-  - [ ] Add progress calculation utilities
-  - [ ] Add score grading utilities
-- [ ] Move Marp renderers from structured-goals
-- [ ] Update PRD:
-  - [ ] Replace `Objectives` field with `Goals` field
-  - [ ] Remove inline OKR types (use goals/okr)
-  - [ ] Remove `GoalsAlignment` wrapper
+- [x] Merge OKR types (combine best of both):
+  - [x] Merge Objective types (added Rationale, Category, Tags from PRD; kept Title, Progress, Risks, ParentID, AlignedWith)
+  - [x] Merge KeyResult types (added PhaseTargets, MeasurementMethod, Tags from PRD; kept Score, DueDate, Status)
+  - [x] Move PhaseTarget to okr package
+  - [x] Add progress calculation utilities (CalculateProgress, UpdateProgress, CalculateOverallProgress)
+  - [x] Add score grading utilities (ScoreGrade, ScoreDescription)
+- [x] Move Marp renderers from structured-goals (already in goals/okr/render/marp)
+- [x] Update PRD:
+  - [ ] Replace `Objectives` field with `Goals` field (kept Objectives for now)
+  - [x] Remove inline OKR types (use goals/okr via type aliases)
+  - [ ] Remove `GoalsAlignment` wrapper (kept for V2MOM/OKR alignment)
 - [ ] Update roadmap swimlane to use Goals abstraction
 - [ ] Update structured-goals to re-export from structured-plan (or deprecate)
 - [ ] Update CLI: `splan goals okr`, `splan goals v2mom`
