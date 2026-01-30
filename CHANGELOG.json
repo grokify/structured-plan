@@ -1,11 +1,52 @@
 {
   "ir_version": "1.0",
-  "project": "structured-requirements",
+  "project": "structured-plan",
   "repository": "https://github.com/grokify/structured-plan",
   "versioning": "semver",
   "commit_convention": "conventional",
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
+    {
+      "version": "v0.5.0",
+      "date": "2026-01-30",
+      "highlights": [
+        { "description": "Rename repository from structured-requirements to structured-plan", "commit": "5cde98e" },
+        { "description": "Add framework-agnostic Goals wrapper supporting both OKR and V2MOM", "commit": "c1282b4" },
+        { "description": "Extract common types (Risk, Assumption, Constraint, etc.) to common/ package", "commit": "8f2ba1c" }
+      ],
+      "added": [
+        { "description": "Add goals/ package with framework-agnostic Goals wrapper", "commit": "c1282b4" },
+        { "description": "Add GoalItem and ResultItem abstractions for unified rendering", "commit": "c1282b4" },
+        { "description": "Add GoalLabel()/ResultLabel() for dynamic framework-specific labels", "commit": "c1282b4" },
+        { "description": "Add ResultItemsByPhase() for roadmap alignment", "commit": "c1282b4" },
+        { "description": "Add ProductGoals field to PRD for framework-agnostic goals", "commit": "288156d" },
+        { "description": "Add GetProductGoals() helper for unified goals access", "commit": "288156d" },
+        { "description": "Add ToSwimlaneTableWithGoals() with dynamic labels (Objectives/Methods, Key Results/Measures)", "commit": "288156d" },
+        { "description": "Add common/status.go with Status type and constants", "commit": "8f2ba1c" },
+        { "description": "Add common/risk.go with Risk, RiskProbability, RiskImpact, RiskStatus types", "commit": "8f2ba1c" },
+        { "description": "Add common/assumption.go with Assumption type", "commit": "8f2ba1c" },
+        { "description": "Add common/constraint.go with Constraint and ConstraintType", "commit": "8f2ba1c" },
+        { "description": "Add common/decision.go with OpenItem, Option, DecisionRecord types", "commit": "8f2ba1c" },
+        { "description": "Add common/glossary.go with GlossaryTerm type", "commit": "8f2ba1c" },
+        { "description": "Add common/custom.go with CustomSection type", "commit": "8f2ba1c" },
+        { "description": "Add common/nongoals.go with NonGoal type", "commit": "8f2ba1c" }
+      ],
+      "changed": [
+        { "description": "Rename module from github.com/grokify/structured-requirements to github.com/grokify/structured-plan", "commit": "5cde98e" },
+        { "description": "Deprecate ToSwimlaneTableWithOKRs() in favor of ToSwimlaneTableWithGoals()", "commit": "288156d" }
+      ],
+      "refactored": [
+        { "description": "Consolidate OKR types into goals/okr package with merged fields from PRD", "commit": "d68dc6b" },
+        { "description": "Add PhaseTarget, MeasurementMethod, Tags to KeyResult from PRD", "commit": "d68dc6b" },
+        { "description": "Add Rationale, Category, Tags to Objective from PRD", "commit": "d68dc6b" },
+        { "description": "Update PRD to use goals/okr types via type aliases", "commit": "d68dc6b" },
+        { "description": "Extract common types from PRD/MRD/TRD to common/ package", "commit": "8f2ba1c" },
+        { "description": "Update PRD/MRD/TRD to use common types via type aliases", "commit": "8f2ba1c" }
+      ],
+      "documentation": [
+        { "description": "Document Phase 5 decision: structured-roadmap renamed to structured-tasks", "commit": "052e728" }
+      ]
+    },
     {
       "version": "v0.4.0",
       "date": "2026-01-29",
