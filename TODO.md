@@ -190,12 +190,12 @@ srequirements trd ...             splan requirements trd ...
 ```
 
 Tasks:
-- [ ] Rename `cmd/srequirements/` → `cmd/splan/`
-- [ ] Update command hierarchy:
-  - [ ] Add `requirements` parent command
-  - [ ] Move `prd`, `mrd`, `trd` under `requirements`
-- [ ] Update binary name in goreleaser
-- [ ] Create `srequirements` shim for backwards compatibility (optional)
+- [x] Create `cmd/splan/` with new CLI structure
+- [x] Update command hierarchy:
+  - [x] Add `requirements` parent command with `req` alias
+  - [x] Move `prd`, `mrd`, `trd` under `requirements`
+- [ ] Update binary name in goreleaser (no goreleaser config found)
+- [x] Keep `srequirements` for backwards compatibility
 
 ## Phase 2: Rename Repository
 
