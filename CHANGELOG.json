@@ -7,6 +7,25 @@
   "maintainers": ["grokify", "johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.6.0",
+      "date": "2026-01-30",
+      "highlights": [
+        { "description": "BREAKING: Migrate all JSON tags from snake_case to camelCase for consistency with JSON/JavaScript conventions", "commit": "7469a09" }
+      ],
+      "changed": [
+        { "description": "BREAKING: Migrate 252 JSON field names from snake_case to camelCase", "commit": "7469a09" },
+        { "description": "Update all example JSON files to use camelCase field names", "commit": "53e5121" },
+        { "description": "Regenerate PRD JSON schema with camelCase field names", "commit": "33dc1fb" }
+      ],
+      "added": [
+        { "description": "Add migration script for user JSON files (scripts/migrate_json_to_camelcase.sh)", "commit": "28dbd35" },
+        { "description": "Add migration plan documenting all field name changes (MIGRATION_CAMELCASE.md)", "commit": "28dbd35" }
+      ],
+      "documentation": [
+        { "description": "Document complete snake_case to camelCase field mapping", "commit": "28dbd35" }
+      ]
+    },
+    {
       "version": "v0.5.0",
       "date": "2026-01-30",
       "highlights": [

@@ -260,9 +260,9 @@ Requires `jq` (install with `brew install jq`).
 - [x] Update example JSON files
 - [x] Update test files with camelCase JSON
 - [x] Regenerate JSON schemas (PRD only - MRD/TRD not yet implemented)
-- [ ] Update README with new JSON examples
+- [x] Update README with new JSON examples
 - [x] Add migration script to repository
-- [ ] Update CHANGELOG.json
-- [ ] Create RELEASE_NOTES_v0.6.0.md documenting breaking change
+- [x] Update CHANGELOG.json
+- [x] Create RELEASE_NOTES_v0.6.0.md documenting breaking change
 - [x] Run full test suite
 - [x] Verify golangci-lint passes

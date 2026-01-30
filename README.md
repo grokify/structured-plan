@@ -187,14 +187,14 @@ Defines the market opportunity and business justification.
 | Section | Required | Description |
 |---------|----------|-------------|
 | `metadata` | Yes | Document ID, title, version, authors |
-| `executive_summary` | Yes | Market opportunity, proposed offering, key findings |
-| `market_overview` | Yes | TAM/SAM/SOM, growth rate, trends |
-| `target_market` | Yes | Primary/secondary segments, buyer personas |
-| `competitive_landscape` | Yes | Competitors, strengths/weaknesses, differentiators |
-| `market_requirements` | Yes | Market-level requirements with priorities |
+| `executiveSummary` | Yes | Market opportunity, proposed offering, key findings |
+| `marketOverview` | Yes | TAM/SAM/SOM, growth rate, trends |
+| `targetMarket` | Yes | Primary/secondary segments, buyer personas |
+| `competitiveLandscape` | Yes | Competitors, strengths/weaknesses, differentiators |
+| `marketRequirements` | Yes | Market-level requirements with priorities |
 | `positioning` | Yes | Positioning statement, key benefits |
-| `go_to_market` | No | Launch strategy, pricing, distribution |
-| `success_metrics` | Yes | Revenue targets, market share goals |
+| `goToMarket` | No | Launch strategy, pricing, distribution |
+| `successMetrics` | Yes | Revenue targets, market share goals |
 | `risks` | No | Market and competitive risks |
 | `glossary` | No | Term definitions |
 
@@ -205,16 +205,16 @@ Defines what the product should do and for whom.
 | Section | Required | Description |
 |---------|----------|-------------|
 | `metadata` | Yes | Document ID, title, version, authors |
-| `executive_summary` | Yes | Problem statement, proposed solution, outcomes |
+| `executiveSummary` | Yes | Problem statement, proposed solution, outcomes |
 | `objectives` | Yes | Business objectives, product goals, success metrics |
 | `personas` | Yes | User personas with goals and pain points |
-| `user_stories` | Yes | User stories with acceptance criteria |
+| `userStories` | Yes | User stories with acceptance criteria |
 | `requirements.functional` | Yes | Functional requirements (MoSCoW priority) |
-| `requirements.non_functional` | Yes | NFRs (performance, security, etc.) |
+| `requirements.nonFunctional` | Yes | NFRs (performance, security, etc.) |
 | `roadmap` | Yes | Phases with deliverables and success criteria |
 | `assumptions` | No | Assumptions, constraints, dependencies |
-| `out_of_scope` | No | Explicitly excluded items |
-| `technical_architecture` | No | System overview, integrations |
+| `outOfScope` | No | Explicitly excluded items |
+| `technicalArchitecture` | No | System overview, integrations |
 | `risks` | No | Product and technical risks |
 | `glossary` | No | Term definitions |
 
@@ -225,12 +225,12 @@ Defines how the product will be built.
 | Section | Required | Description |
 |---------|----------|-------------|
 | `metadata` | Yes | Document ID, title, version, authors |
-| `executive_summary` | Yes | Purpose, scope, technical approach |
+| `executiveSummary` | Yes | Purpose, scope, technical approach |
 | `architecture` | Yes | Overview, principles, components, data flows |
-| `technology_stack` | Yes | Languages, frameworks, databases, infrastructure |
-| `api_specifications` | No | API definitions with endpoints |
-| `data_model` | No | Entities, attributes, data stores |
-| `security_design` | Yes | AuthN, AuthZ, encryption, compliance |
+| `technologyStack` | Yes | Languages, frameworks, databases, infrastructure |
+| `apiSpecifications` | No | API definitions with endpoints |
+| `dataModel` | No | Entities, attributes, data stores |
+| `securityDesign` | Yes | AuthN, AuthZ, encryption, compliance |
 | `performance` | Yes | Performance requirements and benchmarks |
 | `scalability` | No | Horizontal/vertical scaling, limits |
 | `deployment` | Yes | Environments, strategy, regions |
@@ -259,21 +259,21 @@ Use these extensions for automatic type detection:
 | `role` | Yes | Job title or role |
 | `description` | Yes | Background and context |
 | `goals` | Yes | What they want to achieve |
-| `pain_points` | Yes | Current frustrations |
+| `painPoints` | Yes | Current frustrations |
 | `behaviors` | No | Typical behaviors and patterns |
-| `technical_proficiency` | No | Low, Medium, High, Expert |
+| `technicalProficiency` | No | Low, Medium, High, Expert |
 
 ### User Stories
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `id` | Yes | Unique story identifier |
-| `persona_id` | Yes | Reference to persona |
+| `personaId` | Yes | Reference to persona |
 | `title` | Yes | Short descriptive title |
 | `story` | Yes | "As a [persona], I want [goal] so that [reason]" |
-| `acceptance_criteria` | Yes | Testable conditions (Given/When/Then) |
+| `acceptanceCriteria` | Yes | Testable conditions (Given/When/Then) |
 | `priority` | Yes | Critical, High, Medium, Low |
-| `phase_id` | Yes | Reference to roadmap phase |
+| `phaseId` | Yes | Reference to roadmap phase |
 
 ### Roadmap and Swimlane Table
 
@@ -429,7 +429,7 @@ Use the `→` notation to distinguish rollout targets:
 | `scalability` | Scaling capability | 10K concurrent users |
 | `reliability` | Uptime, MTBF, MTTR | 99.9% uptime |
 | `security` | AuthN, AuthZ, encryption | SOC 2 compliance |
-| `multi_tenancy` | Tenant isolation | Schema-per-tenant |
+| `multiTenancy` | Tenant isolation | Schema-per-tenant |
 | `observability` | Logging, metrics, tracing | 100% trace coverage |
 | `compliance` | Regulatory requirements | GDPR, HIPAA |
 
@@ -451,11 +451,11 @@ Use the `→` notation to distinguish rollout targets:
 | `id` | Yes | Unique identifier |
 | `name` | Yes | Persona name |
 | `title` | Yes | Job title |
-| `buying_role` | Yes | Decision Maker, Influencer, User, Gatekeeper |
-| `budget_authority` | Yes | Has budget authority (boolean) |
-| `pain_points` | Yes | Business pain points |
+| `buyingRole` | Yes | Decision Maker, Influencer, User, Gatekeeper |
+| `budgetAuthority` | Yes | Has budget authority (boolean) |
+| `painPoints` | Yes | Business pain points |
 | `goals` | Yes | Business goals |
-| `buying_criteria` | No | Purchase decision criteria |
+| `buyingCriteria` | No | Purchase decision criteria |
 
 ### Competitors
 
@@ -466,8 +466,8 @@ Use the `→` notation to distinguish rollout targets:
 | `category` | No | Direct, Indirect, Substitute |
 | `strengths` | Yes | Competitive strengths |
 | `weaknesses` | Yes | Competitive weaknesses |
-| `market_share` | No | Market share percentage |
-| `threat_level` | No | High, Medium, Low |
+| `marketShare` | No | Market share percentage |
+| `threatLevel` | No | High, Medium, Low |
 
 ## TRD Details
 
@@ -491,7 +491,7 @@ Use the `→` notation to distinguish rollout targets:
 | `name` | Yes | API name |
 | `type` | Yes | REST, gRPC, GraphQL, WebSocket |
 | `version` | No | API version |
-| `base_url` | No | Base URL |
+| `baseUrl` | No | Base URL |
 | `auth` | No | Authentication method |
 | `endpoints` | No | List of endpoints |
 
