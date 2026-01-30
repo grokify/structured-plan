@@ -136,10 +136,10 @@ var prdScoreFlags struct {
 }
 
 var prdFilterFlags struct {
-	output     string
+	output      string
 	includeTags []string
 	excludeTags []string
-	matchAll   bool
+	matchAll    bool
 }
 
 var prdFilterCmd = &cobra.Command{

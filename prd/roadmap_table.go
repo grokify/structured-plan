@@ -418,4 +418,3 @@ func (d *Document) ToSwimlaneTableWithOKRs(opts RoadmapTableOptions) string {
 
 	return sb.String()
 }
-
