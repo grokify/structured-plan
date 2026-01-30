@@ -562,13 +562,22 @@ type ObjectiveResult struct {
 - [ ] Integration: weekly status can pull from PRD/Roadmap deliverables
 - [ ] Integration: quarterly review can pull from OKR scores
 
-## Phase 5: Evaluate structured-roadmap
+## Phase 5: Evaluate structured-roadmap ✓
 
-Separate from above - `structured-roadmap` is project task tracking, not product planning.
+**Decision:** Rename `structured-roadmap` → `structured-tasks` and keep separate.
 
-- [ ] Consider renaming to `simple-todo` or `structured-tasks`
-- [ ] Clarify in README: project tasks vs product roadmap
-- [ ] Keep separate from structured-plan
+**Rationale:**
+- `structured-tasks` = AI agent task tracking (agent-primary, human-secondary)
+- `structured-plan` = Planning documents (agent-generated, human-reviewed)
+
+| Repo | Primary User | Purpose |
+|------|--------------|---------|
+| `structured-tasks` | AI agents | Task tracking, work management |
+| `structured-plan` | Humans (via agents) | Planning documents (PRD, OKR, V2MOM, Roadmap) |
+
+- [x] Decision: Rename to `structured-tasks`
+- [x] Decision: Keep separate from structured-plan
+- [ ] Execute rename on GitHub (separate action)
 
 ## File Change Summary
 
@@ -734,4 +743,4 @@ Tasks:
 | 2025-01-30 | Keep metrics in separate structured-metrics | DMAIC methodology is different domain; metrics referenced by ID from plans |
 | 2025-01-30 | Add weekly/quarterly status reports | Status reports are plan tracking (weekly = on track?, quarterly = objectives hit?) |
 | 2025-01-30 | V2MOM: Add Assumptions field | Maps to: Methods→Objectives, Measures→KRs, Obstacles→Constraints, NEW: Assumptions |
-| TBD | structured-roadmap → simple-todo | Different purpose (project tasks vs product roadmap) |
+| 2025-01-30 | structured-roadmap → structured-tasks | AI agent task tracking vs human-reviewed planning docs |
