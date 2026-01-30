@@ -76,11 +76,96 @@ func init() {
 	// Add top-level commands
 	rootCmd.AddCommand(requirementsCmd)
 	rootCmd.AddCommand(schemaCmd)
+	rootCmd.AddCommand(mergeCmd)
 
 	// Add requirements subcommands
 	requirementsCmd.AddCommand(prdCmd)
 	requirementsCmd.AddCommand(mrdCmd)
 	requirementsCmd.AddCommand(trdCmd)
+}
+
+// ============================================================================
+// Merge Command
+// ============================================================================
+
+var mergeFlags struct {
+	output string
+}
+
+var mergeCmd = &cobra.Command{
+	Use:   "merge [files...]",
+	Short: "Merge multiple JSON files into one",
+	Long: `Merge multiple JSON files into one.
+
+The files are merged in the order they are provided. For nested objects,
+values are recursively merged. For arrays, values are concatenated.`,
+	Example: `  splan merge file1.json file2.json -o merged.json
+  splan merge base.prd.json overrides.json -o final.prd.json`,
+	Args: cobra.MinimumNArgs(1),
+	RunE: runMerge,
+}
+
+func init() {
+	mergeCmd.Flags().StringVarP(&mergeFlags.output, "output", "o", "merged.json", "Output file name")
+}
+
+func runMerge(cmd *cobra.Command, args []string) error {
+	var mergedData map[string]interface{}
+
+	for _, file := range args {
+		data, err := os.ReadFile(file)
+		if err != nil {
+			return fmt.Errorf("reading file %s: %w", file, err)
+		}
+
+		var currentData map[string]interface{}
+		if err := json.Unmarshal(data, &currentData); err != nil {
+			return fmt.Errorf("unmarshaling json from file %s: %w", file, err)
+		}
+
+		if mergedData == nil {
+			mergedData = currentData
+		} else {
+			mergedData = deepMerge(mergedData, currentData)
+		}
+	}
+
+	mergedJSON, err := json.MarshalIndent(mergedData, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshaling merged data to json: %w", err)
+	}
+
+	if err := os.WriteFile(mergeFlags.output, mergedJSON, 0600); err != nil {
+		return fmt.Errorf("writing merged json to file %s: %w", mergeFlags.output, err)
+	}
+
+	fmt.Printf("Successfully merged %d files into %s\n", len(args), mergeFlags.output)
+	return nil
+}
+
+func deepMerge(a, b map[string]interface{}) map[string]interface{} {
+	for k, v := range b {
+		if va, ok := a[k]; ok {
+			// Both have this key - check types for merging
+			switch vaTyped := va.(type) {
+			case map[string]interface{}:
+				// Both are maps - recursively merge
+				if vMap, ok := v.(map[string]interface{}); ok {
+					a[k] = deepMerge(vaTyped, vMap)
+					continue
+				}
+			case []interface{}:
+				// Both are arrays - concatenate them
+				if vSlice, ok := v.([]interface{}); ok {
+					a[k] = append(vaTyped, vSlice...)
+					continue
+				}
+			}
+		}
+		// Key doesn't exist in a, or types don't match - use b's value
+		a[k] = v
+	}
+	return a
 }
 
 // ============================================================================
