@@ -177,7 +177,6 @@ template := prd.GenerateEvaluationTemplate(doc, "my-product.prd.json")
 | ux_coverage | 5% | Design and accessibility |
 | technical_feasibility | 5% | Architecture and integrations |
 | risk_management | 5% | Risk identification and mitigation |
-```
 
 ## Document Types
 
