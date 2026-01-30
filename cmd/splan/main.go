@@ -18,7 +18,12 @@ import (
 	"github.com/grokify/structured-plan/schema"
 )
 
-var version = "0.5.0"
+// Set by GoReleaser ldflags
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
@@ -54,6 +59,10 @@ Example usage:
   splan requirements trd generate architecture.trd.json -o output.md
   splan schema generate --type prd`,
 	Version: version,
+}
+
+func init() {
+	rootCmd.SetVersionTemplate("splan version {{.Version}} (commit: " + commit + ", built: " + date + ")\n")
 }
 
 // ============================================================================
