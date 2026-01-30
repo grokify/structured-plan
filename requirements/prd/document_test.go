@@ -23,23 +23,23 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test PRD",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Test Author"}]
 				},
-				"executive_summary": {
-					"problem_statement": "Test problem",
-					"proposed_solution": "Test solution",
-					"expected_outcomes": ["Outcome 1"]
+				"executiveSummary": {
+					"problemStatement": "Test problem",
+					"proposedSolution": "Test solution",
+					"expectedOutcomes": ["Outcome 1"]
 				},
 				"objectives": {
-					"business_objectives": [],
-					"product_goals": [],
-					"success_metrics": []
+					"businessObjectives": [],
+					"productGoals": [],
+					"successMetrics": []
 				},
 				"personas": [{"id": "p1", "name": "User", "role": "End User", "description": "Test user"}],
-				"user_stories": [{"id": "us1", "persona_id": "p1", "title": "Test Story", "as_a": "user", "i_want": "to do something", "so_that": "I can achieve a goal"}],
-				"requirements": {"functional": [], "non_functional": []},
+				"userStories": [{"id": "us1", "personaId": "p1", "title": "Test Story", "asA": "user", "iWant": "to do something", "soThat": "I can achieve a goal"}],
+				"requirements": {"functional": [], "nonFunctional": []},
 				"roadmap": {"phases": [{"id": "phase1", "name": "Phase 1"}]}
 			}`,
 			wantErr: false,
@@ -69,15 +69,15 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "approved",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author"}]
 				},
-				"executive_summary": {"problem_statement": "P", "proposed_solution": "S", "expected_outcomes": []},
-				"objectives": {"business_objectives": [], "product_goals": [], "success_metrics": []},
+				"executiveSummary": {"problemStatement": "P", "proposedSolution": "S", "expectedOutcomes": []},
+				"objectives": {"businessObjectives": [], "productGoals": [], "successMetrics": []},
 				"personas": [],
-				"user_stories": [],
-				"requirements": {"functional": [], "non_functional": []},
+				"userStories": [],
+				"requirements": {"functional": [], "nonFunctional": []},
 				"roadmap": {"phases": []}
 			}`,
 			wantErr: false,
@@ -95,24 +95,24 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author", "email": "author@example.com", "role": "PM"}],
 					"tags": ["tag1", "tag2"]
 				},
-				"executive_summary": {
-					"problem_statement": "Problem",
-					"proposed_solution": "Solution",
-					"expected_outcomes": ["O1", "O2"],
-					"target_audience": "Developers",
-					"value_proposition": "Value prop"
+				"executiveSummary": {
+					"problemStatement": "Problem",
+					"proposedSolution": "Solution",
+					"expectedOutcomes": ["O1", "O2"],
+					"targetAudience": "Developers",
+					"valueProposition": "Value prop"
 				},
-				"objectives": {"business_objectives": [], "product_goals": [], "success_metrics": []},
+				"objectives": {"businessObjectives": [], "productGoals": [], "successMetrics": []},
 				"personas": [],
-				"user_stories": [],
-				"requirements": {"functional": [], "non_functional": []},
+				"userStories": [],
+				"requirements": {"functional": [], "nonFunctional": []},
 				"roadmap": {"phases": []},
-				"out_of_scope": ["Item 1", "Item 2"],
+				"outOfScope": ["Item 1", "Item 2"],
 				"glossary": [{"term": "API", "definition": "Application Programming Interface"}],
 				"risks": [{"id": "r1", "description": "Risk 1", "probability": "low", "impact": "high", "mitigation": "Mitigate"}]
 			}`,
@@ -143,19 +143,19 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author"}]
 				},
-				"executive_summary": {"problem_statement": "P", "proposed_solution": "S", "expected_outcomes": []},
-				"objectives": {"business_objectives": [], "product_goals": [], "success_metrics": []},
+				"executiveSummary": {"problemStatement": "P", "proposedSolution": "S", "expectedOutcomes": []},
+				"objectives": {"businessObjectives": [], "productGoals": [], "successMetrics": []},
 				"personas": [],
-				"user_stories": [],
+				"userStories": [],
 				"requirements": {
 					"functional": [
 						{"id": "FR-1", "title": "Feature 1", "description": "Desc", "category": "Core", "priority": "must"}
 					],
-					"non_functional": [
+					"nonFunctional": [
 						{"id": "NFR-1", "category": "performance", "title": "Perf Req", "description": "Fast", "metric": "latency", "target": "<100ms"}
 					]
 				},

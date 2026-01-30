@@ -89,7 +89,7 @@ func TestGeneratorReflectsExtendedSections(t *testing.T) {
 	}
 
 	// Check that extended sections are reflected from Go types
-	extendedSections := []string{"problem", "market", "solution", "decisions", "reviews", "revision_history", "goals"}
+	extendedSections := []string{"problem", "market", "solution", "decisions", "reviews", "revisionHistory", "goals"}
 	for _, section := range extendedSections {
 		if _, ok := props[section]; !ok {
 			t.Errorf("generated schema missing extended section: %s", section)

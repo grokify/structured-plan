@@ -23,36 +23,36 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test MRD",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Test Author"}]
 				},
-				"executive_summary": {
-					"market_opportunity": "Big opportunity",
-					"proposed_offering": "Great product",
-					"key_findings": ["Finding 1"]
+				"executiveSummary": {
+					"marketOpportunity": "Big opportunity",
+					"proposedOffering": "Great product",
+					"keyFindings": ["Finding 1"]
 				},
-				"market_overview": {
+				"marketOverview": {
 					"tam": {"value": "$10B"},
 					"sam": {"value": "$5B"},
 					"som": {"value": "$1B"}
 				},
-				"target_market": {
-					"primary_segments": [{"id": "seg1", "name": "Enterprise", "description": "Large companies"}]
+				"targetMarket": {
+					"primarySegments": [{"id": "seg1", "name": "Enterprise", "description": "Large companies"}]
 				},
-				"competitive_landscape": {
+				"competitiveLandscape": {
 					"overview": "Competitive market",
 					"competitors": [{"id": "c1", "name": "Competitor 1", "strengths": ["Strong brand"], "weaknesses": ["High price"]}]
 				},
-				"market_requirements": [{"id": "mr1", "title": "Feature X", "description": "Need feature X", "priority": "must"}],
+				"marketRequirements": [{"id": "mr1", "title": "Feature X", "description": "Need feature X", "priority": "must"}],
 				"positioning": {
 					"statement": "For enterprises who need X",
-					"target_audience": "Enterprise IT",
+					"targetAudience": "Enterprise IT",
 					"category": "SaaS",
-					"key_benefits": ["Benefit 1"],
+					"keyBenefits": ["Benefit 1"],
 					"differentiators": ["Diff 1"]
 				},
-				"success_metrics": [{"id": "sm1", "name": "Revenue", "description": "ARR", "metric": "ARR", "target": "$1M"}]
+				"successMetrics": [{"id": "sm1", "name": "Revenue", "description": "ARR", "metric": "ARR", "target": "$1M"}]
 			}`,
 			wantErr: false,
 			check: func(t *testing.T, doc Document) {
@@ -81,31 +81,31 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author"}]
 				},
-				"executive_summary": {"market_opportunity": "M", "proposed_offering": "P", "key_findings": []},
-				"market_overview": {"tam": {"value": "$1B"}, "sam": {"value": "$500M"}, "som": {"value": "$100M"}},
-				"target_market": {
-					"primary_segments": [{"id": "s1", "name": "Segment", "description": "Desc"}],
-					"buyer_personas": [
+				"executiveSummary": {"marketOpportunity": "M", "proposedOffering": "P", "keyFindings": []},
+				"marketOverview": {"tam": {"value": "$1B"}, "sam": {"value": "$500M"}, "som": {"value": "$100M"}},
+				"targetMarket": {
+					"primarySegments": [{"id": "s1", "name": "Segment", "description": "Desc"}],
+					"buyerPersonas": [
 						{
 							"id": "bp1",
 							"name": "CTO",
 							"title": "Chief Technology Officer",
 							"description": "Tech leader",
-							"buying_role": "Decision Maker",
-							"budget_authority": true,
-							"pain_points": ["Pain 1"],
+							"buyingRole": "Decision Maker",
+							"budgetAuthority": true,
+							"painPoints": ["Pain 1"],
 							"goals": ["Goal 1"]
 						}
 					]
 				},
-				"competitive_landscape": {"overview": "O", "competitors": [{"id": "c1", "name": "C1", "strengths": ["S"], "weaknesses": ["W"]}]},
-				"market_requirements": [{"id": "mr1", "title": "T", "description": "D", "priority": "must"}],
-				"positioning": {"statement": "S", "target_audience": "T", "category": "C", "key_benefits": ["B"], "differentiators": ["D"]},
-				"success_metrics": []
+				"competitiveLandscape": {"overview": "O", "competitors": [{"id": "c1", "name": "C1", "strengths": ["S"], "weaknesses": ["W"]}]},
+				"marketRequirements": [{"id": "mr1", "title": "T", "description": "D", "priority": "must"}],
+				"positioning": {"statement": "S", "targetAudience": "T", "category": "C", "keyBenefits": ["B"], "differentiators": ["D"]},
+				"successMetrics": []
 			}`,
 			wantErr: false,
 			check: func(t *testing.T, doc Document) {
@@ -129,28 +129,28 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author"}]
 				},
-				"executive_summary": {"market_opportunity": "M", "proposed_offering": "P", "key_findings": []},
-				"market_overview": {"tam": {"value": "$1B"}, "sam": {"value": "$500M"}, "som": {"value": "$100M"}},
-				"target_market": {"primary_segments": [{"id": "s1", "name": "S", "description": "D"}]},
-				"competitive_landscape": {"overview": "O", "competitors": [{"id": "c1", "name": "C", "strengths": ["S"], "weaknesses": ["W"]}]},
-				"market_requirements": [{"id": "mr1", "title": "T", "description": "D", "priority": "must"}],
-				"positioning": {"statement": "S", "target_audience": "T", "category": "C", "key_benefits": ["B"], "differentiators": ["D"]},
-				"go_to_market": {
-					"launch_strategy": "Phased rollout",
-					"pricing_strategy": {
+				"executiveSummary": {"marketOpportunity": "M", "proposedOffering": "P", "keyFindings": []},
+				"marketOverview": {"tam": {"value": "$1B"}, "sam": {"value": "$500M"}, "som": {"value": "$100M"}},
+				"targetMarket": {"primarySegments": [{"id": "s1", "name": "S", "description": "D"}]},
+				"competitiveLandscape": {"overview": "O", "competitors": [{"id": "c1", "name": "C", "strengths": ["S"], "weaknesses": ["W"]}]},
+				"marketRequirements": [{"id": "mr1", "title": "T", "description": "D", "priority": "must"}],
+				"positioning": {"statement": "S", "targetAudience": "T", "category": "C", "keyBenefits": ["B"], "differentiators": ["D"]},
+				"goToMarket": {
+					"launchStrategy": "Phased rollout",
+					"pricingStrategy": {
 						"model": "Subscription",
 						"tiers": [
 							{"name": "Free", "price": "$0", "features": ["Basic"]},
 							{"name": "Pro", "price": "$99/mo", "features": ["Advanced"]}
 						]
 					},
-					"distribution_channels": ["Direct", "Partners"]
+					"distributionChannels": ["Direct", "Partners"]
 				},
-				"success_metrics": []
+				"successMetrics": []
 			}`,
 			wantErr: false,
 			check: func(t *testing.T, doc Document) {

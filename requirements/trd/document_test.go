@@ -23,21 +23,21 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test TRD",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Test Author"}]
 				},
-				"executive_summary": {
+				"executiveSummary": {
 					"purpose": "Define technical architecture",
 					"scope": "Backend services",
-					"technical_approach": "Microservices"
+					"technicalApproach": "Microservices"
 				},
 				"architecture": {
 					"overview": "Microservices architecture",
 					"components": [{"id": "c1", "name": "API Gateway", "description": "Entry point"}]
 				},
-				"technology_stack": {},
-				"security_design": {
+				"technologyStack": {},
+				"securityDesign": {
 					"overview": "Defense in depth"
 				},
 				"performance": {
@@ -75,17 +75,17 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author"}]
 				},
-				"executive_summary": {"purpose": "P", "scope": "S", "technical_approach": "T"},
+				"executiveSummary": {"purpose": "P", "scope": "S", "technicalApproach": "T"},
 				"architecture": {
 					"overview": "Overview",
 					"components": [{"id": "c1", "name": "Service", "description": "D"}]
 				},
-				"technology_stack": {},
-				"api_specifications": [
+				"technologyStack": {},
+				"apiSpecifications": [
 					{
 						"id": "api1",
 						"name": "User API",
@@ -97,7 +97,7 @@ func TestDocumentParsing(t *testing.T) {
 						]
 					}
 				],
-				"security_design": {"overview": "O"},
+				"securityDesign": {"overview": "O"},
 				"performance": {"requirements": [{"id": "p1", "name": "N", "metric": "M", "target": "T"}]},
 				"deployment": {"overview": "O", "environments": [{"name": "prod"}]}
 			}`,
@@ -123,14 +123,14 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author"}]
 				},
-				"executive_summary": {"purpose": "P", "scope": "S", "technical_approach": "T"},
+				"executiveSummary": {"purpose": "P", "scope": "S", "technicalApproach": "T"},
 				"architecture": {"overview": "O", "components": [{"id": "c1", "name": "N", "description": "D"}]},
-				"technology_stack": {},
-				"security_design": {
+				"technologyStack": {},
+				"securityDesign": {
 					"overview": "Zero trust architecture",
 					"authentication": {
 						"method": "OAuth2",
@@ -142,8 +142,8 @@ func TestDocumentParsing(t *testing.T) {
 						"roles": ["admin", "user", "viewer"]
 					},
 					"encryption": {
-						"at_rest": "AES-256",
-						"in_transit": "TLS 1.3"
+						"atRest": "AES-256",
+						"inTransit": "TLS 1.3"
 					},
 					"compliance": ["SOC2", "GDPR"]
 				},
@@ -180,14 +180,14 @@ func TestDocumentParsing(t *testing.T) {
 					"title": "Test",
 					"version": "1.0.0",
 					"status": "draft",
-					"created_at": "2025-01-01T00:00:00Z",
-					"updated_at": "2025-01-01T00:00:00Z",
+					"createdAt": "2025-01-01T00:00:00Z",
+					"updatedAt": "2025-01-01T00:00:00Z",
 					"authors": [{"name": "Author"}]
 				},
-				"executive_summary": {"purpose": "P", "scope": "S", "technical_approach": "T"},
+				"executiveSummary": {"purpose": "P", "scope": "S", "technicalApproach": "T"},
 				"architecture": {"overview": "O", "components": [{"id": "c1", "name": "N", "description": "D"}]},
-				"technology_stack": {},
-				"security_design": {"overview": "O"},
+				"technologyStack": {},
+				"securityDesign": {"overview": "O"},
 				"performance": {"requirements": [{"id": "p1", "name": "N", "metric": "M", "target": "T"}]},
 				"deployment": {"overview": "O", "environments": [{"name": "prod"}]},
 				"integrations": [
@@ -197,7 +197,7 @@ func TestDocumentParsing(t *testing.T) {
 						"type": "API",
 						"direction": "Outbound",
 						"protocol": "HTTPS",
-						"auth_method": "API Key"
+						"authMethod": "API Key"
 					}
 				]
 			}`,
