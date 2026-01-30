@@ -3,6 +3,8 @@ package mrd
 import (
 	"fmt"
 	"strings"
+
+	"github.com/grokify/structured-requirements/common"
 )
 
 // MarkdownOptions configures markdown generation.
@@ -47,11 +49,9 @@ func (d *Document) ToMarkdown(opts MarkdownOptions) string {
 	sb.WriteString(fmt.Sprintf("| **Created** | %s |\n", d.Metadata.CreatedAt.Format("2006-01-02")))
 	sb.WriteString(fmt.Sprintf("| **Updated** | %s |\n", d.Metadata.UpdatedAt.Format("2006-01-02")))
 
-	var authorNames []string
-	for _, a := range d.Metadata.Authors {
-		authorNames = append(authorNames, a.Name)
+	if len(d.Metadata.Authors) > 0 {
+		sb.WriteString(fmt.Sprintf("| **Author(s)** | %s |\n", common.FormatPeopleMarkdown(d.Metadata.Authors)))
 	}
-	sb.WriteString(fmt.Sprintf("| **Author(s)** | %s |\n", strings.Join(authorNames, ", ")))
 
 	if len(d.Metadata.Tags) > 0 {
 		sb.WriteString(fmt.Sprintf("| **Tags** | %s |\n", strings.Join(d.Metadata.Tags, ", ")))

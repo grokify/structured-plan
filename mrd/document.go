@@ -1,7 +1,17 @@
 // Package mrd provides data types for structured Market Requirements Documents.
 package mrd
 
-import "time"
+import (
+	"time"
+
+	"github.com/grokify/structured-requirements/common"
+)
+
+// Person is an alias for common.Person for backwards compatibility.
+type Person = common.Person
+
+// Approver is an alias for common.Approver for backwards compatibility.
+type Approver = common.Approver
 
 // Document represents a complete Market Requirements Document.
 type Document struct {
@@ -44,21 +54,6 @@ type Metadata struct {
 	Reviewers []Person   `json:"reviewers,omitempty"`
 	Approvers []Approver `json:"approvers,omitempty"`
 	Tags      []string   `json:"tags,omitempty"`
-}
-
-// Person represents an individual contributor.
-type Person struct {
-	Name  string `json:"name"`
-	Email string `json:"email,omitempty"`
-	Role  string `json:"role,omitempty"`
-}
-
-// Approver represents a person with approval authority.
-type Approver struct {
-	Person
-	ApprovedAt *time.Time `json:"approved_at,omitempty"`
-	Approved   bool       `json:"approved"`
-	Comments   string     `json:"comments,omitempty"`
 }
 
 // ExecutiveSummary provides high-level market overview.
@@ -116,6 +111,7 @@ type MarketSegment struct {
 	Growth      string   `json:"growth,omitempty"`     // Segment growth rate
 	Needs       []string `json:"needs,omitempty"`      // Key needs
 	Challenges  []string `json:"challenges,omitempty"` // Key challenges
+	Tags        []string `json:"tags,omitempty"`       // For filtering by topic/domain
 }
 
 // BuyerPersona represents a market-focused buyer persona.
@@ -130,6 +126,7 @@ type BuyerPersona struct {
 	Goals              []string `json:"goals"`
 	BuyingCriteria     []string `json:"buying_criteria,omitempty"`
 	InformationSources []string `json:"information_sources,omitempty"` // Where they get info
+	Tags               []string `json:"tags,omitempty"`                // For filtering by topic/domain
 }
 
 // CompetitiveLandscape contains competitive analysis.
@@ -153,6 +150,7 @@ type Competitor struct {
 	Pricing     string   `json:"pricing,omitempty"`
 	Positioning string   `json:"positioning,omitempty"`
 	ThreatLevel string   `json:"threat_level,omitempty"` // High, Medium, Low
+	Tags        []string `json:"tags,omitempty"`         // For filtering by topic/domain
 }
 
 // MarketRequirement represents a market-level requirement.
@@ -166,6 +164,7 @@ type MarketRequirement struct {
 	Validation  string   `json:"validation,omitempty"` // How this was validated
 	Segments    []string `json:"segments,omitempty"`   // Which segments need this
 	Personas    []string `json:"personas,omitempty"`   // Which personas need this
+	Tags        []string `json:"tags,omitempty"`       // For filtering by topic/domain
 }
 
 // Priority represents requirement priority.
@@ -225,27 +224,30 @@ type Milestone struct {
 	Description string    `json:"description,omitempty"`
 	TargetDate  time.Time `json:"target_date,omitempty"`
 	Status      string    `json:"status,omitempty"`
+	Tags        []string  `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // SuccessMetric defines market success metrics.
 type SuccessMetric struct {
-	ID                string `json:"id"`
-	Name              string `json:"name"`
-	Description       string `json:"description"`
-	Metric            string `json:"metric"`
-	Target            string `json:"target"`
-	Timeframe         string `json:"timeframe,omitempty"`
-	MeasurementMethod string `json:"measurement_method,omitempty"`
+	ID                string   `json:"id"`
+	Name              string   `json:"name"`
+	Description       string   `json:"description"`
+	Metric            string   `json:"metric"`
+	Target            string   `json:"target"`
+	Timeframe         string   `json:"timeframe,omitempty"`
+	MeasurementMethod string   `json:"measurement_method,omitempty"`
+	Tags              []string `json:"tags,omitempty"` // For filtering by topic/domain
 }
 
 // Risk represents a market risk.
 type Risk struct {
-	ID          string `json:"id"`
-	Description string `json:"description"`
-	Probability string `json:"probability"` // Low, Medium, High
-	Impact      string `json:"impact"`      // Low, Medium, High, Critical
-	Mitigation  string `json:"mitigation"`
-	Category    string `json:"category,omitempty"` // Market, Competitive, Regulatory, etc.
+	ID          string   `json:"id"`
+	Description string   `json:"description"`
+	Probability string   `json:"probability"` // Low, Medium, High
+	Impact      string   `json:"impact"`      // Low, Medium, High, Critical
+	Mitigation  string   `json:"mitigation"`
+	Category    string   `json:"category,omitempty"` // Market, Competitive, Regulatory, etc.
+	Tags        []string `json:"tags,omitempty"`     // For filtering by topic/domain
 }
 
 // Assumption represents a market assumption.
