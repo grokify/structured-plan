@@ -11,7 +11,8 @@
       "date": "2026-01-30",
       "highlights": [
         { "description": "BREAKING: Migrate all JSON tags from snake_case to camelCase for consistency with JSON/JavaScript conventions", "commit": "7469a09" },
-        { "description": "Add V2MOM CLI commands for validation, Marp slide generation, and template creation", "commit": "c3677cf" }
+        { "description": "Add Goals CLI commands (V2MOM and OKR) for validation, Marp slide generation, and template creation", "commit": "c3677cf" },
+        { "description": "Add JSON Schema generation for OKR and V2MOM documents", "commit": "" }
       ],
       "changed": [
         { "description": "BREAKING: Migrate 252 JSON field names from snake_case to camelCase", "commit": "7469a09" },
@@ -22,6 +23,12 @@
         { "description": "Add 'splan goals v2mom validate' command for V2MOM validation", "commit": "c3677cf" },
         { "description": "Add 'splan goals v2mom generate marp' command for Marp slide generation", "commit": "c3677cf" },
         { "description": "Add 'splan goals v2mom init' command for creating V2MOM templates", "commit": "c3677cf" },
+        { "description": "Add 'splan goals okr validate' command for OKR validation", "commit": "" },
+        { "description": "Add 'splan goals okr generate marp' command for Marp slide generation", "commit": "" },
+        { "description": "Add 'splan goals okr init' command for creating OKR templates", "commit": "" },
+        { "description": "Add OKR and V2MOM JSON Schema generation (splan schema generate --type okr/v2mom)", "commit": "" },
+        { "description": "Add embedded OKR and V2MOM JSON schemas with OKRSchema() and V2MOMSchema()", "commit": "" },
+        { "description": "Add V2MOM example files (minimal, product, agentplexus)", "commit": "" },
         { "description": "Add migration script for user JSON files (scripts/migrate_json_to_camelcase.sh)", "commit": "28dbd35" },
         { "description": "Add migration plan documenting all field name changes (MIGRATION_CAMELCASE.md)", "commit": "28dbd35" }
       ],

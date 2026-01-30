@@ -4,7 +4,7 @@
 
 ## Overview
 
-This release standardizes all JSON field names to **camelCase** for consistency with JSON/JavaScript conventions and modern API standards (OpenAPI, GraphQL, Google APIs). It also adds V2MOM CLI commands for working with V2MOM goal documents.
+This release standardizes all JSON field names to **camelCase** for consistency with JSON/JavaScript conventions and modern API standards (OpenAPI, GraphQL, Google APIs). It also adds Goals CLI commands (V2MOM and OKR) for validation, Marp slide generation, and template creation, along with JSON Schema generation support for both frameworks.
 
 ## Breaking Changes
 
@@ -111,15 +111,68 @@ splan goals v2mom init --name "FY2026 Product Strategy" -o product-v2mom.json
 - `hybrid` - Both levels allowed (default)
 
 **Terminology modes:**
+
 - `v2mom` - Use V2MOM terms: Methods, Measures, Obstacles
 - `okr` - Use OKR terms: Objectives, Key Results, Risks
 - `hybrid` - Show both terminologies
+
+### OKR CLI Commands
+
+The `splan goals okr` commands are now available for working with OKR (Objectives and Key Results) documents:
+
+```bash
+# Validate an OKR JSON file
+splan goals okr validate my-okrs.json
+
+# Generate Marp presentation slides
+splan goals okr generate marp my-okrs.json
+splan goals okr generate marp my-okrs.json -o slides.md --theme=corporate
+
+# Create a new OKR template
+splan goals okr init
+splan goals okr init --name "Q1 2026 Goals" -o q1-okrs.json
+```
+
+### JSON Schema Generation
+
+Generate JSON Schemas from Go types for validation:
+
+```bash
+# Generate all schemas (PRD, OKR, V2MOM)
+splan schema generate -o ./schema/
+
+# Generate specific schema
+splan schema generate --type okr -o okr.schema.json
+splan schema generate --type v2mom -o v2mom.schema.json
+splan schema generate --type prd -o prd.schema.json
+```
+
+Embedded schemas are also available programmatically:
+
+```go
+import "github.com/grokify/structured-plan/schema"
+
+// Get schemas as strings
+prdSchema := schema.PRDSchema()
+okrSchema := schema.OKRSchema()
+v2momSchema := schema.V2MOMSchema()
+
+// Get schemas as byte slices
+prdBytes := schema.PRDSchemaBytes()
+okrBytes := schema.OKRSchemaBytes()
+v2momBytes := schema.V2MOMSchemaBytes()
+```
 
 ## New Files
 
 - `MIGRATION_CAMELCASE.md` - Complete migration documentation with field mapping
 - `scripts/migrate_json_to_camelcase.sh` - jq-based migration script for user JSON files
 - `scripts/migrate_to_camelcase.sh` - Migration script for Go source files (for reference)
+- `schema/okr.schema.json` - JSON Schema for OKR documents
+- `schema/v2mom.schema.json` - JSON Schema for V2MOM documents
+- `examples/minimal.v2mom.json` - Minimal V2MOM example
+- `examples/product.v2mom.json` - Product strategy V2MOM example
+- `examples/agentplexus.v2mom.json` - Comprehensive V2MOM example
 
 ## Installation
 

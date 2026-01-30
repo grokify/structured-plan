@@ -1,0 +1,212 @@
+{
+  "$schema": "../schema/v2mom.schema.json",
+  "metadata": {
+    "id": "product-fy2025",
+    "name": "Product Strategy FY2025",
+    "author": "Jane Smith, VP Product",
+    "team": "Product",
+    "fiscalYear": "FY2025",
+    "quarter": "Annual",
+    "version": "1.0.0",
+    "status": "Active",
+    "structure": "nested",
+    "terminology": "v2mom"
+  },
+  "vision": "Become the leading platform for enterprise workflow automation, enabling 10,000+ organizations to reduce operational costs by 40% through intelligent process optimization.",
+  "values": [
+    {
+      "name": "Customer Obsession",
+      "description": "Every decision starts with customer impact and value delivery",
+      "priority": 1
+    },
+    {
+      "name": "Simplicity",
+      "description": "Complexity is the enemy of adoption - make it easy",
+      "priority": 2
+    },
+    {
+      "name": "Speed",
+      "description": "Ship fast, learn faster, iterate continuously",
+      "priority": 3
+    },
+    {
+      "name": "Transparency",
+      "description": "Open communication at all levels, share context widely",
+      "priority": 4
+    }
+  ],
+  "methods": [
+    {
+      "id": "method-1",
+      "name": "Launch self-service onboarding",
+      "description": "Enable customers to sign up, configure, and start using the platform without sales or support intervention.",
+      "priority": "P0",
+      "status": "In Progress",
+      "owner": "Onboarding Team",
+      "startDate": "2025-01-01",
+      "endDate": "2025-03-31",
+      "measures": [
+        {
+          "id": "m1-kr1",
+          "name": "Self-service signup conversion rate",
+          "baseline": "0%",
+          "target": "25%",
+          "current": "12%",
+          "unit": "percent",
+          "progress": 0.48,
+          "status": "On Track"
+        },
+        {
+          "id": "m1-kr2",
+          "name": "Time to first value",
+          "baseline": "14 days",
+          "target": "< 1 day",
+          "current": "3 days",
+          "progress": 0.78,
+          "status": "On Track"
+        },
+        {
+          "id": "m1-kr3",
+          "name": "Support tickets from new users",
+          "baseline": "50 per week",
+          "target": "< 10 per week",
+          "current": "22 per week",
+          "progress": 0.56,
+          "status": "At Risk"
+        }
+      ],
+      "obstacles": [
+        {
+          "name": "Legacy authentication system",
+          "description": "Current auth doesn't support social login or SSO self-config",
+          "severity": "High",
+          "mitigation": "Phased migration to Auth0 in Q1"
+        }
+      ],
+      "projects": ["proj-onboarding-flow", "proj-auth-migration"]
+    },
+    {
+      "id": "method-2",
+      "name": "Expand enterprise integrations",
+      "description": "Build native integrations with top 10 enterprise systems to reduce implementation time.",
+      "priority": "P1",
+      "status": "Planning",
+      "owner": "Integrations Team",
+      "startDate": "2025-02-01",
+      "endDate": "2025-06-30",
+      "measures": [
+        {
+          "id": "m2-kr1",
+          "name": "Native integrations shipped",
+          "baseline": "5",
+          "target": "15",
+          "current": "7",
+          "progress": 0.2,
+          "status": "On Track"
+        },
+        {
+          "id": "m2-kr2",
+          "name": "Average integration setup time",
+          "baseline": "2 weeks",
+          "target": "< 2 hours",
+          "current": "1 week",
+          "progress": 0.5,
+          "status": "On Track"
+        }
+      ],
+      "obstacles": [
+        {
+          "name": "API rate limits",
+          "description": "Some enterprise APIs have strict rate limits affecting sync performance",
+          "severity": "Medium",
+          "mitigation": "Implement intelligent batching and caching"
+        }
+      ]
+    },
+    {
+      "id": "method-3",
+      "name": "Build partner ecosystem",
+      "description": "Create a partner program enabling system integrators and consultants to implement and extend our platform.",
+      "priority": "P2",
+      "status": "Not Started",
+      "owner": "Partnerships Team",
+      "startDate": "2025-04-01",
+      "endDate": "2025-09-30",
+      "measures": [
+        {
+          "id": "m3-kr1",
+          "name": "Certified partners",
+          "baseline": "0",
+          "target": "25",
+          "current": "0",
+          "progress": 0,
+          "status": "Not Started"
+        },
+        {
+          "id": "m3-kr2",
+          "name": "Partner-sourced revenue",
+          "baseline": "$0",
+          "target": "$2M ARR",
+          "current": "$0",
+          "progress": 0,
+          "status": "Not Started"
+        }
+      ]
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "obs-global-1",
+      "name": "Hiring freeze",
+      "description": "Company-wide hiring freeze limits team capacity",
+      "severity": "High",
+      "likelihood": "High",
+      "mitigation": "Focus on automation and contractor support for non-core work",
+      "status": "Accepted"
+    },
+    {
+      "id": "obs-global-2",
+      "name": "Market uncertainty",
+      "description": "Economic conditions may affect enterprise buying decisions",
+      "severity": "Medium",
+      "likelihood": "Medium",
+      "mitigation": "Emphasize ROI and cost-reduction messaging",
+      "status": "Mitigating"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-onboarding-flow",
+      "name": "Self-Service Onboarding Flow",
+      "description": "Redesign signup and onboarding experience for zero-touch activation",
+      "category": "Product",
+      "methodId": "method-1",
+      "priority": "P0",
+      "status": "In Progress",
+      "quarter": "Q1",
+      "startDate": "2025-01-15",
+      "endDate": "2025-03-15"
+    },
+    {
+      "id": "proj-auth-migration",
+      "name": "Auth0 Migration",
+      "description": "Migrate authentication to Auth0 for social login and SSO support",
+      "category": "Infrastructure",
+      "methodId": "method-1",
+      "priority": "P0",
+      "status": "In Progress",
+      "quarter": "Q1",
+      "dependencies": ["proj-onboarding-flow"]
+    },
+    {
+      "id": "proj-salesforce-integration",
+      "name": "Salesforce Native Integration",
+      "description": "Build native Salesforce integration with managed package",
+      "category": "Integrations",
+      "methodId": "method-2",
+      "priority": "P1",
+      "status": "Proposed",
+      "quarter": "Q2"
+    }
+  ]
+}

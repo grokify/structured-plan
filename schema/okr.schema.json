@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/grokify/structured-plan/schema/okr.schema.json",
+  "$ref": "#/$defs/OKRDocument",
+  "$defs": {
+    "Alignment": {
+      "properties": {
+        "parentOkrId": {
+          "type": "string"
+        },
+        "companyOkrIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "KeyResult": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "metric": {
+          "type": "string"
+        },
+        "baseline": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "measurementMethod": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "dueDate": {
+          "type": "string"
+        },
+        "phaseTargets": {
+          "items": {
+            "$ref": "#/$defs/PhaseTarget"
+          },
+          "type": "array"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Metadata": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "periodType": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "OKRDocument": {
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/Metadata"
+        },
+        "theme": {
+          "type": "string"
+        },
+        "objectives": {
+          "items": {
+            "$ref": "#/$defs/Objective"
+          },
+          "type": "array"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/Risk"
+          },
+          "type": "array"
+        },
+        "alignment": {
+          "$ref": "#/$defs/Alignment"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Objective": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "timeframe": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "keyResults": {
+          "items": {
+            "$ref": "#/$defs/KeyResult"
+          },
+          "type": "array"
+        },
+        "progress": {
+          "type": "number"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/Risk"
+          },
+          "type": "array"
+        },
+        "parentId": {
+          "type": "string"
+        },
+        "alignedWith": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "PhaseTarget": {
+      "properties": {
+        "phaseId": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "actual": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Risk": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "impact": {
+          "type": "string"
+        },
+        "likelihood": {
+          "type": "string"
+        },
+        "mitigation": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  "title": "OKR Document",
+  "description": "Schema for OKR (Objectives and Key Results) documents"
+}

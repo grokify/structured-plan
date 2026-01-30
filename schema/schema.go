@@ -31,7 +31,43 @@ const (
 
 	// TRDSchemaID is the canonical ID for the TRD schema (placeholder).
 	TRDSchemaID = "https://github.com/grokify/structured-plan/schema/trd.schema.json"
+
+	// OKRSchemaID is the canonical ID for the OKR schema.
+	OKRSchemaID = "https://github.com/grokify/structured-plan/schema/okr.schema.json"
+
+	// V2MOMSchemaID is the canonical ID for the V2MOM schema.
+	V2MOMSchemaID = "https://github.com/grokify/structured-plan/schema/v2mom.schema.json"
 )
+
+// OKR Schema
+
+//go:embed okr.schema.json
+var OKRSchemaJSON []byte
+
+// OKRSchema returns the OKR JSON Schema as a string.
+func OKRSchema() string {
+	return string(OKRSchemaJSON)
+}
+
+// OKRSchemaBytes returns the OKR JSON Schema as a byte slice.
+func OKRSchemaBytes() []byte {
+	return OKRSchemaJSON
+}
+
+// V2MOM Schema
+
+//go:embed v2mom.schema.json
+var V2MOMSchemaJSON []byte
+
+// V2MOMSchema returns the V2MOM JSON Schema as a string.
+func V2MOMSchema() string {
+	return string(V2MOMSchemaJSON)
+}
+
+// V2MOMSchemaBytes returns the V2MOM JSON Schema as a byte slice.
+func V2MOMSchemaBytes() []byte {
+	return V2MOMSchemaJSON
+}
 
 // TODO: Add MRD and TRD schemas when created.
 // When mrd.schema.json is added:

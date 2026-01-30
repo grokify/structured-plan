@@ -1,0 +1,42 @@
+{
+  "$schema": "../schema/v2mom.schema.json",
+  "vision": "Build the best product in our category.",
+  "values": [
+    {
+      "name": "Quality",
+      "description": "Ship excellent work"
+    },
+    {
+      "name": "Speed",
+      "description": "Move fast and iterate"
+    }
+  ],
+  "methods": [
+    {
+      "name": "Improve core product",
+      "priority": "P0"
+    },
+    {
+      "name": "Expand market reach",
+      "priority": "P1"
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "Limited resources",
+      "severity": "Medium"
+    }
+  ],
+  "measures": [
+    {
+      "name": "Customer satisfaction",
+      "target": "NPS > 50",
+      "status": "On Track"
+    },
+    {
+      "name": "Revenue growth",
+      "target": "20% YoY",
+      "status": "On Track"
+    }
+  ]
+}

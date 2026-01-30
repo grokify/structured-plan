@@ -12,9 +12,12 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/agentplexus/structured-evaluation/evaluation"
+	"github.com/grokify/structured-plan/goals/okr"
+	okrrender "github.com/grokify/structured-plan/goals/okr/render"
+	okrmarp "github.com/grokify/structured-plan/goals/okr/render/marp"
 	"github.com/grokify/structured-plan/goals/v2mom"
-	"github.com/grokify/structured-plan/goals/v2mom/render"
-	"github.com/grokify/structured-plan/goals/v2mom/render/marp"
+	v2momrender "github.com/grokify/structured-plan/goals/v2mom/render"
+	v2mommarp "github.com/grokify/structured-plan/goals/v2mom/render/marp"
 	"github.com/grokify/structured-plan/requirements/mrd"
 	"github.com/grokify/structured-plan/requirements/prd"
 	"github.com/grokify/structured-plan/requirements/prd/render/terminal"
@@ -99,6 +102,7 @@ func init() {
 
 	// Add goals subcommands
 	goalsCmd.AddCommand(v2momCmd)
+	goalsCmd.AddCommand(okrCmd)
 }
 
 // ============================================================================
@@ -387,8 +391,8 @@ func runV2MOMMarpGenerate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Create renderer and options
-	renderer := marp.New()
-	opts := render.DefaultOptions()
+	renderer := v2mommarp.New()
+	opts := v2momrender.DefaultOptions()
 	opts.Theme = v2momGenerateMarpFlags.theme
 	if v2momGenerateMarpFlags.terminology != "" {
 		opts.Terminology = v2momGenerateMarpFlags.terminology
@@ -674,6 +678,309 @@ func createHybridV2MOMTemplate(name string) *v2mom.V2MOM {
 			},
 		},
 	}
+}
+
+// ============================================================================
+// OKR Commands
+// ============================================================================
+
+var okrCmd = &cobra.Command{
+	Use:   "okr",
+	Short: "Work with OKR documents",
+	Long: `Commands for generating and validating OKR (Objectives and Key Results) documents.
+
+OKR is a goal-setting framework that helps teams define objectives and track
+measurable key results. Originally developed at Intel and popularized by Google.`,
+}
+
+var okrValidateFlags struct {
+	strict bool
+}
+
+var okrValidateCmd = &cobra.Command{
+	Use:   "validate FILE",
+	Short: "Validate an OKR JSON file",
+	Long: `Validate an OKR JSON file against the schema and structural rules.
+
+Examples:
+  splan goals okr validate my-okrs.json
+  splan goals okr validate my-okrs.json --strict`,
+	Args: cobra.ExactArgs(1),
+	RunE: runOKRValidate,
+}
+
+var okrGenerateCmd = &cobra.Command{
+	Use:   "generate",
+	Short: "Generate output from OKR",
+	Long:  `Generate various output formats from an OKR JSON file.`,
+}
+
+var okrGenerateMarpFlags struct {
+	output string
+	theme  string
+}
+
+var okrGenerateMarpCmd = &cobra.Command{
+	Use:   "marp FILE",
+	Short: "Generate Marp markdown slides",
+	Long: `Generate Marp markdown presentation slides from an OKR JSON file.
+
+Themes:
+  default   - Clean gradient theme (default)
+  corporate - Professional blue theme
+  minimal   - Simple grayscale theme
+
+Examples:
+  splan goals okr generate marp my-okrs.json
+  splan goals okr generate marp my-okrs.json -o slides.md
+  splan goals okr generate marp my-okrs.json --theme=corporate`,
+	Args: cobra.ExactArgs(1),
+	RunE: runOKRMarpGenerate,
+}
+
+var okrInitFlags struct {
+	name   string
+	output string
+	period string
+}
+
+var okrInitCmd = &cobra.Command{
+	Use:   "init",
+	Short: "Initialize a new OKR template",
+	Long: `Create a new OKR JSON template file with example content.
+
+Examples:
+  splan goals okr init
+  splan goals okr init --name "Q1 2026 Engineering OKRs"
+  splan goals okr init --name "Product Team" -o product-okrs.json --period 2026-Q1`,
+	RunE: runOKRInit,
+}
+
+func init() {
+	// OKR validate flags
+	okrValidateCmd.Flags().BoolVar(&okrValidateFlags.strict, "strict", false, "Enable strict validation mode")
+
+	// OKR generate marp flags
+	okrGenerateMarpCmd.Flags().StringVarP(&okrGenerateMarpFlags.output, "output", "o", "", "Output file path (default: stdout)")
+	okrGenerateMarpCmd.Flags().StringVar(&okrGenerateMarpFlags.theme, "theme", "default", "Slide theme (default, corporate, minimal)")
+
+	// OKR init flags
+	okrInitCmd.Flags().StringVar(&okrInitFlags.name, "name", "My OKRs", "Name for the OKR document")
+	okrInitCmd.Flags().StringVarP(&okrInitFlags.output, "output", "o", "okrs.json", "Output file path")
+	okrInitCmd.Flags().StringVar(&okrInitFlags.period, "period", "", "Period (e.g., 2026-Q1)")
+
+	// Add subcommands
+	okrGenerateCmd.AddCommand(okrGenerateMarpCmd)
+	okrCmd.AddCommand(okrValidateCmd)
+	okrCmd.AddCommand(okrGenerateCmd)
+	okrCmd.AddCommand(okrInitCmd)
+}
+
+func runOKRValidate(cmd *cobra.Command, args []string) error {
+	filepath := args[0]
+
+	// Check file exists
+	if _, err := os.Stat(filepath); os.IsNotExist(err) {
+		return fmt.Errorf("file not found: %s", filepath)
+	}
+
+	// Read and parse OKR
+	doc, err := okr.ReadFile(filepath)
+	if err != nil {
+		return fmt.Errorf("reading OKR: %w", err)
+	}
+
+	// Set up validation options
+	opts := okr.DefaultValidationOptions()
+	if okrValidateFlags.strict {
+		opts = okr.StrictValidationOptions()
+	}
+
+	// Validate
+	errs := doc.Validate(opts)
+
+	// Report results
+	errors := okr.Errors(errs)
+	warnings := okr.Warnings(errs)
+
+	if len(warnings) > 0 {
+		fmt.Println("Warnings:")
+		for _, w := range warnings {
+			fmt.Printf("  - %s\n", w)
+		}
+		fmt.Println()
+	}
+
+	if len(errors) > 0 {
+		fmt.Println("Errors:")
+		for _, e := range errors {
+			fmt.Printf("  - %s\n", e)
+		}
+		return fmt.Errorf("validation failed with %d error(s)", len(errors))
+	}
+
+	// Print success info
+	fmt.Printf("Valid OKR: %s\n", filepath)
+	fmt.Printf("  Objectives: %d\n", len(doc.Objectives))
+	fmt.Printf("  Total Key Results: %d\n", len(doc.AllKeyResults()))
+	fmt.Printf("  Overall Progress: %.0f%%\n", doc.CalculateOverallProgress()*100)
+
+	if doc.Metadata != nil && doc.Metadata.Name != "" {
+		fmt.Printf("  Name: %s\n", doc.Metadata.Name)
+	}
+
+	return nil
+}
+
+func runOKRMarpGenerate(cmd *cobra.Command, args []string) error {
+	inputPath := args[0]
+
+	// Check file exists
+	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+		return fmt.Errorf("file not found: %s", inputPath)
+	}
+
+	// Read and parse OKR
+	doc, err := okr.ReadFile(inputPath)
+	if err != nil {
+		return fmt.Errorf("reading OKR: %w", err)
+	}
+
+	// Create renderer and options
+	renderer := okrmarp.New()
+	opts := okrrender.DefaultOptions()
+	opts.Theme = okrGenerateMarpFlags.theme
+
+	// Render
+	output, err := renderer.Render(doc, opts)
+	if err != nil {
+		return fmt.Errorf("rendering Marp: %w", err)
+	}
+
+	// Write output
+	if okrGenerateMarpFlags.output != "" {
+		// Ensure output directory exists
+		dir := filepath.Dir(okrGenerateMarpFlags.output)
+		if dir != "." && dir != "" {
+			if err := os.MkdirAll(dir, 0755); err != nil {
+				return fmt.Errorf("creating output directory: %w", err)
+			}
+		}
+
+		if err := os.WriteFile(okrGenerateMarpFlags.output, output, 0600); err != nil {
+			return fmt.Errorf("writing output: %w", err)
+		}
+		fmt.Printf("Generated: %s\n", okrGenerateMarpFlags.output)
+	} else {
+		// Write to stdout
+		fmt.Print(string(output))
+	}
+
+	return nil
+}
+
+func runOKRInit(cmd *cobra.Command, args []string) error {
+	// Check if file already exists
+	if _, err := os.Stat(okrInitFlags.output); err == nil {
+		return fmt.Errorf("file already exists: %s (use -o to specify a different output path)", okrInitFlags.output)
+	}
+
+	// Create template
+	now := time.Now()
+	period := okrInitFlags.period
+	if period == "" {
+		quarter := (now.Month()-1)/3 + 1
+		period = fmt.Sprintf("%d-Q%d", now.Year(), quarter)
+	}
+
+	template := &okr.OKRDocument{
+		Schema: "../schema/okr.schema.json",
+		Metadata: &okr.Metadata{
+			ID:         okr.GenerateID(),
+			Name:       okrInitFlags.name,
+			Owner:      "Your Name",
+			Team:       "Your Team",
+			Period:     period,
+			PeriodType: "quarter",
+			Version:    "1.0.0",
+			Status:     okr.StatusDraft,
+			CreatedAt:  now,
+			UpdatedAt:  now,
+		},
+		Theme: "Achieve great results this quarter",
+		Objectives: []okr.Objective{
+			{
+				ID:          "obj-1",
+				Title:       "First Objective",
+				Description: "What do you want to achieve? Make it inspirational.",
+				Category:    "Product",
+				Owner:       "Your Name",
+				Status:      okr.StatusDraft,
+				KeyResults: []okr.KeyResult{
+					{
+						ID:          "kr-1-1",
+						Description: "First measurable key result",
+						Baseline:    "0",
+						Target:      "100",
+						Current:     "0",
+						Unit:        "%",
+						Confidence:  okr.ConfidenceMedium,
+					},
+					{
+						ID:          "kr-1-2",
+						Description: "Second measurable key result",
+						Baseline:    "0",
+						Target:      "50",
+						Current:     "0",
+						Unit:        "count",
+						Confidence:  okr.ConfidenceMedium,
+					},
+				},
+			},
+			{
+				ID:          "obj-2",
+				Title:       "Second Objective",
+				Description: "Another goal to achieve this quarter.",
+				Category:    "Engineering",
+				Owner:       "Your Name",
+				Status:      okr.StatusDraft,
+				KeyResults: []okr.KeyResult{
+					{
+						ID:          "kr-2-1",
+						Description: "Key result for objective 2",
+						Baseline:    "0",
+						Target:      "10",
+						Current:     "0",
+						Unit:        "features",
+						Confidence:  okr.ConfidenceHigh,
+					},
+				},
+			},
+		},
+		Risks: []okr.Risk{
+			{
+				ID:          "risk-1",
+				Description: "What might prevent success?",
+				Impact:      "High",
+				Likelihood:  "Medium",
+				Mitigation:  "How will you address this?",
+			},
+		},
+	}
+
+	// Write to file
+	if err := template.WriteFile(okrInitFlags.output); err != nil {
+		return fmt.Errorf("writing template: %w", err)
+	}
+
+	fmt.Printf("Created: %s\n", okrInitFlags.output)
+	fmt.Printf("  Period: %s\n", period)
+	fmt.Println("\nNext steps:")
+	fmt.Println("  1. Edit the file to add your objectives and key results")
+	fmt.Println("  2. Run 'splan goals okr validate " + okrInitFlags.output + "' to check your OKRs")
+	fmt.Println("  3. Run 'splan goals okr generate marp " + okrInitFlags.output + " -o slides.md' to create slides")
+
+	return nil
 }
 
 // ============================================================================
@@ -1518,17 +1825,19 @@ var schemaGenerateCmd = &cobra.Command{
 	Short: "Generate JSON Schema from Go types",
 	Long: `Generate JSON Schema files from Go type definitions.
 
-By default, generates all schema files (PRD, MRD, TRD) to the schema/ directory.
+By default, generates all schema files (PRD, OKR, V2MOM) to the schema/ directory.
 Use --type to generate a specific document type's schema.`,
 	Example: `  splan schema generate
   splan schema generate -o ./schema/
-  splan schema generate --type prd -o prd.schema.json`,
+  splan schema generate --type prd -o prd.schema.json
+  splan schema generate --type okr -o okr.schema.json
+  splan schema generate --type v2mom -o v2mom.schema.json`,
 	RunE: runSchemaGenerate,
 }
 
 func init() {
 	schemaGenerateCmd.Flags().StringVarP(&schemaGenerateFlags.output, "output", "o", ".", "Output directory or file path")
-	schemaGenerateCmd.Flags().StringVarP(&schemaGenerateFlags.docType, "type", "t", "all", "Document type to generate (prd, mrd, trd, or all)")
+	schemaGenerateCmd.Flags().StringVarP(&schemaGenerateFlags.docType, "type", "t", "all", "Document type to generate (prd, okr, v2mom, mrd, trd, or all)")
 
 	schemaCmd.AddCommand(schemaGenerateCmd)
 }
@@ -1561,11 +1870,33 @@ func runSchemaGenerate(cmd *cobra.Command, args []string) error {
 		}
 		fmt.Printf("Generated schemas in: %s\n", dir)
 
+	case "okr":
+		// Single OKR schema
+		path := output
+		if isDir(output) {
+			path = filepath.Join(output, "okr.schema.json")
+		}
+		if err := gen.WriteOKRSchema(path); err != nil {
+			return fmt.Errorf("generating OKR schema: %w", err)
+		}
+		fmt.Printf("Generated: %s\n", path)
+
+	case "v2mom":
+		// Single V2MOM schema
+		path := output
+		if isDir(output) {
+			path = filepath.Join(output, "v2mom.schema.json")
+		}
+		if err := gen.WriteV2MOMSchema(path); err != nil {
+			return fmt.Errorf("generating V2MOM schema: %w", err)
+		}
+		fmt.Printf("Generated: %s\n", path)
+
 	case "mrd", "trd":
 		return fmt.Errorf("schema generation for %s is not yet implemented", docType)
 
 	default:
-		return fmt.Errorf("unknown document type: %s (expected prd, mrd, trd, or all)", docType)
+		return fmt.Errorf("unknown document type: %s (expected prd, okr, v2mom, mrd, trd, or all)", docType)
 	}
 
 	return nil
