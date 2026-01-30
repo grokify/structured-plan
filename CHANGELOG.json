@@ -10,17 +10,17 @@
       "version": "v0.4.0",
       "date": "2026-01-29",
       "highlights": [
-        { "description": "Add OKR (Objectives and Key Results) structure replacing legacy goals fields", "commit": "" },
-        { "description": "Add CLI `filter` command with tag-based filtering (OR/AND logic)", "commit": "" },
-        { "description": "Add roadmap swimlane table with auto-derived OKR swimlanes", "commit": "" }
+        { "description": "Add OKR (Objectives and Key Results) structure replacing legacy goals fields", "commit": "7f96f4d" },
+        { "description": "Add CLI `filter` command with tag-based filtering (OR/AND logic)", "commit": "471ab77" },
+        { "description": "Add roadmap swimlane table with auto-derived OKR swimlanes", "commit": "813616e" }
       ],
       "added": [
         { "description": "Add OKR structure with nested Objectives and KeyResults replacing legacy goals", "commit": "7f96f4d" },
         { "description": "Add KeyResult type with baseline, target, current, confidence, and phase targets", "commit": "7f96f4d" },
         { "description": "Add PhaseTarget type for roadmap-aligned OKR progress tracking", "commit": "7f96f4d" },
         { "description": "Add CLI `filter` command for tag-based PRD filtering", "commit": "471ab77" },
-        { "description": "Add FilterByTags() method to PRD/MRD/TRD for OR-logic tag filtering", "commit": "" },
-        { "description": "Add FilterByTagsAll() method for AND-logic tag filtering", "commit": "" },
+        { "description": "Add FilterByTags() method to PRD/MRD/TRD for OR-logic tag filtering", "commit": "3d3eb3b" },
+        { "description": "Add FilterByTagsAll() method for AND-logic tag filtering", "commit": "3d3eb3b" },
         { "description": "Add ValidateTag() and ValidateTags() for kebab-case tag validation", "commit": "3d3eb3b" },
         { "description": "Add roadmap swimlane table with ToSwimlaneTable() method", "commit": "813616e" },
         { "description": "Add ToSwimlaneTableWithOKRs() for combined deliverables and OKR swimlanes", "commit": "813616e" },
@@ -41,18 +41,18 @@
         { "description": "Show objectives in all phases where their Key Results appear (not just first phase)", "commit": "7f96f4d" }
       ],
       "improved": [
-        { "description": "Enhance roadmap table formatting with 'Phase N' headers and bullet list items", "commit": "" },
-        { "description": "Enhance author formatting with email links and roles", "commit": "" },
-        { "description": "Ensure deterministic ordering for functional and non-functional requirement categories", "commit": "" },
-        { "description": "Ensure deterministic ordering for compliance controls frameworks", "commit": "" }
+        { "description": "Enhance roadmap table formatting with 'Phase N' headers and bullet list items", "commit": "813616e" },
+        { "description": "Enhance author formatting with email links and roles", "commit": "fc0a9dc" },
+        { "description": "Ensure deterministic ordering for functional and non-functional requirement categories", "commit": "7f96f4d" },
+        { "description": "Ensure deterministic ordering for compliance controls frameworks", "commit": "7f96f4d" }
       ],
       "refactored": [
-        { "description": "Simplify appendix system by removing domain-specific schemas", "commit": "" },
-        { "description": "Use type aliases for backwards-compatible Person and Approver types", "commit": "" }
+        { "description": "Simplify appendix system by removing domain-specific schemas", "commit": "a589855" },
+        { "description": "Use type aliases for backwards-compatible Person and Approver types", "commit": "fc0a9dc" }
       ],
       "documentation": [
-        { "description": "Add roadmap and swimlane table documentation to README", "commit": "" },
-        { "description": "Add operational rollout swimlane guidance", "commit": "" }
+        { "description": "Add roadmap and swimlane table documentation to README", "commit": "9333044" },
+        { "description": "Add operational rollout swimlane guidance", "commit": "9333044" }
       ]
     },
     {
@@ -91,8 +91,8 @@
         { "description": "Add structured user story fields: epic_id, story_points, labels, dependencies", "commit": "4bc8bd7" }
       ],
       "improved": [
-        { "description": "Use relative dash widths in markdown tables for wider Story and Description columns in Pandoc output", "commit": "" },
-        { "description": "Add --desc-len CLI flag to control description truncation length in tables (default: 100, was 60)", "commit": "" }
+        { "description": "Use relative dash widths in markdown tables for wider Story and Description columns in Pandoc output", "commit": "c161df1" },
+        { "description": "Add --desc-len CLI flag to control description truncation length in tables (default: 100, was 60)", "commit": "c161df1" }
       ],
       "dependencies": [
         { "description": "Update github.com/agentplexus/structured-evaluation to v0.2.0", "commit": "a4e41d1" }
